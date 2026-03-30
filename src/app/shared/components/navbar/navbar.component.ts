@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, inject, signal, PLATFORM_ID } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, signal, PLATFORM_ID, DestroyRef, afterNextRender } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
@@ -55,15 +55,15 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   `,
 })
 export class NavbarComponent {
-  private readonly platformId = inject(PLATFORM_ID);
+  private readonly destroyRef = inject(DestroyRef);
   readonly mobileOpen = signal(false);
   readonly scrolled = signal(false);
 
   constructor() {
-    if (isPlatformBrowser(this.platformId)) {
-      window.addEventListener('scroll', () => {
-        this.scrolled.set(window.scrollY > 50);
-      });
-    }
+    afterNextRender(() => {
+      const onScroll = () => this.scrolled.set(window.scrollY > 50);
+      window.addEventListener('scroll', onScroll, { passive: true });
+      this.destroyRef.onDestroy(() => window.removeEventListener('scroll', onScroll));
+    });
   }
 }
