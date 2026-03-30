@@ -1,5 +1,6 @@
-import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, effect } from '@angular/core';
 import { PortfolioService } from '../../core/services/portfolio.service';
+import { SeoService } from '../../core/services/seo.service';
 import { HeroComponent } from './sections/hero/hero.component';
 import { AboutComponent } from './sections/about/about.component';
 import { ExperienceComponent } from './sections/experience/experience.component';
@@ -31,4 +32,17 @@ import { ContactComponent } from './sections/contact/contact.component';
 })
 export class LandingComponent {
   readonly portfolio = inject(PortfolioService);
+  private readonly seo = inject(SeoService);
+
+  constructor() {
+    effect(() => {
+      const config = this.portfolio.siteConfig();
+      if (config) {
+        this.seo.updateMeta({
+          title: config['site_title'] ?? 'Adrián Jiménez Cabello',
+          description: config['site_description'],
+        });
+      }
+    });
+  }
 }

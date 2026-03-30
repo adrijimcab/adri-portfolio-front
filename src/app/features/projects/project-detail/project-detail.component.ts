@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, inject, signal, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { PortfolioService } from '../../../core/services/portfolio.service';
+import { SeoService } from '../../../core/services/seo.service';
 import { GlassmorphismCardComponent } from '../../../shared/components/glassmorphism-card/glassmorphism-card.component';
 import { TechPillComponent } from '../../../shared/components/tech-pill/tech-pill.component';
 import { ScrollAnimateDirective } from '../../../shared/directives/scroll-animate.directive';
@@ -68,10 +69,18 @@ import { Project } from '../../../core/models';
 export class ProjectDetailComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly portfolio = inject(PortfolioService);
+  private readonly seo = inject(SeoService);
   readonly project = signal<Project | null>(null);
 
   ngOnInit() {
     const slug = this.route.snapshot.paramMap.get('slug')!;
-    this.portfolio.getProjectBySlug(slug).subscribe((data) => this.project.set(data));
+    this.portfolio.getProjectBySlug(slug).subscribe((data) => {
+      this.project.set(data);
+      this.seo.updateMeta({
+        title: `${data.title} — Adrián Jiménez Cabello`,
+        description: data.description ?? data.short_description ?? undefined,
+        image: data.image_url ?? undefined,
+      });
+    });
   }
 }
