@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, inject, signal, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, signal, computed, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { PortfolioService } from '../../../core/services/portfolio.service';
 import { GlassmorphismCardComponent } from '../../../shared/components/glassmorphism-card/glassmorphism-card.component';
@@ -17,8 +17,17 @@ import { Project } from '../../../core/models';
       <div class="mx-auto max-w-6xl">
         <app-section-header title="All Projects" label="Portfolio" />
 
+        <div class="mb-8" appScrollAnimate>
+          <input
+            type="text"
+            placeholder="Search projects..."
+            [value]="searchQuery()"
+            (input)="searchQuery.set($any($event.target).value)"
+            class="w-full rounded-xl border border-white/10 bg-white/5 px-5 py-3 text-sm text-white placeholder-white/30 outline-none backdrop-blur-sm transition-colors focus:border-white/20 focus:bg-white/[0.08]" />
+        </div>
+
         <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          @for (project of projects(); track project.id; let i = $index) {
+          @for (project of filteredProjects(); track project.id; let i = $index) {
             <a [routerLink]="['/projects', project.slug]" class="group" appScrollAnimate [delay]="i * 80">
               <app-glass-card>
                 @if (project.image_url) {
@@ -49,6 +58,19 @@ import { Project } from '../../../core/models';
 export class ProjectListComponent implements OnInit {
   private readonly portfolio = inject(PortfolioService);
   readonly projects = signal<Project[]>([]);
+  readonly searchQuery = signal('');
+
+  readonly filteredProjects = computed(() => {
+    const query = this.searchQuery().toLowerCase().trim();
+    const all = this.projects();
+    if (!query) return all;
+    return all.filter(
+      (p) =>
+        p.title.toLowerCase().includes(query) ||
+        p.short_description?.toLowerCase().includes(query) ||
+        p.technologies.some((t) => t.name.toLowerCase().includes(query)),
+    );
+  });
 
   ngOnInit() {
     this.portfolio.getAllProjects().subscribe((data) => this.projects.set(data));
