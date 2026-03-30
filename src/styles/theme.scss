@@ -1,0 +1,51 @@
+:root {
+  --color-primary: #6366f1;
+  --color-secondary: #a855f7;
+  --color-accent: #ec4899;
+  --color-bg: #000000;
+  --font-family: 'Inter', sans-serif;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: #fff;
+  font-family: var(--font-family), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// Aurora animations
+@keyframes aurora-1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -50px) scale(1.1); }
+  66% { transform: translate(-20px, 20px) scale(0.9); }
+}
+
+@keyframes aurora-2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(-40px, 30px) scale(1.05); }
+  66% { transform: translate(30px, -40px) scale(0.95); }
+}
+
+@keyframes aurora-3 {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-50%, -50%) scale(1.15); }
+}
+
+.animate-aurora-1 { animation: aurora-1 15s ease-in-out infinite; }
+.animate-aurora-2 { animation: aurora-2 18s ease-in-out infinite; }
+.animate-aurora-3 { animation: aurora-3 12s ease-in-out infinite; }
+
+// Gradient text utility
+.gradient-text {
+  background: linear-gradient(90deg, var(--color-primary), var(--color-secondary), var(--color-accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+// Scrollbar
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }

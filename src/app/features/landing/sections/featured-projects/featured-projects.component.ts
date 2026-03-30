@@ -1,0 +1,60 @@
+import { Component, ChangeDetectionStrategy, input } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { SectionHeaderComponent } from '../../../../shared/components/section-header/section-header.component';
+import { GlassmorphismCardComponent } from '../../../../shared/components/glassmorphism-card/glassmorphism-card.component';
+import { TechPillComponent } from '../../../../shared/components/tech-pill/tech-pill.component';
+import { ScrollAnimateDirective } from '../../../../shared/directives/scroll-animate.directive';
+import { Project } from '../../../../core/models';
+
+@Component({
+  selector: 'app-featured-projects',
+  standalone: true,
+  imports: [RouterLink, SectionHeaderComponent, GlassmorphismCardComponent, TechPillComponent, ScrollAnimateDirective],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
+    <section id="featured-projects" class="py-24 px-6">
+      <div class="mx-auto max-w-6xl">
+        <app-section-header title="Featured Projects" label="Selected Work" />
+
+        <div class="grid gap-6 md:grid-cols-2">
+          @for (project of projects(); track project.id; let i = $index) {
+            <a [routerLink]="['/projects', project.slug]" class="group" appScrollAnimate [delay]="i * 100">
+              <app-glass-card>
+                @if (project.image_url) {
+                  <div class="mb-4 overflow-hidden rounded-lg">
+                    <img [src]="project.image_url" [alt]="project.title"
+                         class="h-48 w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                  </div>
+                }
+                <h3 class="text-xl font-bold text-white group-hover:text-transparent group-hover:bg-clip-text"
+                    style="background-image: linear-gradient(90deg, var(--color-primary), var(--color-secondary));">
+                  {{ project.title }}
+                </h3>
+                @if (project.short_description) {
+                  <p class="mt-2 text-sm text-white/50">{{ project.short_description }}</p>
+                }
+                @if (project.technologies.length) {
+                  <div class="mt-4 flex flex-wrap gap-1.5">
+                    @for (tech of project.technologies; track tech.id) {
+                      <app-tech-pill [name]="tech.name" [iconSlug]="tech.icon_slug" />
+                    }
+                  </div>
+                }
+              </app-glass-card>
+            </a>
+          }
+        </div>
+
+        <div class="mt-8 text-center" appScrollAnimate>
+          <a routerLink="/projects"
+             class="inline-flex items-center gap-2 rounded-lg border border-white/10 px-6 py-3 text-sm text-white/60 transition-all hover:border-white/20 hover:text-white">
+            View All Projects
+          </a>
+        </div>
+      </div>
+    </section>
+  `,
+})
+export class FeaturedProjectsComponent {
+  projects = input<Project[]>([]);
+}
