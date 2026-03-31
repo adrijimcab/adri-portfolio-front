@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy, input, inject, computed } from '@an
 import { SectionHeaderComponent } from '../../../../shared/components/section-header/section-header.component';
 import { GlassmorphismCardComponent } from '../../../../shared/components/glassmorphism-card/glassmorphism-card.component';
 import { ScrollAnimateDirective } from '../../../../shared/directives/scroll-animate.directive';
+import { TiltDirective } from '../../../../shared/directives/tilt.directive';
 import { SkeletonLoaderComponent } from '../../../../shared/components/skeleton-loader/skeleton-loader.component';
 import { TranslateService } from '../../../../core/services/translate.service';
 import { GitHubRepo } from '../../../../core/models';
@@ -10,7 +11,7 @@ import { getLanguageColor } from '../../../../shared/helpers/language-colors';
 @Component({
   selector: 'app-github-repos-section',
   standalone: true,
-  imports: [SectionHeaderComponent, GlassmorphismCardComponent, ScrollAnimateDirective, SkeletonLoaderComponent],
+  imports: [SectionHeaderComponent, GlassmorphismCardComponent, ScrollAnimateDirective, TiltDirective, SkeletonLoaderComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section id="github-repos" class="py-24 px-6">
@@ -26,7 +27,7 @@ import { getLanguageColor } from '../../../../shared/helpers/language-colors';
         } @else {
           <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             @for (repo of sortedRepos(); track repo.id; let i = $index) {
-              <div appScrollAnimate [delay]="i * 60">
+              <div appScrollAnimate [delay]="i * 60" appTilt>
                 <a [href]="repo.html_url" target="_blank" rel="noopener noreferrer" class="block group">
                   <app-glass-card>
                     <div class="flex items-start justify-between gap-2">

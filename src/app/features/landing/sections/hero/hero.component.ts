@@ -1,18 +1,27 @@
 import { Component, ChangeDetectionStrategy, input, computed, inject } from '@angular/core';
 import { ScrollAnimateDirective } from '../../../../shared/directives/scroll-animate.directive';
+import { ParticlesBackgroundComponent } from '../../../../shared/components/particles-background/particles-background.component';
+import { TypingTextComponent } from '../../../../shared/components/typing-text/typing-text.component';
+import { AnimatedCounterComponent } from '../../../../shared/components/animated-counter/animated-counter.component';
 import { TranslateService } from '../../../../core/services/translate.service';
 import { Profile, SiteConfig } from '../../../../core/models';
 
 @Component({
   selector: 'app-hero',
   standalone: true,
-  imports: [ScrollAnimateDirective],
+  imports: [
+    ScrollAnimateDirective,
+    ParticlesBackgroundComponent,
+    TypingTextComponent,
+    AnimatedCounterComponent,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section id="hero" class="relative flex min-h-screen items-center justify-center px-6">
-      <div class="text-center" appScrollAnimate>
+      <app-particles-background />
+      <div class="relative z-10 text-center" appScrollAnimate>
         <p class="mb-4 text-xs tracking-[4px] uppercase" style="color: var(--color-secondary);">
-          {{ config()?.['hero_subtitle'] || profile()?.title }}
+          <app-typing-text [texts]="typingTexts" />
         </p>
         <h1 class="text-5xl font-bold text-white md:text-7xl lg:text-8xl">
           {{ firstName() }}
@@ -23,10 +32,12 @@ import { Profile, SiteConfig } from '../../../../core/models';
         </p>
 
         <!-- Stats -->
-        <div class="mt-12 flex justify-center gap-12">
+        <div class="mt-12 flex justify-center gap-12" appScrollAnimate [stagger]="true">
           @for (stat of stats(); track stat.label) {
-            <div class="text-center" appScrollAnimate [delay]="$index * 100 + 200">
-              <span class="text-3xl font-bold text-white">{{ stat.value }}</span>
+            <div class="text-center">
+              <span class="text-3xl font-bold text-white">
+                <app-animated-counter [target]="stat.numericValue" [suffix]="stat.suffix" />
+              </span>
               <span class="mt-1 block text-xs text-white/40 uppercase tracking-wider">{{ stat.label }}</span>
             </div>
           }
@@ -47,15 +58,38 @@ export class HeroComponent {
   profile = input<Profile | undefined>();
   config = input<SiteConfig | undefined>();
 
+  readonly typingTexts = [
+    'Frontend Architect',
+    'Technical Lead',
+    'Senior Developer',
+    'DDD Enthusiast',
+  ];
+
   firstName = computed(() => this.profile()?.full_name?.split(' ').slice(0, -2).join(' ') || '');
   lastName = computed(() => this.profile()?.full_name?.split(' ').slice(-2).join(' ') || '');
 
   stats = computed(() => {
     const c = this.config();
+    const yearsRaw = c?.['stats_years'] || '9';
+    const companiesRaw = c?.['stats_companies'] || '4';
+    const techRaw = c?.['stats_technologies'] || '30';
+
     return [
-      { value: (c?.['stats_years'] || '9') + '+', label: this.t.t('hero.years') },
-      { value: c?.['stats_companies'] || '4', label: this.t.t('hero.companies') },
-      { value: (c?.['stats_technologies'] || '30') + '+', label: this.t.t('hero.technologies') },
+      {
+        numericValue: parseInt(yearsRaw, 10) || 9,
+        suffix: '+',
+        label: this.t.t('hero.years'),
+      },
+      {
+        numericValue: parseInt(companiesRaw, 10) || 4,
+        suffix: '',
+        label: this.t.t('hero.companies'),
+      },
+      {
+        numericValue: parseInt(techRaw, 10) || 30,
+        suffix: '+',
+        label: this.t.t('hero.technologies'),
+      },
     ];
   });
 }

@@ -4,13 +4,14 @@ import { SectionHeaderComponent } from '../../../../shared/components/section-he
 import { GlassmorphismCardComponent } from '../../../../shared/components/glassmorphism-card/glassmorphism-card.component';
 import { TechPillComponent } from '../../../../shared/components/tech-pill/tech-pill.component';
 import { ScrollAnimateDirective } from '../../../../shared/directives/scroll-animate.directive';
+import { TiltDirective } from '../../../../shared/directives/tilt.directive';
 import { TranslateService } from '../../../../core/services/translate.service';
 import { Project } from '../../../../core/models';
 
 @Component({
   selector: 'app-featured-projects',
   standalone: true,
-  imports: [RouterLink, SectionHeaderComponent, GlassmorphismCardComponent, TechPillComponent, ScrollAnimateDirective],
+  imports: [RouterLink, SectionHeaderComponent, GlassmorphismCardComponent, TechPillComponent, ScrollAnimateDirective, TiltDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section id="featured-projects" class="py-24 px-6">
@@ -19,7 +20,7 @@ import { Project } from '../../../../core/models';
 
         <div class="grid gap-6 md:grid-cols-2">
           @for (project of projects(); track project.id; let i = $index) {
-            <a [routerLink]="['/projects', project.slug]" class="group" appScrollAnimate [delay]="i * 100">
+            <a [routerLink]="['/projects', project.slug]" class="group" appScrollAnimate [delay]="i * 100" appTilt>
               <app-glass-card>
                 @if (project.image_url) {
                   <div class="mb-4 overflow-hidden rounded-lg">
