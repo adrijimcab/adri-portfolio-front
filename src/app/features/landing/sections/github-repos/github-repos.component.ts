@@ -4,6 +4,7 @@ import { GlassmorphismCardComponent } from '../../../../shared/components/glassm
 import { ScrollAnimateDirective } from '../../../../shared/directives/scroll-animate.directive';
 import { TiltDirective } from '../../../../shared/directives/tilt.directive';
 import { SkeletonLoaderComponent } from '../../../../shared/components/skeleton-loader/skeleton-loader.component';
+import { GithubCalendarComponent } from '../../../../shared/components/github-calendar/github-calendar.component';
 import { TranslateService } from '../../../../core/services/translate.service';
 import { GitHubRepo } from '../../../../core/models';
 import { getLanguageColor } from '../../../../shared/helpers/language-colors';
@@ -11,12 +12,14 @@ import { getLanguageColor } from '../../../../shared/helpers/language-colors';
 @Component({
   selector: 'app-github-repos-section',
   standalone: true,
-  imports: [SectionHeaderComponent, GlassmorphismCardComponent, ScrollAnimateDirective, TiltDirective, SkeletonLoaderComponent],
+  imports: [SectionHeaderComponent, GlassmorphismCardComponent, ScrollAnimateDirective, TiltDirective, SkeletonLoaderComponent, GithubCalendarComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section id="github-repos" class="py-24 px-6">
       <div class="mx-auto max-w-6xl">
         <app-section-header [title]="t.t('github.title')" [label]="t.t('github.label')" />
+
+        <app-github-calendar />
 
         @if (!repos()) {
           <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

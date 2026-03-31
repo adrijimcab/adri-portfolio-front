@@ -56,7 +56,16 @@
     "label": "Open Source",
     "view_all": "View all on GitHub →",
     "stars": "stars",
-    "forks": "forks"
+    "forks": "forks",
+    "cal_mon": "Mon",
+    "cal_wed": "Wed",
+    "cal_fri": "Fri",
+    "cal_contribution": "contribution",
+    "cal_contributions": "contributions",
+    "cal_on": "on",
+    "cal_total": "contributions in the last year",
+    "cal_less": "Less",
+    "cal_more": "More"
   },
   "contact": {
     "title": "Get In Touch",

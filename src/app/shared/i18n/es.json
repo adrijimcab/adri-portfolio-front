@@ -56,7 +56,16 @@
     "label": "Código Abierto",
     "view_all": "Ver todo en GitHub →",
     "stars": "estrellas",
-    "forks": "forks"
+    "forks": "forks",
+    "cal_mon": "Lun",
+    "cal_wed": "Mié",
+    "cal_fri": "Vie",
+    "cal_contribution": "contribución",
+    "cal_contributions": "contribuciones",
+    "cal_on": "el",
+    "cal_total": "contribuciones en el último año",
+    "cal_less": "Menos",
+    "cal_more": "Más"
   },
   "contact": {
     "title": "Contacto",
