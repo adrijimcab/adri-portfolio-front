@@ -4,6 +4,7 @@ import { ApiService } from './api.service';
 import {
   Profile, Experience, Project, TechnologyGroup,
   SiteConfig, SectionConfig, SocialLink, Education, Course,
+  Certification, GitHubRepo,
 } from '../models';
 
 @Injectable({ providedIn: 'root' })
@@ -18,6 +19,8 @@ export class PortfolioService {
   readonly siteConfig = toSignal(this.api.get<SiteConfig>('config/site'));
   readonly sections = toSignal(this.api.get<SectionConfig[]>('config/sections'));
   readonly socialLinks = toSignal(this.api.get<SocialLink[]>('config/social'));
+  readonly certifications = toSignal(this.api.get<Certification[]>('certifications'));
+  readonly githubRepos = toSignal(this.api.get<GitHubRepo[]>('github/repos'));
 
   getAllProjects() {
     return this.api.get<Project[]>('projects');
@@ -29,5 +32,9 @@ export class PortfolioService {
 
   getCvUrl() {
     return this.api.get<{ url: string }>('cv/url');
+  }
+
+  getCertificationById(id: string) {
+    return this.api.get<Certification>(`certifications/${id}`);
   }
 }

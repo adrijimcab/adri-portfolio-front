@@ -1,9 +1,10 @@
-import { Component, ChangeDetectionStrategy, input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { SectionHeaderComponent } from '../../../../shared/components/section-header/section-header.component';
 import { GlassmorphismCardComponent } from '../../../../shared/components/glassmorphism-card/glassmorphism-card.component';
 import { TechPillComponent } from '../../../../shared/components/tech-pill/tech-pill.component';
 import { ScrollAnimateDirective } from '../../../../shared/directives/scroll-animate.directive';
+import { TranslateService } from '../../../../core/services/translate.service';
 import { Project } from '../../../../core/models';
 
 @Component({
@@ -14,7 +15,7 @@ import { Project } from '../../../../core/models';
   template: `
     <section id="featured-projects" class="py-24 px-6">
       <div class="mx-auto max-w-6xl">
-        <app-section-header title="Featured Projects" label="Selected Work" />
+        <app-section-header [title]="t.t('projects.title')" [label]="t.t('projects.label')" />
 
         <div class="grid gap-6 md:grid-cols-2">
           @for (project of projects(); track project.id; let i = $index) {
@@ -48,7 +49,7 @@ import { Project } from '../../../../core/models';
         <div class="mt-8 text-center" appScrollAnimate>
           <a routerLink="/projects"
              class="inline-flex items-center gap-2 rounded-lg border border-white/10 px-6 py-3 text-sm text-white/60 transition-all hover:border-white/20 hover:text-white">
-            View All Projects
+            {{ t.t('projects.view_all') }}
           </a>
         </div>
       </div>
@@ -56,5 +57,6 @@ import { Project } from '../../../../core/models';
   `,
 })
 export class FeaturedProjectsComponent {
+  readonly t = inject(TranslateService);
   projects = input<Project[]>([]);
 }

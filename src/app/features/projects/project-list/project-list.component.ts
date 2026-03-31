@@ -5,6 +5,7 @@ import { GlassmorphismCardComponent } from '../../../shared/components/glassmorp
 import { TechPillComponent } from '../../../shared/components/tech-pill/tech-pill.component';
 import { SectionHeaderComponent } from '../../../shared/components/section-header/section-header.component';
 import { ScrollAnimateDirective } from '../../../shared/directives/scroll-animate.directive';
+import { TranslateService } from '../../../core/services/translate.service';
 import { Project } from '../../../core/models';
 
 @Component({
@@ -15,7 +16,7 @@ import { Project } from '../../../core/models';
   template: `
     <div class="min-h-screen pt-24 px-6">
       <div class="mx-auto max-w-6xl">
-        <app-section-header title="All Projects" label="Portfolio" />
+        <app-section-header [title]="t.t('projects.all_title')" [label]="t.t('projects.all_label')" />
 
         <div class="mb-8" appScrollAnimate>
           <input
@@ -56,6 +57,7 @@ import { Project } from '../../../core/models';
   `,
 })
 export class ProjectListComponent implements OnInit {
+  readonly t = inject(TranslateService);
   private readonly portfolio = inject(PortfolioService);
   readonly projects = signal<Project[]>([]);
   readonly searchQuery = signal('');

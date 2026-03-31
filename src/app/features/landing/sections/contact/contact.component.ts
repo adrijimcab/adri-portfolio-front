@@ -1,22 +1,24 @@
-import { Component, ChangeDetectionStrategy, input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input, inject } from '@angular/core';
 import { SectionHeaderComponent } from '../../../../shared/components/section-header/section-header.component';
 import { GlassmorphismCardComponent } from '../../../../shared/components/glassmorphism-card/glassmorphism-card.component';
+import { LinkedinWidgetComponent } from '../../../../shared/components/linkedin-widget/linkedin-widget.component';
 import { ScrollAnimateDirective } from '../../../../shared/directives/scroll-animate.directive';
+import { TranslateService } from '../../../../core/services/translate.service';
 import { Profile, SocialLink } from '../../../../core/models';
 
 @Component({
   selector: 'app-contact',
   standalone: true,
-  imports: [SectionHeaderComponent, GlassmorphismCardComponent, ScrollAnimateDirective],
+  imports: [SectionHeaderComponent, GlassmorphismCardComponent, LinkedinWidgetComponent, ScrollAnimateDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section id="contact" class="py-24 px-6">
       <div class="mx-auto max-w-2xl text-center">
-        <app-section-header title="Get In Touch" label="Contact" />
+        <app-section-header [title]="t.t('contact.title')" [label]="t.t('contact.label')" />
 
         <div appScrollAnimate>
           <app-glass-card>
-            <p class="mb-6 text-white/60">Interested in working together? Let's connect.</p>
+            <p class="mb-6 text-white/60">{{ t.t('contact.subtitle') }}</p>
 
             @if (profile()?.email) {
               <a [href]="'mailto:' + profile()?.email"
@@ -38,11 +40,19 @@ import { Profile, SocialLink } from '../../../../core/models';
             }
           </app-glass-card>
         </div>
+
+        <!-- LinkedIn Widget -->
+        <div class="mt-8" appScrollAnimate [delay]="200">
+          <app-linkedin-widget
+            [name]="profile()?.full_name || 'Adrián Jiménez Cabello'"
+            [title]="profile()?.title || 'Senior Frontend Engineer'" />
+        </div>
       </div>
     </section>
   `,
 })
 export class ContactComponent {
+  readonly t = inject(TranslateService);
   profile = input<Profile | undefined>();
   socialLinks = input<SocialLink[]>([]);
 }

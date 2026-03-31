@@ -1,8 +1,9 @@
-import { Component, ChangeDetectionStrategy, input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input, inject } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { SectionHeaderComponent } from '../../../../shared/components/section-header/section-header.component';
 import { GlassmorphismCardComponent } from '../../../../shared/components/glassmorphism-card/glassmorphism-card.component';
 import { ScrollAnimateDirective } from '../../../../shared/directives/scroll-animate.directive';
+import { TranslateService } from '../../../../core/services/translate.service';
 import { Education, Course } from '../../../../core/models';
 
 @Component({
@@ -13,7 +14,7 @@ import { Education, Course } from '../../../../core/models';
   template: `
     <section id="education" class="py-24 px-6">
       <div class="mx-auto max-w-4xl">
-        <app-section-header title="Education & Courses" label="Learning Path" />
+        <app-section-header [title]="t.t('education.title')" [label]="t.t('education.label')" />
 
         <!-- Education -->
         <div class="mb-12 space-y-4">
@@ -39,7 +40,7 @@ import { Education, Course } from '../../../../core/models';
 
         <!-- Courses -->
         @if (courses().length) {
-          <h3 class="mb-4 text-sm font-semibold uppercase tracking-wider text-white/40">Certifications & Courses</h3>
+          <h3 class="mb-4 text-sm font-semibold uppercase tracking-wider text-white/40">{{ t.t('education.certifications_label') }}</h3>
           <div class="grid gap-3 sm:grid-cols-2">
             @for (course of courses(); track course.id; let i = $index) {
               <div appScrollAnimate [delay]="i * 60">
@@ -63,6 +64,7 @@ import { Education, Course } from '../../../../core/models';
   `,
 })
 export class EducationSectionComponent {
+  readonly t = inject(TranslateService);
   education = input<Education[]>([]);
   courses = input<Course[]>([]);
 }

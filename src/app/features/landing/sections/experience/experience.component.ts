@@ -1,8 +1,9 @@
-import { Component, ChangeDetectionStrategy, input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input, inject } from '@angular/core';
 import { SectionHeaderComponent } from '../../../../shared/components/section-header/section-header.component';
 import { GlassmorphismCardComponent } from '../../../../shared/components/glassmorphism-card/glassmorphism-card.component';
 import { TechPillComponent } from '../../../../shared/components/tech-pill/tech-pill.component';
 import { ScrollAnimateDirective } from '../../../../shared/directives/scroll-animate.directive';
+import { TranslateService } from '../../../../core/services/translate.service';
 import { Experience } from '../../../../core/models';
 import { DatePipe } from '@angular/common';
 
@@ -14,7 +15,7 @@ import { DatePipe } from '@angular/common';
   template: `
     <section id="experience" class="py-24 px-6">
       <div class="mx-auto max-w-4xl">
-        <app-section-header title="Experience" label="Career Path" />
+        <app-section-header [title]="t.t('experience.title')" [label]="t.t('experience.label')" />
 
         <div class="relative">
           <!-- Timeline line -->
@@ -36,7 +37,7 @@ import { DatePipe } from '@angular/common';
                     </p>
                   </div>
                   <span class="shrink-0 text-xs text-white/40">
-                    {{ exp.start_date | date:'MMM yyyy' }} — {{ exp.end_date ? (exp.end_date | date:'MMM yyyy') : 'Present' }}
+                    {{ exp.start_date | date:'MMM yyyy' }} — {{ exp.end_date ? (exp.end_date | date:'MMM yyyy') : t.t('experience.present') }}
                   </span>
                 </div>
 
@@ -68,5 +69,6 @@ import { DatePipe } from '@angular/common';
   `,
 })
 export class ExperienceComponent {
+  readonly t = inject(TranslateService);
   experiences = input<Experience[]>([]);
 }

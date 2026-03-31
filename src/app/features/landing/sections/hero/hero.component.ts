@@ -1,5 +1,6 @@
-import { Component, ChangeDetectionStrategy, input, computed } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input, computed, inject } from '@angular/core';
 import { ScrollAnimateDirective } from '../../../../shared/directives/scroll-animate.directive';
+import { TranslateService } from '../../../../core/services/translate.service';
 import { Profile, SiteConfig } from '../../../../core/models';
 
 @Component({
@@ -42,6 +43,7 @@ import { Profile, SiteConfig } from '../../../../core/models';
   `,
 })
 export class HeroComponent {
+  readonly t = inject(TranslateService);
   profile = input<Profile | undefined>();
   config = input<SiteConfig | undefined>();
 
@@ -51,9 +53,9 @@ export class HeroComponent {
   stats = computed(() => {
     const c = this.config();
     return [
-      { value: (c?.['stats_years'] || '9') + '+', label: 'Years' },
-      { value: c?.['stats_companies'] || '4', label: 'Companies' },
-      { value: (c?.['stats_technologies'] || '30') + '+', label: 'Technologies' },
+      { value: (c?.['stats_years'] || '9') + '+', label: this.t.t('hero.years') },
+      { value: c?.['stats_companies'] || '4', label: this.t.t('hero.companies') },
+      { value: (c?.['stats_technologies'] || '30') + '+', label: this.t.t('hero.technologies') },
     ];
   });
 }

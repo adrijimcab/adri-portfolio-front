@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy, inject, signal, OnInit } from '@ang
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { PortfolioService } from '../../../core/services/portfolio.service';
 import { SeoService } from '../../../core/services/seo.service';
+import { TranslateService } from '../../../core/services/translate.service';
 import { GlassmorphismCardComponent } from '../../../shared/components/glassmorphism-card/glassmorphism-card.component';
 import { TechPillComponent } from '../../../shared/components/tech-pill/tech-pill.component';
 import { ScrollAnimateDirective } from '../../../shared/directives/scroll-animate.directive';
@@ -16,7 +17,7 @@ import { Project } from '../../../core/models';
     <div class="min-h-screen pt-24 px-6">
       <div class="mx-auto max-w-4xl">
         <a routerLink="/projects" class="mb-8 inline-flex items-center gap-2 text-sm text-white/40 hover:text-white transition-colors">
-          Back to Projects
+          {{ t.t('projects.back') }}
         </a>
 
         @if (project(); as p) {
@@ -50,13 +51,13 @@ import { Project } from '../../../core/models';
                 <a [href]="p.demo_url" target="_blank" rel="noopener"
                    class="rounded-lg px-6 py-3 text-sm font-medium text-white transition-all hover:scale-105"
                    style="background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));">
-                  Live Demo
+                  {{ t.t('projects.demo') }}
                 </a>
               }
               @if (p.repo_url) {
                 <a [href]="p.repo_url" target="_blank" rel="noopener"
                    class="rounded-lg border border-white/10 px-6 py-3 text-sm text-white/60 transition-all hover:border-white/20 hover:text-white">
-                  Source Code
+                  {{ t.t('projects.code') }}
                 </a>
               }
             </div>
@@ -67,6 +68,7 @@ import { Project } from '../../../core/models';
   `,
 })
 export class ProjectDetailComponent implements OnInit {
+  readonly t = inject(TranslateService);
   private readonly route = inject(ActivatedRoute);
   private readonly portfolio = inject(PortfolioService);
   private readonly seo = inject(SeoService);

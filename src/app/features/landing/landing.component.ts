@@ -7,6 +7,8 @@ import { ExperienceComponent } from './sections/experience/experience.component'
 import { TechStackComponent } from './sections/tech-stack/tech-stack.component';
 import { FeaturedProjectsComponent } from './sections/featured-projects/featured-projects.component';
 import { EducationSectionComponent } from './sections/education/education.component';
+import { CertificationsSectionComponent } from './sections/certifications/certifications.component';
+import { GitHubReposSectionComponent } from './sections/github-repos/github-repos.component';
 import { ContactComponent } from './sections/contact/contact.component';
 
 @Component({
@@ -15,7 +17,8 @@ import { ContactComponent } from './sections/contact/contact.component';
   imports: [
     HeroComponent, AboutComponent, ExperienceComponent,
     TechStackComponent, FeaturedProjectsComponent,
-    EducationSectionComponent, ContactComponent,
+    EducationSectionComponent, CertificationsSectionComponent,
+    GitHubReposSectionComponent, ContactComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -27,6 +30,8 @@ import { ContactComponent } from './sections/contact/contact.component';
     <app-education-section
       [education]="portfolio.education()?.education || []"
       [courses]="portfolio.education()?.courses || []" />
+    <app-certifications-section [certifications]="portfolio.certifications()" />
+    <app-github-repos-section [repos]="portfolio.githubRepos()" />
     <app-contact [profile]="portfolio.profile()" [socialLinks]="portfolio.socialLinks() || []" />
   `,
 })

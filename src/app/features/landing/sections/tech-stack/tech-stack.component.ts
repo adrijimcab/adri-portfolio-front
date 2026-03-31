@@ -1,7 +1,8 @@
-import { Component, ChangeDetectionStrategy, input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input, inject } from '@angular/core';
 import { SectionHeaderComponent } from '../../../../shared/components/section-header/section-header.component';
 import { GlassmorphismCardComponent } from '../../../../shared/components/glassmorphism-card/glassmorphism-card.component';
 import { ScrollAnimateDirective } from '../../../../shared/directives/scroll-animate.directive';
+import { TranslateService } from '../../../../core/services/translate.service';
 import { TechnologyGroup } from '../../../../core/models';
 
 @Component({
@@ -12,7 +13,7 @@ import { TechnologyGroup } from '../../../../core/models';
   template: `
     <section id="tech-stack" class="py-24 px-6">
       <div class="mx-auto max-w-6xl">
-        <app-section-header title="Tech Stack" label="Tools & Technologies" />
+        <app-section-header [title]="t.t('tech_stack.title')" [label]="t.t('tech_stack.label')" />
 
         <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           @for (group of groups(); track group.category; let i = $index) {
@@ -56,6 +57,7 @@ import { TechnologyGroup } from '../../../../core/models';
   `,
 })
 export class TechStackComponent {
+  readonly t = inject(TranslateService);
   groups = input<TechnologyGroup[]>([]);
 
   onImgError(event: Event) {

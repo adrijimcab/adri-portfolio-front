@@ -21,5 +21,14 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/cv-viewer/cv-viewer.component').then((m) => m.CvViewerComponent),
   },
-  { path: '**', redirectTo: '' },
+  {
+    path: 'certifications/:id',
+    loadComponent: () =>
+      import('./features/certifications/certification-detail/certification-detail.component').then((m) => m.CertificationDetailComponent),
+  },
+  {
+    path: '**',
+    loadComponent: () =>
+      import('./features/not-found/not-found.component').then((m) => m.NotFoundComponent),
+  },
 ];

@@ -94,3 +94,30 @@ export interface SocialLink {
   icon_slug: string;
   sort_order: number;
 }
+
+export interface Certification {
+  id: string;
+  name: string;
+  provider: string;
+  date: string | null;
+  certificate_url: string | null;
+  credential_id: string | null;
+  is_verified: boolean;
+  description: string | null;
+  sort_order: number;
+}
+
+export interface GitHubRepo {
+  id: string;
+  github_id: number;
+  name: string;
+  full_name: string;
+  description: string | null;
+  html_url: string;
+  homepage: string | null;
+  language: string | null;
+  stargazers_count: number;
+  forks_count: number;
+  topics: string[];
+  is_pinned: boolean;
+}

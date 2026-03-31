@@ -1,0 +1,80 @@
+{
+  "nav": {
+    "about": "About",
+    "experience": "Experience",
+    "stack": "Stack",
+    "projects": "Projects",
+    "cv": "CV",
+    "contact": "Contact",
+    "login": "Login"
+  },
+  "hero": {
+    "scroll_down": "Scroll down",
+    "years": "Years",
+    "companies": "Companies",
+    "technologies": "Technologies"
+  },
+  "about": {
+    "title": "About Me",
+    "label": "Who I Am"
+  },
+  "experience": {
+    "title": "Experience",
+    "label": "Career Path",
+    "present": "Present"
+  },
+  "tech_stack": {
+    "title": "Tech Stack",
+    "label": "Tools & Technologies"
+  },
+  "projects": {
+    "title": "Featured Projects",
+    "label": "Selected Work",
+    "view_all": "View All Projects",
+    "all_title": "All Projects",
+    "all_label": "Full Portfolio",
+    "demo": "Demo",
+    "code": "Code",
+    "back": "Back"
+  },
+  "education": {
+    "title": "Education & Courses",
+    "label": "Learning Path",
+    "certifications_label": "Certifications & Courses"
+  },
+  "certifications": {
+    "title": "Certifications",
+    "label": "Verified Credentials",
+    "view_certificate": "View Certificate",
+    "verified": "Verified",
+    "back": "Back",
+    "open_new_tab": "Open in new tab",
+    "credential_id": "Credential ID"
+  },
+  "github": {
+    "title": "GitHub Repositories",
+    "label": "Open Source",
+    "view_all": "View all on GitHub →",
+    "stars": "stars",
+    "forks": "forks"
+  },
+  "contact": {
+    "title": "Get In Touch",
+    "label": "Contact",
+    "subtitle": "Interested in working together? Let's connect.",
+    "connect_linkedin": "Connect on LinkedIn"
+  },
+  "footer": {
+    "built_with": "Built with Angular, NestJS & Supabase."
+  },
+  "common": {
+    "loading": "Loading...",
+    "error_title": "Something went wrong",
+    "error_message": "Failed to load data. Please try again.",
+    "retry": "Retry",
+    "not_found_title": "404",
+    "not_found_message": "The page you're looking for doesn't exist.",
+    "not_found_back": "Back to home",
+    "download": "Download"
+  }
+}

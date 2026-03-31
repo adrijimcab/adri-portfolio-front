@@ -1,0 +1,80 @@
+{
+  "nav": {
+    "about": "Sobre mí",
+    "experience": "Experiencia",
+    "stack": "Stack",
+    "projects": "Proyectos",
+    "cv": "CV",
+    "contact": "Contacto",
+    "login": "Login"
+  },
+  "hero": {
+    "scroll_down": "Desplazar hacia abajo",
+    "years": "Años",
+    "companies": "Empresas",
+    "technologies": "Tecnologías"
+  },
+  "about": {
+    "title": "Sobre Mí",
+    "label": "Quién Soy"
+  },
+  "experience": {
+    "title": "Experiencia",
+    "label": "Trayectoria Profesional",
+    "present": "Actual"
+  },
+  "tech_stack": {
+    "title": "Tech Stack",
+    "label": "Herramientas & Tecnologías"
+  },
+  "projects": {
+    "title": "Proyectos Destacados",
+    "label": "Trabajo Seleccionado",
+    "view_all": "Ver Todos los Proyectos",
+    "all_title": "Todos los Proyectos",
+    "all_label": "Portfolio Completo",
+    "demo": "Demo",
+    "code": "Código",
+    "back": "Volver"
+  },
+  "education": {
+    "title": "Educación & Cursos",
+    "label": "Formación",
+    "certifications_label": "Certificaciones & Cursos"
+  },
+  "certifications": {
+    "title": "Certificaciones",
+    "label": "Credenciales Verificadas",
+    "view_certificate": "Ver Certificado",
+    "verified": "Verificado",
+    "back": "Volver",
+    "open_new_tab": "Abrir en nueva pestaña",
+    "credential_id": "ID Credencial"
+  },
+  "github": {
+    "title": "Repositorios GitHub",
+    "label": "Código Abierto",
+    "view_all": "Ver todo en GitHub →",
+    "stars": "estrellas",
+    "forks": "forks"
+  },
+  "contact": {
+    "title": "Contacto",
+    "label": "Conectemos",
+    "subtitle": "¿Interesado en trabajar juntos? Conectemos.",
+    "connect_linkedin": "Conectar en LinkedIn"
+  },
+  "footer": {
+    "built_with": "Construido con Angular, NestJS & Supabase."
+  },
+  "common": {
+    "loading": "Cargando...",
+    "error_title": "Algo salió mal",
+    "error_message": "No se pudieron cargar los datos. Por favor, inténtalo de nuevo.",
+    "retry": "Reintentar",
+    "not_found_title": "404",
+    "not_found_message": "La página que buscas no existe.",
+    "not_found_back": "Volver al inicio",
+    "download": "Descargar"
+  }
+}
