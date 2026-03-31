@@ -99,13 +99,13 @@ export class AdminService {
   // Site Config
   getSiteConfig(): Observable<SiteConfig> { return this.get<SiteConfig>('config/site'); }
   updateSiteConfig(data: Record<string, string>): Observable<SiteConfig> {
-    return this.http.put<ApiRes<SiteConfig>>(`${this.base}/admin/config/site`, data).pipe(map((r) => r.data));
+    return this.http.put<ApiRes<SiteConfig>>(`${this.base}/admin/config/site`, { config: data }).pipe(map((r) => r.data));
   }
 
   // Sections Config
   getSections(): Observable<SectionConfig[]> { return this.get<SectionConfig[]>('config/sections'); }
   updateSections(data: SectionConfig[]): Observable<SectionConfig[]> {
-    return this.http.put<ApiRes<SectionConfig[]>>(`${this.base}/admin/config/sections`, data).pipe(map((r) => r.data));
+    return this.http.put<ApiRes<SectionConfig[]>>(`${this.base}/admin/config/sections`, { sections: data }).pipe(map((r) => r.data));
   }
 
   // GitHub
