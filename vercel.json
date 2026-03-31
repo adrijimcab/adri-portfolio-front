@@ -1,8 +1,5 @@
 {
   "buildCommand": "npm run build",
-  "outputDirectory": "dist/adri-portfolio-front/browser",
-  "framework": null,
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
-  ]
+  "outputDirectory": "dist/adri-portfolio-front",
+  "framework": "angular"
 }

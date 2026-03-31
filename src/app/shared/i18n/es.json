@@ -12,7 +12,11 @@
     "scroll_down": "Desplazar hacia abajo",
     "years": "Años",
     "companies": "Empresas",
-    "technologies": "Tecnologías"
+    "technologies": "Tecnologías",
+    "role1": "Arquitecto Frontend",
+    "role2": "Technical Lead",
+    "role3": "Senior Developer",
+    "role4": "DDD Enthusiast"
   },
   "about": {
     "title": "Sobre Mí",
@@ -70,8 +74,16 @@
   "contact": {
     "title": "Contacto",
     "label": "Conectemos",
-    "subtitle": "¿Interesado en trabajar juntos? Conectemos.",
-    "connect_linkedin": "Conectar en LinkedIn"
+    "subtitle": "¿Interesado en trabajar juntos? Envíame un mensaje.",
+    "connect_linkedin": "Conectar en LinkedIn",
+    "name": "Tu nombre",
+    "email": "Tu email",
+    "message": "Tu mensaje",
+    "send": "Enviar Mensaje",
+    "sending": "Enviando...",
+    "sent_title": "¡Mensaje Enviado!",
+    "sent_message": "Gracias por contactarme. Te responderé lo antes posible.",
+    "error": "Error al enviar el mensaje. Inténtalo de nuevo."
   },
   "footer": {
     "built_with": "Construido con Angular, NestJS & Supabase."

@@ -21,7 +21,7 @@ import { Profile, SiteConfig } from '../../../../core/models';
       <app-particles-background />
       <div class="relative z-10 text-center" appScrollAnimate>
         <p class="mb-4 text-xs tracking-[4px] uppercase" style="color: var(--color-secondary);">
-          <app-typing-text [texts]="typingTexts" />
+          <app-typing-text [texts]="typingTexts()" />
         </p>
         <h1 class="text-5xl font-bold text-white md:text-7xl lg:text-8xl">
           {{ firstName() }}
@@ -58,12 +58,12 @@ export class HeroComponent {
   profile = input<Profile | undefined>();
   config = input<SiteConfig | undefined>();
 
-  readonly typingTexts = [
-    'Frontend Architect',
-    'Technical Lead',
-    'Senior Developer',
-    'DDD Enthusiast',
-  ];
+  readonly typingTexts = computed(() => [
+    this.t.t('hero.role1'),
+    this.t.t('hero.role2'),
+    this.t.t('hero.role3'),
+    this.t.t('hero.role4'),
+  ]);
 
   firstName = computed(() => this.profile()?.full_name?.split(' ').slice(0, -2).join(' ') || '');
   lastName = computed(() => this.profile()?.full_name?.split(' ').slice(-2).join(' ') || '');

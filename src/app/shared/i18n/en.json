@@ -12,7 +12,11 @@
     "scroll_down": "Scroll down",
     "years": "Years",
     "companies": "Companies",
-    "technologies": "Technologies"
+    "technologies": "Technologies",
+    "role1": "Frontend Architect",
+    "role2": "Technical Lead",
+    "role3": "Senior Developer",
+    "role4": "DDD Enthusiast"
   },
   "about": {
     "title": "About Me",
@@ -70,8 +74,16 @@
   "contact": {
     "title": "Get In Touch",
     "label": "Contact",
-    "subtitle": "Interested in working together? Let's connect.",
-    "connect_linkedin": "Connect on LinkedIn"
+    "subtitle": "Interested in working together? Send me a message.",
+    "connect_linkedin": "Connect on LinkedIn",
+    "name": "Your name",
+    "email": "Your email",
+    "message": "Your message",
+    "send": "Send Message",
+    "sending": "Sending...",
+    "sent_title": "Message Sent!",
+    "sent_message": "Thanks for reaching out. I'll get back to you soon.",
+    "error": "Failed to send message. Please try again."
   },
   "footer": {
     "built_with": "Built with Angular, NestJS & Supabase."

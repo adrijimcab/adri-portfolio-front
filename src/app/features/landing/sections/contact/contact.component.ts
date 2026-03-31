@@ -1,4 +1,6 @@
-import { Component, ChangeDetectionStrategy, input, inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input, inject, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 import { SectionHeaderComponent } from '../../../../shared/components/section-header/section-header.component';
 import { GlassmorphismCardComponent } from '../../../../shared/components/glassmorphism-card/glassmorphism-card.component';
 import { LinkedinWidgetComponent } from '../../../../shared/components/linkedin-widget/linkedin-widget.component';
@@ -9,7 +11,7 @@ import { Profile, SocialLink } from '../../../../core/models';
 @Component({
   selector: 'app-contact',
   standalone: true,
-  imports: [SectionHeaderComponent, GlassmorphismCardComponent, LinkedinWidgetComponent, ScrollAnimateDirective],
+  imports: [FormsModule, SectionHeaderComponent, GlassmorphismCardComponent, LinkedinWidgetComponent, ScrollAnimateDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section id="contact" class="py-24 px-6">
@@ -18,14 +20,47 @@ import { Profile, SocialLink } from '../../../../core/models';
 
         <div appScrollAnimate>
           <app-glass-card>
-            <p class="mb-6 text-white/60">{{ t.t('contact.subtitle') }}</p>
+            @if (!formSent()) {
+              <p class="mb-6 text-white/60">{{ t.t('contact.subtitle') }}</p>
 
-            @if (profile()?.email) {
-              <a [href]="'mailto:' + profile()?.email"
-                 class="inline-flex items-center gap-2 rounded-xl px-8 py-4 text-white font-medium transition-all hover:scale-105"
-                 style="background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));">
-                {{ profile()?.email }}
-              </a>
+              <form (ngSubmit)="sendMessage()" class="space-y-4 text-left">
+                <div>
+                  <input type="text" [(ngModel)]="formName" name="name" [placeholder]="t.t('contact.name')" required
+                    class="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder-white/30 outline-none transition-colors focus:border-white/20 focus:bg-white/[0.08]" />
+                </div>
+                <div>
+                  <input type="email" [(ngModel)]="formEmail" name="email" [placeholder]="t.t('contact.email')" required
+                    class="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder-white/30 outline-none transition-colors focus:border-white/20 focus:bg-white/[0.08]" />
+                </div>
+                <div>
+                  <textarea [(ngModel)]="formMessage" name="message" [placeholder]="t.t('contact.message')" required rows="4"
+                    class="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder-white/30 outline-none transition-colors focus:border-white/20 focus:bg-white/[0.08] resize-none"></textarea>
+                </div>
+                <button type="submit" [disabled]="sending()"
+                  class="w-full rounded-xl px-8 py-4 text-white font-medium transition-all hover:scale-[1.02] disabled:opacity-50"
+                  style="background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));">
+                  @if (sending()) {
+                    {{ t.t('contact.sending') }}
+                  } @else {
+                    {{ t.t('contact.send') }}
+                  }
+                </button>
+              </form>
+
+              @if (formError()) {
+                <p class="mt-4 text-sm text-red-400">{{ formError() }}</p>
+              }
+            } @else {
+              <div class="py-8">
+                <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full"
+                     style="background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));">
+                  <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                  </svg>
+                </div>
+                <h3 class="text-xl font-bold text-white">{{ t.t('contact.sent_title') }}</h3>
+                <p class="mt-2 text-white/60">{{ t.t('contact.sent_message') }}</p>
+              </div>
             }
 
             @if (socialLinks().length) {
@@ -41,18 +76,50 @@ import { Profile, SocialLink } from '../../../../core/models';
           </app-glass-card>
         </div>
 
-        <!-- LinkedIn Widget -->
         <div class="mt-8" appScrollAnimate [delay]="200">
           <app-linkedin-widget
             [name]="profile()?.full_name || 'Adrián Jiménez Cabello'"
-            [title]="profile()?.title || 'Senior Frontend Engineer'" />
+            [title]="profile()?.title || 'Frontend Architect'" />
         </div>
       </div>
     </section>
   `,
 })
 export class ContactComponent {
+  private readonly http = inject(HttpClient);
   readonly t = inject(TranslateService);
   profile = input<Profile | undefined>();
   socialLinks = input<SocialLink[]>([]);
+
+  formName = '';
+  formEmail = '';
+  formMessage = '';
+  readonly sending = signal(false);
+  readonly formSent = signal(false);
+  readonly formError = signal('');
+
+  sendMessage() {
+    if (!this.formName || !this.formEmail || !this.formMessage) return;
+
+    this.sending.set(true);
+    this.formError.set('');
+
+    this.http.post('https://api.web3forms.com/submit', {
+      access_key: '4e6f1a2b-placeholder-replace-with-real-key',
+      name: this.formName,
+      email: this.formEmail,
+      message: this.formMessage,
+      from_name: 'Portfolio Contact Form',
+      subject: `Portfolio: Message from ${this.formName}`,
+    }).subscribe({
+      next: () => {
+        this.sending.set(false);
+        this.formSent.set(true);
+      },
+      error: () => {
+        this.sending.set(false);
+        this.formError.set(this.t.t('contact.error'));
+      },
+    });
+  }
 }

@@ -83,5 +83,17 @@ export class LandingComponent {
         });
       }
     });
+
+    effect(() => {
+      const profile = this.portfolio.profile();
+      if (profile) {
+        this.seo.setPersonSchema({
+          full_name: profile.full_name,
+          title: profile.title,
+          email: profile.email,
+          location: profile.location,
+        });
+      }
+    });
   }
 }
