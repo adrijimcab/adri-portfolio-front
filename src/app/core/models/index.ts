@@ -93,6 +93,7 @@ export interface SocialLink {
   url: string;
   icon_slug: string;
   sort_order: number;
+  is_visible: boolean;
 }
 
 export interface Certification {

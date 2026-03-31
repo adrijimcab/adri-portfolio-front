@@ -10,7 +10,7 @@ const cache = new Map<string, CacheEntry>();
 const TTL_MS = 5 * 60 * 1000; // 5 minutes
 
 export const cacheInterceptor: HttpInterceptorFn = (req, next) => {
-  if (req.method !== 'GET') {
+  if (req.method !== 'GET' || req.url.includes('/admin/') || req.url.includes('/auth/')) {
     return next(req);
   }
 
