@@ -105,7 +105,7 @@ export class ContactComponent {
     this.formError.set('');
 
     this.http.post('https://api.web3forms.com/submit', {
-      access_key: '4e6f1a2b-placeholder-replace-with-real-key',
+      access_key: '710f3bff-efbf-47c0-b4c5-967f01e9889a',
       name: this.formName,
       email: this.formEmail,
       message: this.formMessage,

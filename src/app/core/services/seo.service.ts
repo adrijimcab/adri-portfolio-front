@@ -51,7 +51,7 @@ export class SeoService {
       jobTitle: profile.title,
       email: profile.email ?? undefined,
       address: profile.location ? { '@type': 'PostalAddress', addressLocality: profile.location } : undefined,
-      url: profile.url ?? 'https://adri-portfolio-front.vercel.app',
+      url: profile.url ?? 'https://adrianjimenez.dev',
       sameAs: [
         'https://www.linkedin.com/in/adrianjimenezcabello',
         'https://github.com/adrijimcab',
