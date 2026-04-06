@@ -1,5 +1,17 @@
 {
   "version": 2,
   "buildCommand": "npm run build",
-  "framework": "angular"
+  "outputDirectory": "dist/adri-portfolio-front/browser",
+  "framework": null,
+  "functions": {
+    "api/ssr.mjs": {
+      "includeFiles": "dist/adri-portfolio-front/server/**"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/api/ssr"
+    }
+  ]
 }
