@@ -5,13 +5,14 @@ import { SectionHeaderComponent } from '../../../../shared/components/section-he
 import { GlassmorphismCardComponent } from '../../../../shared/components/glassmorphism-card/glassmorphism-card.component';
 import { LinkedinWidgetComponent } from '../../../../shared/components/linkedin-widget/linkedin-widget.component';
 import { ScrollAnimateDirective } from '../../../../shared/directives/scroll-animate.directive';
+import { MagneticDirective } from '../../../../shared/directives/magnetic.directive';
 import { TranslateService } from '../../../../core/services/translate.service';
 import { Profile, SocialLink } from '../../../../core/models';
 
 @Component({
   selector: 'app-contact',
   standalone: true,
-  imports: [FormsModule, SectionHeaderComponent, GlassmorphismCardComponent, LinkedinWidgetComponent, ScrollAnimateDirective],
+  imports: [FormsModule, SectionHeaderComponent, GlassmorphismCardComponent, LinkedinWidgetComponent, ScrollAnimateDirective, MagneticDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section id="contact" class="py-24 px-6">
@@ -37,6 +38,7 @@ import { Profile, SocialLink } from '../../../../core/models';
                     class="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder-white/30 outline-none transition-colors focus:border-white/20 focus:bg-white/[0.08] resize-none"></textarea>
                 </div>
                 <button type="submit" [disabled]="sending()"
+                  appMagnetic [strength]="0.25"
                   class="w-full rounded-xl px-8 py-4 text-white font-medium transition-all hover:scale-[1.02] disabled:opacity-50"
                   style="background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));">
                   @if (sending()) {

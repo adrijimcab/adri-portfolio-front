@@ -1,4 +1,12 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import {
+  Component,
+  inject,
+  OnInit,
+  signal,
+  afterNextRender,
+  PLATFORM_ID,
+} from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
 import { FooterComponent } from './shared/components/footer/footer.component';
@@ -78,7 +86,21 @@ import { ThemeService } from './core/services/theme.service';
 })
 export class App implements OnInit {
   private readonly theme = inject(ThemeService);
+  private readonly platformId = inject(PLATFORM_ID);
   readonly konamiActive = signal(false);
+
+  constructor() {
+    afterNextRender(() => {
+      if (!isPlatformBrowser(this.platformId)) return;
+      // Easter egg for devs who open the inspector. Geek delight.
+      // eslint-disable-next-line no-console
+      console.log(
+        '%c¡Hola, dev!%c\n\nGracias por inspeccionar.\nEste portfolio está hecho con Angular 21 SSR + NestJS + Supabase.\nCódigo abierto: https://github.com/adrijimcab\n\n¿Buscás trabajar conmigo? https://adrianjimenezcabello.dev/#contact\n',
+        'font-size: 24px; font-weight: bold; background: linear-gradient(90deg, #b48cf0, #6ee7b7); -webkit-background-clip: text; color: transparent; padding: 8px 0;',
+        'font-size: 13px; color: #aaa; line-height: 1.6;',
+      );
+    });
+  }
 
   ngOnInit() {
     this.theme.init();
