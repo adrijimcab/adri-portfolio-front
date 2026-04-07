@@ -17,13 +17,13 @@ import { Profile, SiteConfig } from '../../../../core/models';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <section id="hero" class="relative flex min-h-screen items-center justify-center px-6">
-      <app-particles-background />
+    <section id="hero" class="relative flex min-h-screen items-center justify-center px-6" aria-labelledby="hero-title">
+      <app-particles-background aria-hidden="true" />
       <div class="relative z-10 text-center" appScrollAnimate>
         <p class="mb-4 text-xs tracking-[4px] uppercase" style="color: var(--color-secondary);">
           <app-typing-text [texts]="typingTexts()" />
         </p>
-        <h1 class="text-5xl font-bold text-white md:text-7xl lg:text-8xl">
+        <h1 id="hero-title" class="text-5xl font-bold text-white md:text-7xl lg:text-8xl">
           {{ firstName() }}
           <span class="gradient-text">{{ lastName() }}</span>
         </h1>
@@ -32,9 +32,15 @@ import { Profile, SiteConfig } from '../../../../core/models';
         </p>
 
         <!-- Stats -->
-        <div class="mt-12 flex justify-center gap-12" appScrollAnimate [stagger]="true">
+        <div
+          class="mt-12 flex justify-center gap-12"
+          appScrollAnimate
+          [stagger]="true"
+          role="group"
+          aria-label="Career statistics"
+        >
           @for (stat of stats(); track stat.label) {
-            <div class="text-center">
+            <div class="text-center" role="status" aria-live="polite">
               <span class="text-3xl font-bold text-white">
                 <app-animated-counter [target]="stat.numericValue" [suffix]="stat.suffix" />
               </span>
@@ -45,7 +51,14 @@ import { Profile, SiteConfig } from '../../../../core/models';
 
         <!-- Scroll indicator -->
         <div class="mt-16 animate-bounce">
-          <svg class="mx-auto h-6 w-6 text-white/20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg
+            class="mx-auto h-6 w-6 text-white/20"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            role="img"
+            aria-label="Scroll down"
+          >
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
           </svg>
         </div>

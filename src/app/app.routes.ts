@@ -27,6 +27,16 @@ export const routes: Routes = [
       import('./features/cv-viewer/cv-viewer.component').then((m) => m.CvViewerComponent),
   },
   {
+    path: 'uses',
+    loadComponent: () =>
+      import('./features/uses/uses.component').then((m) => m.UsesComponent),
+  },
+  {
+    path: 'stack',
+    loadComponent: () =>
+      import('./features/stack/stack.component').then((m) => m.StackComponent),
+  },
+  {
     path: 'certifications/:id',
     loadComponent: () =>
       import(
