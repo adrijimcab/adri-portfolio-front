@@ -10,7 +10,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
 import { FooterComponent } from './shared/components/footer/footer.component';
-import { AuroraBackgroundComponent } from './shared/components/aurora-background/aurora-background.component';
+import { WebglShaderBackgroundComponent } from './shared/components/webgl-shader-background/webgl-shader-background.component';
 import { ScrollProgressComponent } from './shared/components/scroll-progress/scroll-progress.component';
 import { CommandPaletteComponent } from './shared/components/command-palette/command-palette.component';
 import { KonamiDirective } from './shared/directives/konami.directive';
@@ -23,7 +23,7 @@ import { ThemeService } from './core/services/theme.service';
     RouterOutlet,
     NavbarComponent,
     FooterComponent,
-    AuroraBackgroundComponent,
+    WebglShaderBackgroundComponent,
     ScrollProgressComponent,
     CommandPaletteComponent,
     KonamiDirective,
@@ -32,7 +32,7 @@ import { ThemeService } from './core/services/theme.service';
     <a href="#main-content" class="skip-link">Skip to main content</a>
     <div appKonami (konami)="onKonami()"></div>
     <app-scroll-progress />
-    <app-aurora-background />
+    <app-webgl-shader-background />
     <app-navbar />
     <main id="main-content" class="relative z-10">
       <router-outlet />

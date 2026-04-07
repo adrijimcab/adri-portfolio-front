@@ -1,12 +1,14 @@
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { TranslateService } from '../../../core/services/translate.service';
+import { MagneticDirective } from '../../directives/magnetic.directive';
 
 @Component({
   selector: 'app-language-toggle',
   standalone: true,
+  imports: [MagneticDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="flex items-center gap-1 rounded-lg border border-white/10 p-0.5">
+    <div appMagnetic [strength]="0.18" class="flex items-center gap-1 rounded-lg border border-white/10 p-0.5">
       <button
         (click)="translate.setLang('es')"
         class="rounded-md px-2 py-1 text-xs font-medium transition-all"
