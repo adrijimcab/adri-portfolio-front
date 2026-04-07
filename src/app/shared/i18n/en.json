@@ -53,7 +53,8 @@
     "verified": "Verified",
     "back": "Back",
     "open_new_tab": "Open in new tab",
-    "credential_id": "Credential ID"
+    "credential_id": "Credential ID",
+    "preview_unavailable": "Preview unavailable — open in new tab"
   },
   "github": {
     "title": "GitHub Repositories",
