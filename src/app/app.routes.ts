@@ -37,6 +37,16 @@ export const routes: Routes = [
       import('./features/stack/stack.component').then((m) => m.StackComponent),
   },
   {
+    path: 'blog',
+    loadComponent: () =>
+      import('./features/blog/blog-list/blog-list.component').then((m) => m.BlogListComponent),
+  },
+  {
+    path: 'blog/:slug',
+    loadComponent: () =>
+      import('./features/blog/blog-post/blog-post.component').then((m) => m.BlogPostComponent),
+  },
+  {
     path: 'certifications/:id',
     loadComponent: () =>
       import(
