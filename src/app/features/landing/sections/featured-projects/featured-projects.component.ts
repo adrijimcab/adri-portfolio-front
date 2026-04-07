@@ -5,13 +5,14 @@ import { GlassmorphismCardComponent } from '../../../../shared/components/glassm
 import { TechPillComponent } from '../../../../shared/components/tech-pill/tech-pill.component';
 import { ScrollAnimateDirective } from '../../../../shared/directives/scroll-animate.directive';
 import { TiltDirective } from '../../../../shared/directives/tilt.directive';
+import { MagneticDirective } from '../../../../shared/directives/magnetic.directive';
 import { TranslateService } from '../../../../core/services/translate.service';
 import { Project } from '../../../../core/models';
 
 @Component({
   selector: 'app-featured-projects',
   standalone: true,
-  imports: [RouterLink, SectionHeaderComponent, GlassmorphismCardComponent, TechPillComponent, ScrollAnimateDirective, TiltDirective],
+  imports: [RouterLink, SectionHeaderComponent, GlassmorphismCardComponent, TechPillComponent, ScrollAnimateDirective, TiltDirective, MagneticDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section id="featured-projects" class="py-24 px-6">
@@ -57,6 +58,8 @@ import { Project } from '../../../../core/models';
 
         <div class="mt-8 text-center" appScrollAnimate>
           <a routerLink="/projects"
+             appMagnetic
+             [strength]="0.2"
              class="inline-flex items-center gap-2 rounded-lg border border-white/10 px-6 py-3 text-sm text-white/60 transition-all hover:border-white/20 hover:text-white">
             {{ t.t('projects.view_all') }}
           </a>
