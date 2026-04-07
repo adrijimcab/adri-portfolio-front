@@ -37,6 +37,10 @@ import type { BlogPost } from '../blog.types';
             <time [attr.datetime]="p.date">{{ p.date | date: 'longDate' }}</time>
             <span aria-hidden="true">·</span>
             <span>{{ p.readingTimeMinutes }} min read</span>
+            @if (viewCount() !== null) {
+              <span aria-hidden="true">·</span>
+              <span>{{ viewCount() }} views</span>
+            }
           </div>
           <h1 class="mt-3 text-4xl font-bold text-white md:text-5xl">{{ p.title }}</h1>
           <p class="mt-4 text-lg text-white/60">{{ p.description }}</p>
@@ -151,6 +155,7 @@ export class BlogPostComponent implements OnInit {
   private readonly articleEl = viewChild<ElementRef<HTMLElement>>('articleEl');
 
   protected readonly post = signal<BlogPost | undefined>(undefined);
+  protected readonly viewCount = signal<number | null>(null);
   private readonly rawHtml = computed<string>(() => {
     const current = this.post();
     if (!current) return '';
@@ -163,6 +168,18 @@ export class BlogPostComponent implements OnInit {
   constructor() {
     afterNextRender(() => {
       void this.applyShikiHighlight();
+      this.recordPostView();
+    });
+  }
+
+  private recordPostView(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+    const current = this.post();
+    if (!current) return;
+    this.blog.recordView(current.slug).subscribe((res) => {
+      if (res.view_count > 0) {
+        this.viewCount.set(res.view_count);
+      }
     });
   }
 
