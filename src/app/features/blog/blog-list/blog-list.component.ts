@@ -1,13 +1,23 @@
-import { ChangeDetectionStrategy, Component, OnInit, computed, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  OnInit,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { BlogService } from '../blog.service';
 import { SeoService } from '../../../core/services/seo.service';
+import { HoverPreviewDirective } from '../../../shared/directives/hover-preview.directive';
 
 @Component({
   selector: 'app-blog-list',
   standalone: true,
-  imports: [RouterLink, DatePipe],
+  imports: [RouterLink, DatePipe, HoverPreviewDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <main class="mx-auto max-w-3xl px-6 py-24">
@@ -30,11 +40,19 @@ import { SeoService } from '../../../core/services/seo.service';
             <li
               class="rounded-2xl border border-white/10 bg-white/[0.02] p-6 backdrop-blur transition hover:border-white/20 hover:bg-white/[0.04]"
             >
-              <a [routerLink]="['/blog', post.slug]" class="block">
+              <a
+                [routerLink]="['/blog', post.slug]"
+                [appHoverPreview]="post.slug"
+                class="block"
+              >
                 <div class="flex items-center gap-3 text-xs text-white/40">
                   <time [attr.datetime]="post.date">{{ post.date | date: 'longDate' }}</time>
                   <span aria-hidden="true">·</span>
                   <span>{{ post.readingTimeMinutes }} min read</span>
+                  @if (viewCountFor(post.slug); as count) {
+                    <span aria-hidden="true">·</span>
+                    <span>{{ count }} views</span>
+                  }
                 </div>
                 <h2 class="mt-3 text-2xl font-semibold text-white">{{ post.title }}</h2>
                 <p class="mt-2 text-white/60">{{ post.description }}</p>
@@ -55,8 +73,10 @@ import { SeoService } from '../../../core/services/seo.service';
 export class BlogListComponent implements OnInit {
   private readonly blog = inject(BlogService);
   private readonly seo = inject(SeoService);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly posts = computed(() => this.blog.getAllPosts());
+  private readonly viewCounts = signal<ReadonlyMap<string, number>>(new Map());
 
   ngOnInit(): void {
     this.seo.updateMeta({
@@ -65,5 +85,15 @@ export class BlogListComponent implements OnInit {
         'Technical writing on Angular, NestJS, Supabase and the things I learn shipping software.',
       url: 'https://adrianjimenezcabello.dev/blog',
     });
+
+    this.blog
+      .getAllViewCounts()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((counts) => this.viewCounts.set(counts));
+  }
+
+  protected viewCountFor(slug: string): number | null {
+    const value = this.viewCounts().get(slug);
+    return value && value > 0 ? value : null;
   }
 }
