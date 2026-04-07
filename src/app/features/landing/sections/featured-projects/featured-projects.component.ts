@@ -18,13 +18,21 @@ import { Project } from '../../../../core/models';
       <div class="mx-auto max-w-6xl">
         <app-section-header [title]="t.t('projects.title')" [label]="t.t('projects.label')" />
 
-        <div class="grid gap-6 md:grid-cols-2">
+        <div class="bento-grid">
           @for (project of projects(); track project.id; let i = $index) {
-            <a [routerLink]="['/projects', project.slug]" class="group" appScrollAnimate [delay]="i * 100" appTilt>
+            <a
+              [routerLink]="['/projects', project.slug]"
+              class="bento-cell group"
+              [class.bento-featured]="i === 0"
+              [class.bento-tall]="i === 1"
+              appScrollAnimate
+              [delay]="i * 100"
+              appTilt
+            >
               <app-glass-card>
                 @if (project.image_url) {
                   <div class="mb-4 overflow-hidden rounded-lg">
-                    <img [src]="project.image_url" [alt]="project.title"
+                    <img [src]="project.image_url" [alt]="project.title" loading="lazy"
                          class="h-48 w-full object-cover transition-transform duration-500 group-hover:scale-105" />
                   </div>
                 }
@@ -56,6 +64,37 @@ import { Project } from '../../../../core/models';
       </div>
     </section>
   `,
+  styles: [`
+    .bento-grid {
+      display: grid;
+      gap: 1.5rem;
+      grid-template-columns: 1fr;
+    }
+
+    @media (min-width: 768px) {
+      .bento-grid {
+        grid-template-columns: repeat(3, 1fr);
+        grid-auto-rows: minmax(280px, auto);
+      }
+      .bento-featured {
+        grid-column: span 2;
+        grid-row: span 2;
+      }
+      .bento-tall {
+        grid-row: span 2;
+      }
+    }
+
+    .bento-cell {
+      display: block;
+      min-width: 0;
+    }
+
+    .bento-cell :host ::ng-deep app-glass-card,
+    .bento-cell app-glass-card {
+      height: 100%;
+    }
+  `],
 })
 export class FeaturedProjectsComponent {
   readonly t = inject(TranslateService);
