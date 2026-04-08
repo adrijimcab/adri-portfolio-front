@@ -186,23 +186,32 @@ export class BlogPostComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const slug = this.route.snapshot.paramMap.get('slug');
-    if (!slug) {
+    const resolved = this.route.snapshot.data['post'] as BlogPost | null | undefined;
+    if (!resolved) {
       void this.router.navigate(['/blog']);
       return;
     }
-    const found = this.blog.getPostBySlug(slug);
-    if (!found) {
-      void this.router.navigate(['/blog']);
-      return;
-    }
-    this.post.set(found);
+    this.post.set(resolved);
+    const postUrl = `https://adrianjimenezcabello.dev/blog/${resolved.slug}`;
     this.seo.updateMeta({
-      title: `${found.title} — Adrián Jiménez Cabello`,
-      description: found.description,
-      url: `https://adrianjimenezcabello.dev/blog/${found.slug}`,
+      title: `${resolved.title} — Adrián Jiménez Cabello`,
+      description: resolved.description,
+      url: postUrl,
       image: 'https://adrianjimenezcabello.dev/og-image.png',
+      type: 'article',
     });
+    this.seo.setBlogPostingSchema({
+      title: resolved.title,
+      description: resolved.description,
+      slug: resolved.slug,
+      date: resolved.date,
+      readingTimeMinutes: resolved.readingTimeMinutes,
+    });
+    this.seo.setBreadcrumbList([
+      { name: 'Home', url: 'https://adrianjimenezcabello.dev/' },
+      { name: 'Blog', url: 'https://adrianjimenezcabello.dev/blog' },
+      { name: resolved.title, url: postUrl },
+    ]);
   }
 
   private async applyShikiHighlight(): Promise<void> {
