@@ -40,6 +40,14 @@ export const routes: Routes = [
       import('./features/stack/stack.component').then((m) => m.StackComponent),
   },
   {
+    path: 'now',
+    loadComponent: () => import('./features/now/now.component').then((m) => m.NowComponent),
+  },
+  {
+    path: 'lab',
+    loadComponent: () => import('./features/lab/lab.component').then((m) => m.LabComponent),
+  },
+  {
     path: 'blog',
     loadComponent: () =>
       import('./features/blog/blog-list/blog-list.component').then((m) => m.BlogListComponent),
