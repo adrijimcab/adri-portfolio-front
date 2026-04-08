@@ -1,12 +1,14 @@
 import {
   Component,
   ChangeDetectionStrategy,
+  DestroyRef,
   inject,
   signal,
   computed,
   afterNextRender,
   PLATFORM_ID,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { TranslateService } from '../../../core/services/translate.service';
@@ -136,6 +138,7 @@ export class GithubCalendarComponent {
   readonly t = inject(TranslateService);
   private readonly http = inject(HttpClient);
   private readonly platformId = inject(PLATFORM_ID);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly loading = signal(true);
   readonly total = signal(0);
@@ -153,7 +156,7 @@ export class GithubCalendarComponent {
   }
 
   private fetchContributions(): void {
-    this.http.get<ContributionResponse>(API_URL).subscribe({
+    this.http.get<ContributionResponse>(API_URL).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (data) => {
         this.total.set(data.total.lastYear);
         this.buildCalendar(data.contributions);

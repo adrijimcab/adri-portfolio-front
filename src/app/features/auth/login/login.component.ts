@@ -1,4 +1,5 @@
-import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
+import { Component, ChangeDetectionStrategy, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
@@ -162,6 +163,7 @@ export class LoginComponent {
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly loading = signal(false);
   readonly errorMessage = signal('');
@@ -185,7 +187,7 @@ export class LoginComponent {
     this.errorMessage.set('');
 
     const { email, password } = this.loginForm.getRawValue();
-    this.auth.login(email, password).subscribe({
+    this.auth.login(email, password).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (res) => {
         this.auth.handleLoginSuccess(res);
         this.loading.set(false);
@@ -211,7 +213,7 @@ export class LoginComponent {
     this.forgotMessage.set('');
 
     const { email } = this.forgotForm.getRawValue();
-    this.auth.forgotPassword(email).subscribe({
+    this.auth.forgotPassword(email).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
         this.loading.set(false);
         this.forgotSuccess.set(true);

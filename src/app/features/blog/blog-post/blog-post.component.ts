@@ -4,6 +4,7 @@ import type {
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   PLATFORM_ID,
   afterNextRender,
   computed,
@@ -11,6 +12,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DatePipe, isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import type { SafeHtml } from '@angular/platform-browser';
@@ -153,6 +155,7 @@ export class BlogPostComponent implements OnInit {
   private readonly seo = inject(SeoService);
   private readonly sanitizer = inject(DomSanitizer);
   private readonly platformId = inject(PLATFORM_ID);
+  private readonly destroyRef = inject(DestroyRef);
 
   private readonly articleEl = viewChild<ElementRef<HTMLElement>>('articleEl');
 
@@ -178,11 +181,14 @@ export class BlogPostComponent implements OnInit {
     if (!isPlatformBrowser(this.platformId)) return;
     const current = this.post();
     if (!current) return;
-    this.blog.recordView(current.slug).subscribe((res) => {
-      if (res.view_count > 0) {
-        this.viewCount.set(res.view_count);
-      }
-    });
+    this.blog
+      .recordView(current.slug)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((res) => {
+        if (res.view_count > 0) {
+          this.viewCount.set(res.view_count);
+        }
+      });
   }
 
   ngOnInit(): void {

@@ -1,4 +1,5 @@
-import { Component, ChangeDetectionStrategy, input, inject, signal } from '@angular/core';
+import { Component, ChangeDetectionStrategy, DestroyRef, input, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { SectionHeaderComponent } from '../../../../shared/components/section-header/section-header.component';
 import { GlassmorphismCardComponent } from '../../../../shared/components/glassmorphism-card/glassmorphism-card.component';
@@ -84,6 +85,7 @@ interface ContactResponse {
 export class ContactComponent {
   private readonly api = inject(ApiService);
   readonly t = inject(TranslateService);
+  private readonly destroyRef = inject(DestroyRef);
   profile = input<Profile | undefined>();
   socialLinks = input<SocialLink[]>([]);
 
@@ -106,6 +108,7 @@ export class ContactComponent {
         email: this.formEmail,
         message: this.formMessage,
       })
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
           this.sending.set(false);

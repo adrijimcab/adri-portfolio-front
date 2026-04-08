@@ -1,5 +1,6 @@
 import type { OnInit } from '@angular/core';
-import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, signal, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { PortfolioService } from '../../core/services/portfolio.service';
 import { SeoService } from '../../core/services/seo.service';
 import { SectionHeaderComponent } from '../../shared/components/section-header/section-header.component';
@@ -40,15 +41,19 @@ export class CvViewerComponent implements OnInit {
   private readonly portfolio = inject(PortfolioService);
   private readonly sanitizer = inject(DomSanitizer);
   private readonly seo = inject(SeoService);
+  private readonly destroyRef = inject(DestroyRef);
   readonly cvUrl = signal<SafeResourceUrl | null>(null);
   readonly rawUrl = signal<string>('');
 
   ngOnInit() {
     this.seo.updateMeta({ title: 'CV — Adrián Jiménez Cabello' });
 
-    this.portfolio.getCvUrl().subscribe((res) => {
-      this.rawUrl.set(res.url);
-      this.cvUrl.set(this.sanitizer.bypassSecurityTrustResourceUrl(res.url));
-    });
+    this.portfolio
+      .getCvUrl()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((res) => {
+        this.rawUrl.set(res.url);
+        this.cvUrl.set(this.sanitizer.bypassSecurityTrustResourceUrl(res.url));
+      });
   }
 }

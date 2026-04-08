@@ -1,5 +1,5 @@
-import type { OnInit } from '@angular/core';
 import { Component, ChangeDetectionStrategy, inject, signal, computed } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { PortfolioService } from '../../../core/services/portfolio.service';
 import { GlassmorphismCardComponent } from '../../../shared/components/glassmorphism-card/glassmorphism-card.component';
@@ -58,10 +58,13 @@ import type { Project } from '../../../core/models';
     </div>
   `,
 })
-export class ProjectListComponent implements OnInit {
+export class ProjectListComponent {
   readonly t = inject(TranslateService);
   private readonly portfolio = inject(PortfolioService);
-  readonly projects = signal<Project[]>([]);
+  // Pull-based: toSignal cleans up automatically on component destroy.
+  readonly projects = toSignal<Project[], Project[]>(this.portfolio.getAllProjects(), {
+    initialValue: [],
+  });
   readonly searchQuery = signal('');
 
   readonly filteredProjects = computed(() => {
@@ -75,10 +78,6 @@ export class ProjectListComponent implements OnInit {
         p.technologies.some((t) => t.name.toLowerCase().includes(query)),
     );
   });
-
-  ngOnInit() {
-    this.portfolio.getAllProjects().subscribe((data) => this.projects.set(data));
-  }
 
   protected onSearchInput(event: Event): void {
     const target = event.target as HTMLInputElement | null;
