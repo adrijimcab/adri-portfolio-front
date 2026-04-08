@@ -6,6 +6,41 @@ const MAX_TITLE_LEN = 200;
 const MAX_DESC_LEN = 500;
 const MAX_URL_LEN = 2048;
 
+const SITE_ORIGIN = 'https://adrianjimenezcabello.dev';
+const DEFAULT_OG_IMAGE = `${SITE_ORIGIN}/og-image.png`;
+
+export type OgType = 'website' | 'article' | 'profile';
+
+export interface BreadcrumbItem {
+  readonly name: string;
+  readonly url: string;
+}
+
+export interface BlogPostingSchemaInput {
+  readonly title: string;
+  readonly description: string;
+  readonly slug: string;
+  readonly date: string;
+  readonly dateModified?: string;
+  readonly readingTimeMinutes?: number;
+  readonly image?: string;
+}
+
+export interface ProjectSchemaInput {
+  readonly title: string;
+  readonly description: string;
+  readonly slug: string;
+  readonly image?: string;
+  readonly technologies?: readonly string[];
+  readonly sourceUrl?: string;
+  readonly demoUrl?: string;
+}
+
+export interface ListItemInput {
+  readonly name: string;
+  readonly url: string;
+}
+
 /**
  * Strip control chars, HTML brackets, JS protocol, and clamp length.
  * Defense-in-depth: Angular's interpolation already escapes, but meta tags
@@ -35,11 +70,18 @@ export class SeoService {
   private readonly title = inject(Title);
   private readonly doc = inject(DOCUMENT);
 
-  updateMeta(config: { title?: string; description?: string; image?: string; url?: string }) {
+  updateMeta(config: {
+    title?: string;
+    description?: string;
+    image?: string;
+    url?: string;
+    type?: OgType;
+  }) {
     const safeTitle = sanitizeText(config.title, MAX_TITLE_LEN);
     const safeDescription = sanitizeText(config.description, MAX_DESC_LEN);
     const safeImage = sanitizeUrl(config.image);
     const safeUrl = sanitizeUrl(config.url);
+    const ogType: OgType = config.type ?? 'website';
 
     if (safeTitle) {
       this.title.setTitle(safeTitle);
@@ -58,7 +100,7 @@ export class SeoService {
     if (safeUrl) {
       this.meta.updateTag({ property: 'og:url', content: safeUrl });
     }
-    this.meta.updateTag({ property: 'og:type', content: 'website' });
+    this.meta.updateTag({ property: 'og:type', content: ogType });
     this.meta.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
   }
 
@@ -129,6 +171,105 @@ export class SeoService {
         'query-input': 'required name=search_term_string',
       },
     }, 'schema-website');
+  }
+
+  setBreadcrumbList(items: readonly BreadcrumbItem[]) {
+    const itemListElement = items.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: sanitizeText(item.name, MAX_TITLE_LEN),
+      item: sanitizeUrl(item.url),
+    }));
+    this.setJsonLd(
+      {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement,
+      },
+      'schema-breadcrumb',
+    );
+  }
+
+  setBlogPostingSchema(post: BlogPostingSchemaInput) {
+    const safeSlug = sanitizeText(post.slug, MAX_TITLE_LEN);
+    const safeTitle = sanitizeText(post.title, MAX_TITLE_LEN);
+    const safeDescription = sanitizeText(post.description, MAX_DESC_LEN);
+    const postUrl = `${SITE_ORIGIN}/blog/${safeSlug}`;
+    const image = sanitizeUrl(post.image) || DEFAULT_OG_IMAGE;
+
+    const schema: Record<string, unknown> = {
+      '@context': 'https://schema.org',
+      '@type': 'BlogPosting',
+      '@id': `${postUrl}#article`,
+      headline: safeTitle,
+      description: safeDescription,
+      datePublished: post.date,
+      dateModified: post.dateModified ?? post.date,
+      url: postUrl,
+      image,
+      author: { '@id': `${SITE_ORIGIN}/#person` },
+      publisher: { '@id': `${SITE_ORIGIN}/#person` },
+      inLanguage: 'es',
+      mainEntityOfPage: { '@type': 'WebPage', '@id': postUrl },
+    };
+
+    if (post.readingTimeMinutes && post.readingTimeMinutes > 0) {
+      schema['timeRequired'] = `PT${post.readingTimeMinutes}M`;
+    }
+
+    this.setJsonLd(schema, 'schema-blog-posting');
+  }
+
+  setProjectSchema(project: ProjectSchemaInput) {
+    const safeSlug = sanitizeText(project.slug, MAX_TITLE_LEN);
+    const safeTitle = sanitizeText(project.title, MAX_TITLE_LEN);
+    const safeDescription = sanitizeText(project.description, MAX_DESC_LEN);
+    const projectUrl = `${SITE_ORIGIN}/projects/${safeSlug}`;
+    const image = sanitizeUrl(project.image) || DEFAULT_OG_IMAGE;
+
+    const schema: Record<string, unknown> = {
+      '@context': 'https://schema.org',
+      '@type': 'CreativeWork',
+      '@id': `${projectUrl}#project`,
+      name: safeTitle,
+      description: safeDescription,
+      url: projectUrl,
+      image,
+      author: { '@id': `${SITE_ORIGIN}/#person` },
+      creator: { '@id': `${SITE_ORIGIN}/#person` },
+      inLanguage: 'es',
+    };
+
+    if (project.technologies && project.technologies.length > 0) {
+      schema['keywords'] = project.technologies.join(', ');
+    }
+    const safeSource = sanitizeUrl(project.sourceUrl);
+    if (safeSource) {
+      schema['codeRepository'] = safeSource;
+    }
+    const safeDemo = sanitizeUrl(project.demoUrl);
+    if (safeDemo) {
+      schema['sameAs'] = safeDemo;
+    }
+
+    this.setJsonLd(schema, 'schema-project');
+  }
+
+  setItemList(items: readonly ListItemInput[], id: string) {
+    const itemListElement = items.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: sanitizeText(item.name, MAX_TITLE_LEN),
+      url: sanitizeUrl(item.url),
+    }));
+    this.setJsonLd(
+      {
+        '@context': 'https://schema.org',
+        '@type': 'ItemList',
+        itemListElement,
+      },
+      id,
+    );
   }
 
   setProfessionalServiceSchema() {
