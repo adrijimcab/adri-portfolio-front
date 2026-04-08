@@ -1,8 +1,15 @@
 import type { OnInit } from '@angular/core';
-import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, signal, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { AdminService } from '../../../core/services/admin.service';
 import { ToastService } from '../../../shared/components/toast/toast.service';
+
+/**
+ * Not migrated to GenericCrudComponent: the profile is a singleton —
+ * there is no list/create/delete, only `get` + `update`. Wrapping it
+ * in the generic CRUD component would add indirection for zero win.
+ */
 
 @Component({
   selector: 'app-profile-editor',
@@ -120,6 +127,7 @@ export class ProfileEditorComponent implements OnInit {
   private readonly admin = inject(AdminService);
   private readonly toast = inject(ToastService);
   private readonly fb = inject(FormBuilder);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly saving = signal(false);
   readonly uploadingCv = signal(false);
@@ -151,25 +159,31 @@ export class ProfileEditorComponent implements OnInit {
   ];
 
   ngOnInit(): void {
-    this.admin.getProfile().subscribe({
-      next: (profile) => {
-        this.form.patchValue(profile as unknown as Record<string, string>);
-      },
-    });
+    this.admin
+      .getProfile()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (profile) => {
+          this.form.patchValue(profile as unknown as Record<string, string>);
+        },
+      });
   }
 
   save(): void {
     this.saving.set(true);
-    this.admin.updateProfile(this.form.getRawValue()).subscribe({
-      next: () => {
-        this.saving.set(false);
-        this.toast.success('Profile updated successfully');
-      },
-      error: () => {
-        this.saving.set(false);
-        this.toast.error('Failed to update profile');
-      },
-    });
+    this.admin
+      .updateProfile(this.form.getRawValue())
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.saving.set(false);
+          this.toast.success('Profile updated successfully');
+        },
+        error: () => {
+          this.saving.set(false);
+          this.toast.error('Failed to update profile');
+        },
+      });
   }
 
   onCvSelected(event: Event): void {
@@ -178,16 +192,19 @@ export class ProfileEditorComponent implements OnInit {
     if (!file) return;
 
     this.uploadingCv.set(true);
-    this.admin.uploadCv(file).subscribe({
-      next: (res) => {
-        this.uploadingCv.set(false);
-        this.cvUrl.set(res.url);
-        this.toast.success('CV uploaded successfully');
-      },
-      error: () => {
-        this.uploadingCv.set(false);
-        this.toast.error('Failed to upload CV');
-      },
-    });
+    this.admin
+      .uploadCv(file)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (res) => {
+          this.uploadingCv.set(false);
+          this.cvUrl.set(res.url);
+          this.toast.success('CV uploaded successfully');
+        },
+        error: () => {
+          this.uploadingCv.set(false);
+          this.toast.error('Failed to upload CV');
+        },
+      });
   }
 }

@@ -1,10 +1,18 @@
 import type { OnInit } from '@angular/core';
-import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, signal, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { AdminService } from '../../../core/services/admin.service';
 import { ToastService } from '../../../shared/components/toast/toast.service';
-import type { SectionConfig } from '../../../core/models';
-import { SiteConfig } from '../../../core/models';
+import type { SectionConfig } from '../../../core/domain/entities';
+
+/**
+ * Not migrated to GenericCrudComponent: this screen juggles two
+ * unrelated forms (a key/value SiteConfig table with typed inputs and
+ * a sorted list of SectionConfig items with inline toggles). There is
+ * no list -> form -> save cycle and no uniform entity, so forcing it
+ * through the generic component would hurt more than help.
+ */
 
 interface ConfigEntry {
   key: string;
@@ -122,6 +130,7 @@ interface ConfigEntry {
 export class ConfigEditorComponent implements OnInit {
   private readonly admin = inject(AdminService);
   private readonly toast = inject(ToastService);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly configEntries = signal<ConfigEntry[]>([]);
   readonly sections = signal<SectionConfig[]>([]);
@@ -129,20 +138,26 @@ export class ConfigEditorComponent implements OnInit {
   readonly savingSections = signal(false);
 
   ngOnInit(): void {
-    this.admin.getSiteConfig().subscribe({
-      next: (config) => {
-        const entries: ConfigEntry[] = Object.entries(config).map(([key, value]) => ({
-          key,
-          value,
-          type: this.detectType(key, value),
-        }));
-        this.configEntries.set(entries);
-      },
-    });
+    this.admin
+      .getSiteConfig()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (config) => {
+          const entries: ConfigEntry[] = Object.entries(config).map(([key, value]) => ({
+            key,
+            value,
+            type: this.detectType(key, value),
+          }));
+          this.configEntries.set(entries);
+        },
+      });
 
-    this.admin.getSections().subscribe({
-      next: (sections) => this.sections.set(sections),
-    });
+    this.admin
+      .getSections()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (sections) => this.sections.set(sections),
+      });
   }
 
   updateEntry(entry: ConfigEntry, value: string): void {
@@ -155,18 +170,36 @@ export class ConfigEditorComponent implements OnInit {
     for (const e of this.configEntries()) {
       data[e.key] = e.value;
     }
-    this.admin.updateSiteConfig(data).subscribe({
-      next: () => { this.savingConfig.set(false); this.toast.success('Config saved'); },
-      error: () => { this.savingConfig.set(false); this.toast.error('Failed to save config'); },
-    });
+    this.admin
+      .updateSiteConfig(data)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.savingConfig.set(false);
+          this.toast.success('Config saved');
+        },
+        error: () => {
+          this.savingConfig.set(false);
+          this.toast.error('Failed to save config');
+        },
+      });
   }
 
   saveSections(): void {
     this.savingSections.set(true);
-    this.admin.updateSections(this.sections()).subscribe({
-      next: () => { this.savingSections.set(false); this.toast.success('Sections saved'); },
-      error: () => { this.savingSections.set(false); this.toast.error('Failed to save sections'); },
-    });
+    this.admin
+      .updateSections(this.sections())
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.savingSections.set(false);
+          this.toast.success('Sections saved');
+        },
+        error: () => {
+          this.savingSections.set(false);
+          this.toast.error('Failed to save sections');
+        },
+      });
   }
 
   private detectType(key: string, value: string): ConfigEntry['type'] {

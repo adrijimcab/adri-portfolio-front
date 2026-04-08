@@ -1,5 +1,6 @@
 import type { OnInit } from '@angular/core';
-import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, signal, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AdminService } from '../../../core/services/admin.service';
 import { ToastService } from '../../../shared/components/toast/toast.service';
 
@@ -52,6 +53,7 @@ interface StatCard {
 export class AdminDashboardComponent implements OnInit {
   private readonly admin = inject(AdminService);
   private readonly toast = inject(ToastService);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly stats = signal<StatCard[]>([]);
   readonly syncing = signal(false);
@@ -62,23 +64,50 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   private loadStats(): void {
-    let experiences = 0, projects = 0, technologies = 0, certifications = 0;
+    let experiences = 0;
+    let projects = 0;
+    let technologies = 0;
+    let certifications = 0;
 
-    this.admin.getExperiences().subscribe({
-      next: (data) => { experiences = data.length; this.updateStats(experiences, projects, technologies, certifications); },
-    });
-    this.admin.getProjects().subscribe({
-      next: (data) => { projects = data.length; this.updateStats(experiences, projects, technologies, certifications); },
-    });
-    this.admin.getTechnologies().subscribe({
-      next: (data) => { technologies = data.length; this.updateStats(experiences, projects, technologies, certifications); },
-      error: () => {
-        // Fallback: technologies endpoint might return grouped data
-      },
-    });
-    this.admin.getCertifications().subscribe({
-      next: (data) => { certifications = data.length; this.updateStats(experiences, projects, technologies, certifications); },
-    });
+    this.admin
+      .getExperiences()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (data) => {
+          experiences = data.length;
+          this.updateStats(experiences, projects, technologies, certifications);
+        },
+      });
+    this.admin
+      .getProjects()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (data) => {
+          projects = data.length;
+          this.updateStats(experiences, projects, technologies, certifications);
+        },
+      });
+    this.admin
+      .getTechnologies()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (data) => {
+          technologies = data.length;
+          this.updateStats(experiences, projects, technologies, certifications);
+        },
+        error: () => {
+          /* technologies endpoint may return grouped data; fall through */
+        },
+      });
+    this.admin
+      .getCertifications()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (data) => {
+          certifications = data.length;
+          this.updateStats(experiences, projects, technologies, certifications);
+        },
+      });
   }
 
   private updateStats(exp: number, proj: number, tech: number, cert: number): void {
@@ -92,16 +121,19 @@ export class AdminDashboardComponent implements OnInit {
 
   syncGithub(): void {
     this.syncing.set(true);
-    this.admin.syncGithub().subscribe({
-      next: (res) => {
-        this.syncing.set(false);
-        this.lastSync.set(new Date().toLocaleString());
-        this.toast.success(`Synced ${res.synced} repositories`);
-      },
-      error: () => {
-        this.syncing.set(false);
-        this.toast.error('Failed to sync GitHub repos');
-      },
-    });
+    this.admin
+      .syncGithub()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (res) => {
+          this.syncing.set(false);
+          this.lastSync.set(new Date().toLocaleString());
+          this.toast.success(`Synced ${res.synced} repositories`);
+        },
+        error: () => {
+          this.syncing.set(false);
+          this.toast.error('Failed to sync GitHub repos');
+        },
+      });
   }
 }

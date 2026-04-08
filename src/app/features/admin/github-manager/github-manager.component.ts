@@ -1,8 +1,16 @@
 import type { OnInit } from '@angular/core';
-import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, signal, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AdminService } from '../../../core/services/admin.service';
 import { ToastService } from '../../../shared/components/toast/toast.service';
-import type { GitHubRepo } from '../../../core/models';
+import type { GitHubRepo } from '../../../core/domain/entities';
+
+/**
+ * Not migrated to GenericCrudComponent: this screen has no create/edit
+ * form and no delete — the data flows in from a GitHub sync action,
+ * and each row exposes two inline toggles (visible, pinned). Different
+ * lifecycle, different UI, so it stays bespoke.
+ */
 
 @Component({
   selector: 'app-github-manager',
@@ -82,6 +90,7 @@ import type { GitHubRepo } from '../../../core/models';
 export class GithubManagerComponent implements OnInit {
   private readonly admin = inject(AdminService);
   private readonly toast = inject(ToastService);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly repos = signal<(GitHubRepo & { is_visible: boolean })[]>([]);
   readonly syncing = signal(false);
@@ -89,42 +98,57 @@ export class GithubManagerComponent implements OnInit {
   ngOnInit(): void { this.loadData(); }
 
   private loadData(): void {
-    this.admin.getGithubRepos().subscribe({
-      next: (items) => this.repos.set(items as (GitHubRepo & { is_visible: boolean })[]),
-    });
+    this.admin
+      .getGithubRepos()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (items) => this.repos.set(items as (GitHubRepo & { is_visible: boolean })[]),
+      });
   }
 
   sync(): void {
     this.syncing.set(true);
-    this.admin.syncGithub().subscribe({
-      next: (res) => {
-        this.syncing.set(false);
-        this.toast.success(`Synced ${res.synced} repos`);
-        this.loadData();
-      },
-      error: () => { this.syncing.set(false); this.toast.error('Sync failed'); },
-    });
+    this.admin
+      .syncGithub()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (res) => {
+          this.syncing.set(false);
+          this.toast.success(`Synced ${res.synced} repos`);
+          this.loadData();
+        },
+        error: () => {
+          this.syncing.set(false);
+          this.toast.error('Sync failed');
+        },
+      });
   }
 
   toggleVisible(repo: GitHubRepo & { is_visible: boolean }): void {
-    this.admin.updateGithubRepo(repo.id, { is_visible: !repo.is_visible } as Partial<GitHubRepo>).subscribe({
-      next: () => {
-        repo.is_visible = !repo.is_visible;
-        this.repos.update((r) => [...r]);
-        this.toast.success('Updated');
-      },
-      error: () => this.toast.error('Failed to update'),
-    });
+    this.admin
+      .updateGithubRepo(repo.id, { is_visible: !repo.is_visible } as Partial<GitHubRepo>)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          repo.is_visible = !repo.is_visible;
+          this.repos.update((r) => [...r]);
+          this.toast.success('Updated');
+        },
+        error: () => this.toast.error('Failed to update'),
+      });
   }
 
   togglePinned(repo: GitHubRepo & { is_visible: boolean }): void {
-    this.admin.updateGithubRepo(repo.id, { is_pinned: !repo.is_pinned } as Partial<GitHubRepo>).subscribe({
-      next: () => {
-        repo.is_pinned = !repo.is_pinned;
-        this.repos.update((r) => [...r]);
-        this.toast.success('Updated');
-      },
-      error: () => this.toast.error('Failed to update'),
-    });
+    this.admin
+      .updateGithubRepo(repo.id, { is_pinned: !repo.is_pinned } as Partial<GitHubRepo>)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          repo.is_pinned = !repo.is_pinned;
+          this.repos.update((r) => [...r]);
+          this.toast.success('Updated');
+        },
+        error: () => this.toast.error('Failed to update'),
+      });
   }
 }
