@@ -1,0 +1,93 @@
+/* ============================================================
+   CSS scroll-driven animations — progressive enhancement
+   ------------------------------------------------------------
+   Uses the native `animation-timeline: scroll()` and `view()`
+   APIs (Chrome 115+, Edge 115+, Safari 18+). Browsers that
+   don't support it fall back gracefully:
+     - `.scroll-progress-css` is hidden via `@supports not`,
+       so the JS-driven <app-scroll-progress> remains the
+       single source of truth in legacy engines.
+     - `.scroll-fade-in` stays fully visible (opacity: 1)
+       unless the modern timeline is supported.
+   Respects `prefers-reduced-motion`.
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   Top progress bar driven entirely by the viewport scroll.
+   Zero JS, zero layout thrashing, runs on the compositor.
+   ------------------------------------------------------------ */
+.scroll-progress-css {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  z-index: 9999;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    var(--color-primary),
+    var(--color-secondary),
+    var(--color-accent)
+  );
+  animation: scroll-progress linear;
+  animation-timeline: scroll(root);
+}
+
+@keyframes scroll-progress {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+/* Hide the CSS bar entirely where the feature isn't supported —
+   the existing <app-scroll-progress> JS component is the fallback. */
+@supports not (animation-timeline: scroll(root)) {
+  .scroll-progress-css {
+    display: none;
+  }
+}
+
+/* ------------------------------------------------------------
+   View-timeline fade-in utility.
+   Usage: add `.scroll-fade-in` to any element you want to
+   reveal as it enters the viewport. In unsupported browsers
+   it stays visible (graceful default).
+   Example:
+     <section class="scroll-fade-in">…</section>
+   ------------------------------------------------------------ */
+.scroll-fade-in {
+  /* Default visible state — applies in unsupported browsers. */
+  opacity: 1;
+  transform: none;
+}
+
+@supports (animation-timeline: view()) {
+  .scroll-fade-in {
+    animation: scroll-fade-in linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 50%;
+  }
+}
+
+@keyframes scroll-fade-in {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ------------------------------------------------------------
+   Reduced motion: kill every scroll-driven animation but keep
+   content visible — never trap users in opacity:0.
+   ------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  .scroll-progress-css {
+    animation: none;
+    transform: scaleX(0);
+  }
+  .scroll-fade-in {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
