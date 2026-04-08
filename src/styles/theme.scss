@@ -1,9 +1,19 @@
-:root {
+:root,
+:root[data-theme='dark'] {
   --color-primary: #6366f1;
   --color-secondary: #a855f7;
   --color-accent: #ec4899;
   --color-bg: #000000;
+  --color-text: #ffffff;
   --font-family: 'Inter', sans-serif;
+}
+
+:root[data-theme='light'] {
+  --color-primary: #6d28d9;
+  --color-secondary: #047857;
+  --color-accent: #1d4ed8;
+  --color-bg: #fafafa;
+  --color-text: #0a0a0a;
 }
 
 body {
