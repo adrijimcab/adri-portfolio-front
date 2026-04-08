@@ -22,33 +22,63 @@ import { ContactComponent } from './sections/contact/contact.component';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
+    <!-- Above the fold: render eagerly so the hero is ready for LCP. -->
     @if (show('hero')) {
       <app-hero [profile]="portfolio.profile()" [config]="portfolio.siteConfig()" />
     }
     @if (show('about')) {
       <app-about [profile]="portfolio.profile()" />
     }
+
+    <!-- Everything below is deferred until it scrolls into view. -->
     @if (show('experience')) {
-      <app-experience [experiences]="portfolio.experiences() || []" />
+      @defer (on viewport) {
+        <app-experience [experiences]="portfolio.experiences() || []" />
+      } @placeholder (minimum 100ms) {
+        <div class="min-h-[400px]" aria-hidden="true"></div>
+      }
     }
     @if (show('tech-stack')) {
-      <app-tech-stack [groups]="portfolio.technologies() || []" />
+      @defer (on viewport) {
+        <app-tech-stack [groups]="portfolio.technologies() || []" />
+      } @placeholder (minimum 100ms) {
+        <div class="min-h-[400px]" aria-hidden="true"></div>
+      }
     }
     @if (show('featured-projects')) {
-      <app-featured-projects [projects]="portfolio.featuredProjects() || []" />
+      @defer (on viewport) {
+        <app-featured-projects [projects]="portfolio.featuredProjects() || []" />
+      } @placeholder (minimum 100ms) {
+        <div class="min-h-[500px]" aria-hidden="true"></div>
+      }
     }
     @if (show('education')) {
-      <app-education-section
-        [education]="portfolio.education()?.education || []" />
+      @defer (on viewport) {
+        <app-education-section [education]="portfolio.education()?.education || []" />
+      } @placeholder (minimum 100ms) {
+        <div class="min-h-[400px]" aria-hidden="true"></div>
+      }
     }
     @if (show('certifications')) {
-      <app-certifications-section [certifications]="portfolio.certifications()" />
+      @defer (on viewport) {
+        <app-certifications-section [certifications]="portfolio.certifications()" />
+      } @placeholder (minimum 100ms) {
+        <div class="min-h-[400px]" aria-hidden="true"></div>
+      }
     }
     @if (show('github-repos')) {
-      <app-github-repos-section [repos]="portfolio.githubRepos()" />
+      @defer (on viewport) {
+        <app-github-repos-section [repos]="portfolio.githubRepos()" />
+      } @placeholder (minimum 100ms) {
+        <div class="min-h-[400px]" aria-hidden="true"></div>
+      }
     }
     @if (show('contact')) {
-      <app-contact [profile]="portfolio.profile()" [socialLinks]="portfolio.socialLinks() || []" />
+      @defer (on viewport) {
+        <app-contact [profile]="portfolio.profile()" [socialLinks]="portfolio.socialLinks() || []" />
+      } @placeholder (minimum 100ms) {
+        <div class="min-h-[500px]" aria-hidden="true"></div>
+      }
     }
   `,
 })
