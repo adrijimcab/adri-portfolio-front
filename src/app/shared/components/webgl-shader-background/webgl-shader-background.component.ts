@@ -80,6 +80,7 @@ export class WebglShaderBackgroundComponent implements OnDestroy {
     const uniforms: Record<string, THREE.IUniform> = {
       uTime: { value: 0 },
       uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
+      uMouse: { value: new THREE.Vector2(0.5, 0.5) },
       uColorPrimary: { value: cssColor('--color-primary', '#8b5cf6') },
       uColorSecondary: { value: cssColor('--color-secondary', '#3b82f6') },
       uColorAccent: { value: cssColor('--color-accent', '#a855f7') },
@@ -93,17 +94,45 @@ export class WebglShaderBackgroundComponent implements OnDestroy {
       }
     `;
 
-    // Subtle animated gradient mesh: three drifting radial blobs + a dim dot grid,
-    // composited onto a black base. Matches Aurora's language so swapping is seamless.
+    // Multi-layer animated mesh with simplex-style noise, 5 drifting blobs,
+    // mouse-reactive distortion, and a faint dot grid overlay. This is the
+    // version designed to be VISIBLY different from the CSS Aurora — more
+    // motion, more depth, and the cursor pulls the field around.
     const fragmentShader = /* glsl */ `
       precision highp float;
 
       varying vec2 vUv;
       uniform float uTime;
       uniform vec2 uResolution;
+      uniform vec2 uMouse;
       uniform vec3 uColorPrimary;
       uniform vec3 uColorSecondary;
       uniform vec3 uColorAccent;
+
+      // Cheap 2D hash + value-noise (no textures, no extensions).
+      float hash(vec2 p) {
+        return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
+      }
+      float vnoise(vec2 p) {
+        vec2 i = floor(p);
+        vec2 f = fract(p);
+        vec2 u = f * f * (3.0 - 2.0 * f);
+        float a = hash(i);
+        float b = hash(i + vec2(1.0, 0.0));
+        float c = hash(i + vec2(0.0, 1.0));
+        float d = hash(i + vec2(1.0, 1.0));
+        return mix(mix(a, b, u.x), mix(c, d, u.x), u.y);
+      }
+      float fbm(vec2 p) {
+        float v = 0.0;
+        float a = 0.5;
+        for (int i = 0; i < 4; i++) {
+          v += a * vnoise(p);
+          p *= 2.02;
+          a *= 0.5;
+        }
+        return v;
+      }
 
       float blob(vec2 uv, vec2 center, float radius) {
         float d = distance(uv, center);
@@ -111,29 +140,61 @@ export class WebglShaderBackgroundComponent implements OnDestroy {
       }
 
       void main() {
-        vec2 uv = vUv;
         float aspect = uResolution.x / uResolution.y;
+        vec2 uv = vUv;
         vec2 auv = vec2(uv.x * aspect, uv.y);
 
-        float t = uTime * 0.08;
+        // Mouse vector (also aspect-corrected) and an attractor pull strength
+        // that fades with distance from the cursor.
+        vec2 mouse = vec2(uMouse.x * aspect, uMouse.y);
+        float md = distance(auv, mouse);
+        float pull = exp(-md * 2.5) * 0.18;
 
-        vec2 c1 = vec2(0.25 * aspect + 0.08 * sin(t * 1.1), 0.80 + 0.05 * cos(t * 0.9));
-        vec2 c2 = vec2(0.75 * aspect + 0.06 * cos(t * 0.8), 0.20 + 0.05 * sin(t * 1.2));
-        vec2 c3 = vec2(0.50 * aspect + 0.05 * sin(t * 0.6), 0.50 + 0.04 * cos(t * 0.7));
+        float t = uTime * 0.18;
 
-        float b1 = blob(auv, c1, 0.55);
-        float b2 = blob(auv, c2, 0.50);
-        float b3 = blob(auv, c3, 0.40);
+        // 5 drifting blobs at different speeds + slight bias toward the cursor.
+        vec2 c1 = vec2(0.20 * aspect + 0.16 * sin(t * 1.10), 0.78 + 0.10 * cos(t * 0.90));
+        vec2 c2 = vec2(0.78 * aspect + 0.14 * cos(t * 0.80), 0.22 + 0.10 * sin(t * 1.20));
+        vec2 c3 = vec2(0.50 * aspect + 0.20 * sin(t * 0.65), 0.50 + 0.12 * cos(t * 0.75));
+        vec2 c4 = vec2(0.10 * aspect + 0.10 * cos(t * 1.30), 0.30 + 0.08 * sin(t * 1.05));
+        vec2 c5 = vec2(0.90 * aspect + 0.10 * sin(t * 0.95), 0.85 + 0.08 * cos(t * 1.15));
+        c1 = mix(c1, mouse, pull * 1.3);
+        c2 = mix(c2, mouse, pull * 1.0);
+        c3 = mix(c3, mouse, pull * 1.6);
+
+        float b1 = blob(auv, c1, 0.65);
+        float b2 = blob(auv, c2, 0.60);
+        float b3 = blob(auv, c3, 0.55);
+        float b4 = blob(auv, c4, 0.45);
+        float b5 = blob(auv, c5, 0.50);
+
+        // Domain-warped FBM noise field gives that "fluid plasma" look you cannot
+        // produce with CSS gradients alone.
+        vec2 q = auv * 2.5;
+        vec2 warp = vec2(
+          fbm(q + vec2(0.0, t)),
+          fbm(q + vec2(5.2, -t * 0.9))
+        );
+        float n = fbm(q * 1.6 + warp * 1.8 + t * 0.35);
 
         vec3 col = vec3(0.0);
-        col += uColorPrimary   * b1 * 0.20;
-        col += uColorSecondary * b2 * 0.15;
-        col += uColorAccent    * b3 * 0.10;
+        col += uColorPrimary   * b1 * 0.45;
+        col += uColorSecondary * b2 * 0.38;
+        col += uColorAccent    * b3 * 0.42;
+        col += uColorPrimary   * b4 * 0.22;
+        col += uColorSecondary * b5 * 0.22;
 
-        // Dim dot grid overlay to match Aurora's radial-gradient dots.
-        vec2 grid = fract(uv * uResolution / 24.0) - 0.5;
-        float dot = smoothstep(0.08, 0.0, length(grid));
-        col += vec3(0.05) * dot;
+        // Plasma noise overlay (drives the most visible movement).
+        col += mix(uColorPrimary, uColorAccent, n) * 0.18 * smoothstep(0.2, 0.9, n);
+
+        // Soft vignette that pulses gently with the noise field.
+        float vig = smoothstep(1.2, 0.35, distance(uv, vec2(0.5)));
+        col *= 0.55 + vig * 0.6;
+
+        // Faint dot grid (carry-over from Aurora identity).
+        vec2 grid = fract(uv * uResolution / 26.0) - 0.5;
+        float dotMask = smoothstep(0.07, 0.0, length(grid));
+        col += vec3(0.05) * dotMask;
 
         gl_FragColor = vec4(col, 1.0);
       }
@@ -162,6 +223,9 @@ export class WebglShaderBackgroundComponent implements OnDestroy {
     const renderFrame = (): void => {
       (uniforms['uTime'] as THREE.IUniform<number>).value =
         (performance.now() - startMs) / 1000;
+      // Smooth lerp the mouse uniform toward the latest pointer position.
+      const mouseUniform = uniforms['uMouse'] as THREE.IUniform<THREE.Vector2>;
+      mouseUniform.value.lerp(targetMouse, 0.08);
       renderer.render(scene, camera);
     };
 
@@ -179,6 +243,14 @@ export class WebglShaderBackgroundComponent implements OnDestroy {
       if (reducedMotion) renderFrame();
     };
 
+    // Mouse-reactive distortion. Smoothed via lerp toward target so the
+    // shader doesn't jitter on every pointermove event.
+    const targetMouse = new THREE.Vector2(0.5, 0.5);
+    const onPointerMove = (e: PointerEvent): void => {
+      targetMouse.x = e.clientX / window.innerWidth;
+      targetMouse.y = 1.0 - e.clientY / window.innerHeight;
+    };
+
     const onVisibilityChange = (): void => {
       if (document.hidden) {
         paused = true;
@@ -193,6 +265,7 @@ export class WebglShaderBackgroundComponent implements OnDestroy {
     };
 
     window.addEventListener('resize', onResize, { passive: true });
+    window.addEventListener('pointermove', onPointerMove, { passive: true });
     document.addEventListener('visibilitychange', onVisibilityChange);
 
     if (reducedMotion) {
@@ -205,6 +278,7 @@ export class WebglShaderBackgroundComponent implements OnDestroy {
       paused = true;
       if (rafId !== null) cancelAnimationFrame(rafId);
       window.removeEventListener('resize', onResize);
+      window.removeEventListener('pointermove', onPointerMove);
       document.removeEventListener('visibilitychange', onVisibilityChange);
       geometry.dispose();
       material.dispose();
