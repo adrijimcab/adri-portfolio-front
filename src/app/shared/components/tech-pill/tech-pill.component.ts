@@ -14,6 +14,12 @@ import {
   template: `
     <span class="inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs transition-all duration-200 hover:scale-105"
           style="border-color: color-mix(in srgb, var(--color-primary) 30%, transparent); background: color-mix(in srgb, var(--color-primary) 8%, transparent); color: var(--color-primary);">
+      <!--
+        External CDNs (devicon jsdelivr + simple-icons) without resize API and
+        dynamic fallback cascade (see devicon-availability). NgOptimizedImage
+        would fight the error-recovery path, so we keep the raw <img>.
+        loading=lazy + decoding=async keeps this off the critical path.
+      -->
       @if (iconUrl()) {
         <img [src]="iconUrl()!"
              [alt]="name()"

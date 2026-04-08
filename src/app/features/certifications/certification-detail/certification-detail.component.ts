@@ -53,6 +53,12 @@ function thumbnailFor(url: string, width = 1200): string {
             }
 
             @if (thumbnailUrl()) {
+              <!--
+                External screenshot service (image.thum.io) without resize API: raw <img>
+                instead of NgOptimizedImage. This is the above-the-fold LCP image of the
+                detail view, so we intentionally skip loading=lazy and use
+                fetchpriority=high + decoding=async to prioritize it.
+              -->
               <div class="aspect-[4/3] w-full overflow-hidden rounded-lg border border-white/[0.06] bg-white/[0.02] relative">
                 <img
                   [src]="thumbnailUrl()!"

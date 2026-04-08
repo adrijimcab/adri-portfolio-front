@@ -70,6 +70,12 @@ const POLL_INTERVAL_MS = 30_000;
           <!-- Track info row -->
           <div class="flex items-center gap-3">
             <div class="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-md bg-white/[0.04]">
+              <!--
+                External Spotify CDN (i.scdn.co) without resize API: we keep the raw
+                <img> instead of NgOptimizedImage because the loader would add zero
+                value (Spotify returns fixed-size album art URLs). loading=lazy +
+                decoding=async keeps this off the critical path.
+              -->
               @if (t.albumImageUrl) {
                 <img
                   [src]="t.albumImageUrl"

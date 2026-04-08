@@ -25,10 +25,17 @@ import type { TechnologyGroup } from '../../../../core/models';
                 <div class="space-y-3">
                   @for (tech of group.technologies; track tech.id) {
                     <div class="group flex items-center gap-3">
+                      <!--
+                        External CDN (devicon via jsdelivr) without resize API: we keep
+                        the raw <img> instead of NgOptimizedImage because the loader
+                        would add zero value and width/height are font-sized (h-6 w-6).
+                        loading=lazy + decoding=async still keeps this off the critical path.
+                      -->
                       <img [src]="'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/' + tech.icon_slug + '/' + tech.icon_slug + '-original.svg'"
                            [alt]="tech.name"
                            class="h-6 w-6 transition-transform group-hover:scale-125"
                            loading="lazy"
+                           decoding="async"
                            (error)="onImgError($event)" />
                       <div class="flex-1">
                         <div class="flex items-center justify-between">
