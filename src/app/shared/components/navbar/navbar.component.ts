@@ -24,6 +24,8 @@ import { MagneticDirective } from '../../directives/magnetic.directive';
           <a href="/#experience" class="text-sm text-white/60 transition-colors hover:text-white">{{ t.t('nav.experience') }}</a>
           <a href="/#tech-stack" class="text-sm text-white/60 transition-colors hover:text-white">{{ t.t('nav.stack') }}</a>
           <a routerLink="/projects" routerLinkActive="text-white" class="text-sm text-white/60 transition-colors hover:text-white">{{ t.t('nav.projects') }}</a>
+          <a routerLink="/lab" routerLinkActive="text-white" class="text-sm text-white/60 transition-colors hover:text-white">Lab</a>
+          <a routerLink="/now" routerLinkActive="text-white" class="text-sm text-white/60 transition-colors hover:text-white">Now</a>
           <a routerLink="/cv" appMagnetic [strength]="0.18"
              class="rounded-lg px-4 py-2 text-sm font-medium text-white transition-all"
              style="background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));">
@@ -93,6 +95,8 @@ import { MagneticDirective } from '../../directives/magnetic.directive';
             <a href="/#experience" class="text-sm text-white/60" (click)="mobileOpen.set(false)">{{ t.t('nav.experience') }}</a>
             <a href="/#tech-stack" class="text-sm text-white/60" (click)="mobileOpen.set(false)">{{ t.t('nav.stack') }}</a>
             <a routerLink="/projects" class="text-sm text-white/60" (click)="mobileOpen.set(false)">{{ t.t('nav.projects') }}</a>
+            <a routerLink="/lab" class="text-sm text-white/60" (click)="mobileOpen.set(false)">Lab</a>
+            <a routerLink="/now" class="text-sm text-white/60" (click)="mobileOpen.set(false)">Now</a>
             <a routerLink="/cv" class="text-sm text-white/60" (click)="mobileOpen.set(false)">{{ t.t('nav.cv') }}</a>
             <div class="flex items-center gap-3 pt-2 border-t border-white/[0.06]">
               <app-language-toggle />
