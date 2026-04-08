@@ -70,7 +70,9 @@ function parseType(value: string | null): OgType {
 // by the compiler, not by name in this file.
 void Fragment;
 
-export function GET(request: Request): Response {
+export const runtime = 'edge';
+
+export default function handler(request: Request): Response {
   try {
     const url = new URL(request.url);
     const title = sanitize(url.searchParams.get('title'), DEFAULT_TITLE, MAX_TITLE_LENGTH);

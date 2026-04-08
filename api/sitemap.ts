@@ -122,7 +122,9 @@ function renderSitemap(entries: readonly SitemapEntry[]): string {
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${body}\n</urlset>\n`;
 }
 
-export async function GET(_request: Request): Promise<Response> {
+export const runtime = 'edge';
+
+export default async function handler(_request: Request): Promise<Response> {
   try {
     // Blog posts are imported from the local mirror (see api/_blog-posts.ts).
     // TODO: swap for `fetchWithTimeout('/blog/posts')` once the API exposes it.

@@ -85,7 +85,9 @@ function buildFeed(posts: readonly BlogPostFeedEntry[]): JsonFeed {
   };
 }
 
-export function GET(_request: Request): Response {
+export const runtime = 'edge';
+
+export default function handler(_request: Request): Response {
   try {
     const feed = buildFeed(FEED_POSTS_SORTED);
     return new Response(JSON.stringify(feed, null, 2), {

@@ -85,7 +85,9 @@ ${entries}
 `;
 }
 
-export function GET(_request: Request): Response {
+export const runtime = 'edge';
+
+export default function handler(_request: Request): Response {
   try {
     return new Response(renderFeed(FEED_POSTS_SORTED), {
       status: 200,
