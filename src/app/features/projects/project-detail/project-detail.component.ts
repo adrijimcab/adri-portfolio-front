@@ -76,14 +76,33 @@ export class ProjectDetailComponent implements OnInit {
   readonly project = signal<Project | null>(null);
 
   ngOnInit() {
-    const slug = this.route.snapshot.paramMap.get('slug')!;
-    this.portfolio.getProjectBySlug(slug).subscribe((data) => {
-      this.project.set(data);
-      this.seo.updateMeta({
-        title: `${data.title} — Adrián Jiménez Cabello`,
-        description: data.description ?? data.short_description ?? undefined,
-        image: data.image_url ?? undefined,
-      });
+    const resolved = this.route.snapshot.data['project'] as Project | null | undefined;
+    if (!resolved) {
+      return;
+    }
+    this.project.set(resolved);
+    const projectUrl = `https://adrianjimenezcabello.dev/projects/${resolved.slug}`;
+    const description = resolved.description ?? resolved.short_description ?? '';
+    this.seo.updateMeta({
+      title: `${resolved.title} — Adrián Jiménez Cabello`,
+      description,
+      image: resolved.image_url ?? undefined,
+      url: projectUrl,
+      type: 'article',
     });
+    this.seo.setProjectSchema({
+      title: resolved.title,
+      description,
+      slug: resolved.slug,
+      image: resolved.image_url ?? undefined,
+      technologies: resolved.technologies.map((tech) => tech.name),
+      sourceUrl: resolved.repo_url ?? undefined,
+      demoUrl: resolved.demo_url ?? undefined,
+    });
+    this.seo.setBreadcrumbList([
+      { name: 'Home', url: 'https://adrianjimenezcabello.dev/' },
+      { name: 'Projects', url: 'https://adrianjimenezcabello.dev/projects' },
+      { name: resolved.title, url: projectUrl },
+    ]);
   }
 }
