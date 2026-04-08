@@ -93,6 +93,8 @@ export class LandingComponent {
           email: profile.email,
           location: profile.location,
         });
+        this.seo.setWebSiteSchema();
+        this.seo.setProfessionalServiceSchema();
       }
     });
   }

@@ -1,7 +1,5 @@
 import { Component, ChangeDetectionStrategy, inject, signal, DestroyRef, afterNextRender } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { MatIconButton } from '@angular/material/button';
-import { MatIcon } from '@angular/material/icon';
 import { LanguageToggleComponent } from '../language-toggle/language-toggle.component';
 import { TranslateService } from '../../../core/services/translate.service';
 import { ThemeService } from '../../../core/services/theme.service';
@@ -10,7 +8,7 @@ import { MagneticDirective } from '../../directives/magnetic.directive';
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, LanguageToggleComponent, MagneticDirective, MatIconButton, MatIcon],
+  imports: [RouterLink, RouterLinkActive, LanguageToggleComponent, MagneticDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <nav class="fixed top-0 z-50 w-full border-b border-white/[0.06] transition-all duration-300"
@@ -44,15 +42,32 @@ import { MagneticDirective } from '../../directives/magnetic.directive';
           </a>
 
           <button
-            mat-icon-button
             type="button"
             (click)="theme.toggle()"
             [attr.aria-label]="
               theme.theme() === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'
             "
-            class="text-white/70 hover:text-white"
+            class="flex h-10 w-10 items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/10 hover:text-white"
           >
-            <mat-icon>{{ theme.theme() === 'dark' ? 'light_mode' : 'dark_mode' }}</mat-icon>
+            @if (theme.theme() === 'dark') {
+              <!-- Sun icon -->
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5" aria-hidden="true">
+                <circle cx="12" cy="12" r="4"/>
+                <path d="M12 2v2"/>
+                <path d="M12 20v2"/>
+                <path d="m4.93 4.93 1.41 1.41"/>
+                <path d="m17.66 17.66 1.41 1.41"/>
+                <path d="M2 12h2"/>
+                <path d="M20 12h2"/>
+                <path d="m6.34 17.66-1.41 1.41"/>
+                <path d="m19.07 4.93-1.41 1.41"/>
+              </svg>
+            } @else {
+              <!-- Moon icon -->
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5" aria-hidden="true">
+                <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+              </svg>
+            }
           </button>
 
           <app-language-toggle />

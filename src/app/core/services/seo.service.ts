@@ -60,31 +60,84 @@ export class SeoService {
     this.meta.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
   }
 
-  setJsonLd(data: Record<string, unknown>) {
-    const existingScript = this.doc.querySelector('script[type="application/ld+json"]');
-    if (existingScript) {
-      existingScript.textContent = JSON.stringify(data);
+  setJsonLd(data: Record<string, unknown>, id: string) {
+    const selector = `script[type="application/ld+json"]#${id}`;
+    const existing = this.doc.querySelector(selector);
+    if (existing) {
+      existing.textContent = JSON.stringify(data);
     } else {
       const script = this.doc.createElement('script');
       script.type = 'application/ld+json';
+      script.id = id;
       script.textContent = JSON.stringify(data);
       this.doc.head.appendChild(script);
     }
   }
 
   setPersonSchema(profile: { full_name: string; title: string; email?: string | null; location?: string | null; url?: string }) {
-    this.setJsonLd({
+    const address: Record<string, string> = profile.location
+      ? { '@type': 'PostalAddress', addressLocality: profile.location, addressCountry: 'ES' }
+      : { '@type': 'PostalAddress', addressCountry: 'ES' };
+
+    const schema: Record<string, unknown> = {
       '@context': 'https://schema.org',
       '@type': 'Person',
+      '@id': 'https://adrianjimenezcabello.dev/#person',
       name: profile.full_name,
+      givenName: 'Adrián',
+      familyName: 'Jiménez Cabello',
+      alternateName: ['Adrian Jimenez', 'Adrián Jiménez', 'Adri Jiménez'],
       jobTitle: profile.title,
-      email: profile.email ?? undefined,
-      address: profile.location ? { '@type': 'PostalAddress', addressLocality: profile.location } : undefined,
-      url: profile.url ?? 'https://adrianjimenezcabello.dev',
+      url: 'https://adrianjimenezcabello.dev',
+      image: 'https://adrianjimenezcabello.dev/og-image.png',
+      address,
+      nationality: { '@type': 'Country', name: 'Spain' },
+      knowsAbout: [
+        'Angular', 'NestJS', 'React', 'TypeScript', 'Node.js',
+        'Supabase', 'PostgreSQL', 'Tailwind CSS', 'SSR',
+        'Full Stack Development', 'Frontend Architecture',
+        'Clean Architecture', 'Design Patterns',
+      ],
       sameAs: [
         'https://www.linkedin.com/in/adrianjimenezcabello',
         'https://github.com/adrijimcab',
       ],
-    });
+    };
+
+    if (profile.email) {
+      schema['email'] = profile.email;
+    }
+
+    this.setJsonLd(schema, 'schema-person');
+  }
+
+  setWebSiteSchema() {
+    this.setJsonLd({
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      '@id': 'https://adrianjimenezcabello.dev/#website',
+      url: 'https://adrianjimenezcabello.dev/',
+      name: 'Adrián Jiménez Cabello',
+      description: 'Portfolio personal de Adrián Jiménez Cabello, Full Stack Developer especializado en Angular, NestJS y React.',
+      inLanguage: ['es', 'en'],
+      author: { '@id': 'https://adrianjimenezcabello.dev/#person' },
+      potentialAction: {
+        '@type': 'SearchAction',
+        target: 'https://adrianjimenezcabello.dev/?q={search_term_string}',
+        'query-input': 'required name=search_term_string',
+      },
+    }, 'schema-website');
+  }
+
+  setProfessionalServiceSchema() {
+    this.setJsonLd({
+      '@context': 'https://schema.org',
+      '@type': 'ProfessionalService',
+      '@id': 'https://adrianjimenezcabello.dev/#service',
+      name: 'Full Stack Development Services',
+      provider: { '@id': 'https://adrianjimenezcabello.dev/#person' },
+      areaServed: { '@type': 'Country', name: 'Spain' },
+      serviceType: ['Web Development', 'Frontend Development', 'Backend Development'],
+    }, 'schema-service');
   }
 }
