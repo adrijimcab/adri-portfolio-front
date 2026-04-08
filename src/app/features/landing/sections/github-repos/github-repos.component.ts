@@ -39,7 +39,7 @@ import { getLanguageColor } from '../../../../shared/helpers/language-colors';
                         {{ repo.name }}
                       </h3>
                       @if (repo.is_pinned) {
-                        <svg class="h-4 w-4 shrink-0 text-white/30" fill="currentColor" viewBox="0 0 16 16">
+                        <svg class="h-4 w-4 shrink-0 text-white/60" fill="currentColor" viewBox="0 0 16 16">
                           <path d="M4.456.734a1.75 1.75 0 012.826.504l.613 1.327a3.08 3.08 0 002.084 1.707l2.454.584c1.332.317 1.8 1.972.832 2.94L11.06 10l3.72 3.72a.749.749 0 01-1.06 1.06L10 11.06l-2.204 2.205c-.968.968-2.623.5-2.94-.832l-.584-2.454a3.08 3.08 0 00-1.707-2.084l-1.327-.613a1.75 1.75 0 01-.504-2.826L4.456.734z"/>
                         </svg>
                       }
@@ -49,7 +49,7 @@ import { getLanguageColor } from '../../../../shared/helpers/language-colors';
                       <p class="mt-2 text-xs text-white/50 line-clamp-2">{{ repo.description }}</p>
                     }
 
-                    <div class="mt-3 flex items-center gap-3 text-xs text-white/40">
+                    <div class="mt-3 flex items-center gap-3 text-xs text-white/65">
                       @if (repo.language) {
                         <span class="flex items-center gap-1">
                           <span class="inline-block h-2.5 w-2.5 rounded-full" [style.background-color]="getLangColor(repo.language)"></span>
@@ -77,7 +77,7 @@ import { getLanguageColor } from '../../../../shared/helpers/language-colors';
                     @if (repo.topics.length) {
                       <div class="mt-3 flex flex-wrap gap-1">
                         @for (topic of repo.topics.slice(0, 5); track topic) {
-                          <span class="rounded-full px-2 py-0.5 text-[10px] font-medium border border-white/10 text-white/40 bg-white/[0.03]">
+                          <span class="rounded-full px-2 py-0.5 text-[10px] font-medium border border-white/10 text-white/65 bg-white/[0.03]">
                             {{ topic }}
                           </span>
                         }

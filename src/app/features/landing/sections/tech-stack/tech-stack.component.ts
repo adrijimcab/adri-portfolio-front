@@ -34,7 +34,7 @@ import { TechnologyGroup } from '../../../../core/models';
                         <div class="flex items-center justify-between">
                           <span class="text-sm text-white/80">{{ tech.name }}</span>
                           @if (tech.proficiency_level) {
-                            <span class="text-xs text-white/30">{{ tech.proficiency_level }}%</span>
+                            <span class="text-xs text-white/60">{{ tech.proficiency_level }}%</span>
                           }
                         </div>
                         @if (tech.proficiency_level) {

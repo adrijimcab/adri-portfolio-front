@@ -41,7 +41,7 @@ import { Profile, SiteConfig } from '../../../../core/models';
               <span class="text-3xl font-bold text-white">
                 <app-animated-counter [target]="stat.numericValue" [suffix]="stat.suffix" />
               </span>
-              <span class="mt-1 block text-xs text-white/40 uppercase tracking-wider">{{ stat.label }}</span>
+              <span class="mt-1 block text-xs text-white/65 uppercase tracking-wider">{{ stat.label }}</span>
             </div>
           }
         </div>

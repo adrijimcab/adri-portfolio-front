@@ -34,7 +34,7 @@ import { Certification } from '../../../../core/models';
                       <h3 class="font-bold text-white text-sm">{{ cert.name }}</h3>
                       <p class="text-xs mt-1" style="color: var(--color-secondary);">{{ cert.provider }}</p>
                       @if (cert.date) {
-                        <p class="text-xs text-white/30 mt-1">{{ cert.date | date:'MMM yyyy' }}</p>
+                        <p class="text-xs text-white/60 mt-1">{{ cert.date | date:'MMM yyyy' }}</p>
                       }
                       @if (cert.credential_id) {
                         <p class="text-xs text-white/20 mt-1">{{ t.t('certifications.credential_id') }}: {{ cert.credential_id }}</p>

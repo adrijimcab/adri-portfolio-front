@@ -23,10 +23,10 @@ import { Profile } from '../../../../core/models';
             }
             <div class="mt-6 flex flex-wrap gap-4">
               @if (profile()?.location) {
-                <span class="text-sm text-white/40">{{ profile()?.location }}</span>
+                <span class="text-sm text-white/65">{{ profile()?.location }}</span>
               }
               @if (profile()?.email) {
-                <span class="text-sm text-white/40">{{ profile()?.email }}</span>
+                <span class="text-sm text-white/65">{{ profile()?.email }}</span>
               }
             </div>
           </div>

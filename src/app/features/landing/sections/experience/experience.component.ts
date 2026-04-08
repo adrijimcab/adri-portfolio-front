@@ -36,7 +36,7 @@ import { DatePipe } from '@angular/common';
                       {{ exp.company }}@if (exp.client) { &middot; {{ exp.client }}}
                     </p>
                   </div>
-                  <span class="shrink-0 text-xs text-white/40">
+                  <span class="shrink-0 text-xs text-white/65">
                     {{ exp.start_date | date:'MMM yyyy' }} — {{ exp.end_date ? (exp.end_date | date:'MMM yyyy') : t.t('experience.present') }}
                   </span>
                 </div>

@@ -26,10 +26,10 @@ import { Education, Course } from '../../../../core/models';
                     <h3 class="font-bold text-white">{{ edu.degree }}</h3>
                     <p class="text-sm" style="color: var(--color-secondary);">{{ edu.institution }}</p>
                     @if (edu.description) {
-                      <p class="mt-1 text-xs text-white/40">{{ edu.description }}</p>
+                      <p class="mt-1 text-xs text-white/65">{{ edu.description }}</p>
                     }
                   </div>
-                  <span class="text-xs text-white/30">
+                  <span class="text-xs text-white/60">
                     {{ edu.year_start }}{{ edu.year_end ? ' - ' + edu.year_end : '' }}
                   </span>
                 </div>
@@ -40,7 +40,7 @@ import { Education, Course } from '../../../../core/models';
 
         <!-- Courses -->
         @if (courses().length) {
-          <h3 class="mb-4 text-sm font-semibold uppercase tracking-wider text-white/40">{{ t.t('education.certifications_label') }}</h3>
+          <h3 class="mb-4 text-sm font-semibold uppercase tracking-wider text-white/65">{{ t.t('education.certifications_label') }}</h3>
           <div class="grid gap-3 sm:grid-cols-2">
             @for (course of courses(); track course.id; let i = $index) {
               <div appScrollAnimate [delay]="i * 60">
@@ -51,7 +51,7 @@ import { Education, Course } from '../../../../core/models';
                       <span class="text-xs" style="color: var(--color-secondary);">{{ course.provider }}</span>
                     }
                     @if (course.date) {
-                      <span class="text-xs text-white/30">{{ course.date | date:'MMM yyyy' }}</span>
+                      <span class="text-xs text-white/60">{{ course.date | date:'MMM yyyy' }}</span>
                     }
                   </div>
                 </app-glass-card>
