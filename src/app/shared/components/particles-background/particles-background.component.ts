@@ -26,7 +26,9 @@ interface Particle {
   template: `
     <canvas
       #canvas
-      class="pointer-events-none absolute inset-0 h-full w-full"
+      class="pointer-events-none fixed inset-0 h-screen w-screen"
+      aria-hidden="true"
+      style="z-index: -5;"
     ></canvas>
   `,
   styles: `

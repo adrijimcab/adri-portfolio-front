@@ -1,5 +1,4 @@
-import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
-import { TranslateService } from '../../../core/services/translate.service';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { SpotifyNowPlayingComponent } from '../spotify-now-playing/spotify-now-playing.component';
 
 @Component({
@@ -8,17 +7,16 @@ import { SpotifyNowPlayingComponent } from '../spotify-now-playing/spotify-now-p
   imports: [SpotifyNowPlayingComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <footer class="border-t border-white/[0.06] py-8">
-      <div class="mx-auto max-w-6xl space-y-6 px-6 text-center">
+    <footer class="border-t border-white/[0.06] py-12">
+      <div class="mx-auto max-w-6xl px-6 text-center">
         <app-spotify-now-playing />
-        <p class="text-sm text-white/40">
-          &copy; {{ currentYear }} Adrian Jimenez Cabello. {{ t.t('footer.built_with') }}
+        <p class="mt-12 text-sm text-white/50">
+          &copy; {{ currentYear }} Adrián Jiménez Cabello
         </p>
       </div>
     </footer>
   `,
 })
 export class FooterComponent {
-  readonly t = inject(TranslateService);
-  currentYear = new Date().getFullYear();
+  readonly currentYear = new Date().getFullYear();
 }

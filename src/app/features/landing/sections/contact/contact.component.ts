@@ -65,16 +65,6 @@ import { Profile, SocialLink } from '../../../../core/models';
               </div>
             }
 
-            @if (socialLinks().length) {
-              <div class="mt-8 flex justify-center gap-4">
-                @for (link of socialLinks(); track link.id) {
-                  <a [href]="link.url" target="_blank" rel="noopener noreferrer"
-                     class="flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 text-white/60 transition-all hover:border-white/20 hover:text-white hover:scale-110">
-                    {{ link.platform.charAt(0).toUpperCase() }}
-                  </a>
-                }
-              </div>
-            }
           </app-glass-card>
         </div>
 

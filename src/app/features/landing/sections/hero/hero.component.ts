@@ -1,6 +1,5 @@
 import { Component, ChangeDetectionStrategy, input, computed, inject } from '@angular/core';
 import { ScrollAnimateDirective } from '../../../../shared/directives/scroll-animate.directive';
-import { ParticlesBackgroundComponent } from '../../../../shared/components/particles-background/particles-background.component';
 import { TypingTextComponent } from '../../../../shared/components/typing-text/typing-text.component';
 import { AnimatedCounterComponent } from '../../../../shared/components/animated-counter/animated-counter.component';
 import { TranslateService } from '../../../../core/services/translate.service';
@@ -11,14 +10,12 @@ import { Profile, SiteConfig } from '../../../../core/models';
   standalone: true,
   imports: [
     ScrollAnimateDirective,
-    ParticlesBackgroundComponent,
     TypingTextComponent,
     AnimatedCounterComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section id="hero" class="relative flex min-h-screen items-center justify-center px-6" aria-labelledby="hero-title">
-      <app-particles-background aria-hidden="true" />
       <div class="relative z-10 text-center" appScrollAnimate>
         <p class="mb-4 text-xs tracking-[4px] uppercase" style="color: var(--color-secondary);">
           <app-typing-text [texts]="typingTexts()" />

@@ -151,14 +151,17 @@ export class WebglShaderBackgroundComponent implements OnDestroy {
     const mesh = new THREE.Mesh(geometry, material);
     scene.add(mesh);
 
-    const clock = new THREE.Clock();
+    // Avoid THREE.Clock (deprecated in newer three versions). Use performance.now()
+    // directly — zero allocation, no cross-version breakage.
+    const startMs = performance.now();
     let rafId: number | null = null;
     let paused = false;
 
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const renderFrame = (): void => {
-      (uniforms['uTime'] as THREE.IUniform<number>).value = clock.getElapsedTime();
+      (uniforms['uTime'] as THREE.IUniform<number>).value =
+        (performance.now() - startMs) / 1000;
       renderer.render(scene, camera);
     };
 

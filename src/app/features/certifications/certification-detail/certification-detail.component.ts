@@ -1,5 +1,7 @@
-import { Component, ChangeDetectionStrategy, inject, signal, OnInit, computed } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, signal, computed } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { switchMap, catchError, of } from 'rxjs';
 import { TranslateService } from '../../../core/services/translate.service';
 import { PortfolioService } from '../../../core/services/portfolio.service';
 import { Certification } from '../../../core/models';
@@ -19,7 +21,7 @@ function thumbnailFor(url: string, width = 1200): string {
       <div class="mx-auto max-w-5xl">
         <a routerLink="/"
            fragment="certifications"
-           class="mb-6 inline-flex items-center gap-2 text-sm text-white/40 transition-colors hover:text-white">
+           class="mb-6 inline-flex items-center gap-2 text-sm text-white/60 transition-colors hover:text-white">
           <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
           </svg>
@@ -33,7 +35,7 @@ function thumbnailFor(url: string, width = 1200): string {
                 <h1 class="text-2xl font-bold text-white">{{ cert.name }}</h1>
                 <p class="text-sm mt-1" style="color: var(--color-secondary);">{{ cert.provider }}</p>
                 @if (cert.credential_id) {
-                  <p class="text-xs mt-2 text-white/40 font-mono">ID: {{ cert.credential_id }}</p>
+                  <p class="text-xs mt-2 text-white/60 font-mono">ID: {{ cert.credential_id }}</p>
                 }
               </div>
               @if (cert.is_verified) {
@@ -47,7 +49,7 @@ function thumbnailFor(url: string, width = 1200): string {
             </div>
 
             @if (cert.description) {
-              <p class="mb-6 text-sm text-white/60 leading-relaxed">{{ cert.description }}</p>
+              <p class="mb-6 text-sm text-white/70 leading-relaxed">{{ cert.description }}</p>
             }
 
             @if (thumbnailUrl()) {
@@ -56,13 +58,13 @@ function thumbnailFor(url: string, width = 1200): string {
                   [src]="thumbnailUrl()!"
                   [alt]="cert.name + ' certificate preview'"
                   class="h-full w-full object-contain"
-                  loading="lazy"
                   decoding="async"
+                  fetchpriority="high"
                   (error)="thumbnailError.set(true)"
                 />
                 @if (thumbnailError()) {
                   <div class="absolute inset-0 flex items-center justify-center bg-white/[0.03]">
-                    <p class="text-white/40 text-sm">{{ t.t('certifications.preview_unavailable') }}</p>
+                    <p class="text-white/60 text-sm">{{ t.t('certifications.preview_unavailable') }}</p>
                   </div>
                 }
               </div>
@@ -84,19 +86,37 @@ function thumbnailFor(url: string, width = 1200): string {
           </div>
         } @else {
           <div class="flex items-center justify-center py-24">
-            <p class="text-white/40">{{ t.t('common.loading') }}</p>
+            <p class="text-white/60">{{ t.t('common.loading') }}</p>
           </div>
         }
       </div>
     </section>
   `,
 })
-export class CertificationDetailComponent implements OnInit {
+export class CertificationDetailComponent {
   readonly t = inject(TranslateService);
   private readonly route = inject(ActivatedRoute);
   private readonly portfolio = inject(PortfolioService);
 
-  readonly certification = signal<Certification | null>(null);
+  /**
+   * Reactive certification stream:
+   *  - Subscribes to paramMap so navigation between :id values rehydrates the view
+   *  - toSignal integrates the observable directly with OnPush change detection
+   *  - catchError yields null so the @if block falls back to the loading state
+   */
+  readonly certification = toSignal<Certification | null>(
+    this.route.paramMap.pipe(
+      switchMap((params) => {
+        const id = params.get('id');
+        if (!id) return of(null);
+        return this.portfolio.getCertificationById(id).pipe(
+          catchError(() => of(null)),
+        );
+      }),
+    ),
+    { initialValue: null },
+  );
+
   readonly thumbnailError = signal(false);
 
   readonly thumbnailUrl = computed(() => {
@@ -104,14 +124,4 @@ export class CertificationDetailComponent implements OnInit {
     if (!cert?.certificate_url) return null;
     return thumbnailFor(cert.certificate_url, 1200);
   });
-
-  ngOnInit() {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.portfolio.getCertificationById(id).subscribe((cert) => {
-        this.certification.set(cert);
-        this.thumbnailError.set(false);
-      });
-    }
-  }
 }

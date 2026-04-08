@@ -68,7 +68,7 @@ function getColor(count: number): string {
         <!-- Month labels -->
         <div class="overflow-x-auto pb-2">
           <div class="min-w-[720px]">
-            <div class="mb-1 flex text-[10px] text-white/30" style="padding-left: 32px;">
+            <div class="mb-1 flex text-[10px] text-white/60" style="padding-left: 32px;">
               @for (month of months(); track month.label + month.offset) {
                 <span
                   class="shrink-0"
@@ -82,7 +82,7 @@ function getColor(count: number): string {
             <!-- Grid -->
             <div class="flex gap-[3px]">
               <!-- Day labels -->
-              <div class="flex shrink-0 flex-col gap-[3px] text-[10px] text-white/30" style="width: 28px;">
+              <div class="flex shrink-0 flex-col gap-[3px] text-[10px] text-white/60" style="width: 28px;">
                 <span class="h-[11px]">&nbsp;</span>
                 <span class="flex h-[11px] items-center">{{ t.t('github.cal_mon') }}</span>
                 <span class="h-[11px]">&nbsp;</span>
@@ -115,10 +115,10 @@ function getColor(count: number): string {
 
             <!-- Legend -->
             <div class="mt-3 flex items-center justify-between">
-              <span class="text-xs text-white/40">
+              <span class="text-xs text-white/70">
                 {{ total() }} {{ t.t('github.cal_total') }}
               </span>
-              <div class="flex items-center gap-1 text-[10px] text-white/30">
+              <div class="flex items-center gap-1 text-[10px] text-white/60">
                 <span>{{ t.t('github.cal_less') }}</span>
                 @for (color of legendColors; track $index) {
                   <div class="h-[11px] w-[11px] rounded-sm" [style.background-color]="color"></div>
