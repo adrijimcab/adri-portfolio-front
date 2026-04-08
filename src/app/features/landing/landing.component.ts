@@ -1,3 +1,14 @@
+// TODO(fase-4): evaluate rxResource refactor.
+// The landing currently consumes 9 lazy signals from PortfolioService,
+// each backed by a separate endpoint. Migrating to rxResource was
+// considered in Fase 3 but declined because:
+//   1. Each section is @defer (on viewport), so the HTTP only fires
+//      when that section scrolls in — we already pay per-section cost.
+//   2. rxResource shines when inputs drive refetch (params, filters);
+//      these signals are fire-once per session, no input dependency.
+//   3. A unified rxResource would require a backend aggregate endpoint,
+//      which is out of scope for Fase 3.
+// Revisit only if the backend exposes a GET /portfolio/landing bundle.
 import { Component, ChangeDetectionStrategy, inject, effect, computed } from '@angular/core';
 import { PortfolioService } from '../../core/services/portfolio.service';
 import { SeoService } from '../../core/services/seo.service';
