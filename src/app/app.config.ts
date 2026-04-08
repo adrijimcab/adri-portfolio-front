@@ -7,6 +7,8 @@ import { cacheInterceptor } from './core/interceptors/cache.interceptor';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { routes } from './app.routes';
+import { PORTFOLIO_REPOSITORY } from './core/domain/repositories';
+import { HttpPortfolioRepository } from './core/infrastructure/http';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -15,5 +17,6 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withFetch(), withInterceptors([authInterceptor, cacheInterceptor])),
     provideClientHydration(withEventReplay()),
     provideAnimationsAsync(),
+    { provide: PORTFOLIO_REPOSITORY, useExisting: HttpPortfolioRepository },
   ],
 };

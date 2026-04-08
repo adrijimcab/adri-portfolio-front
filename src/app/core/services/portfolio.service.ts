@@ -1,94 +1,91 @@
 import { Injectable, inject, runInInjectionContext, EnvironmentInjector, type Signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import type { Observable } from 'rxjs';
-import { ApiService } from './api.service';
+import { PORTFOLIO_REPOSITORY } from '../domain/repositories';
 import type {
   Profile, Experience, Project, TechnologyGroup,
   SiteConfig, SectionConfig, SocialLink, Education, Course,
   Certification, GitHubRepo,
-} from '../models';
+} from '../domain/entities';
 
 /**
- * Portfolio data gateway.
+ * Portfolio façade.
  *
  * Historical note: this used to eagerly fire 10 HTTP requests from the
- * constructor via `toSignal(api.get(...))`. That hit the API on every
- * navigation — including /login and /404 — and crushed SSR. The service
- * now exposes:
+ * constructor. Fase 2.A made it pull-based with lazy signals. Fase 3
+ * collapsed it into a thin façade over {@link PortfolioRepository} — all
+ * the data-access logic lives in the repository (port/adapter); this
+ * class only adds:
  *
- * 1. Lazy signal accessors (`profile`, `experiences`, ...) that only
- *    create their HTTP subscription on first read, cached for the lifetime
- *    of the service. Components using the old `portfolio.profile()` call
- *    site keep working with no changes.
- * 2. Pull-based observable methods (`getProfile()`, `getExperiences()`,
- *    ...) for container components that want explicit control (e.g. to
- *    feed an `rxResource` or combine with `takeUntilDestroyed`).
+ * 1. Back-compat signal accessors (`profile()`, `experiences()`, ...)
+ *    used by older consumers. Lazy, cached, created only on first read.
+ * 2. A convenience pull-based surface that simply delegates to the port.
  *
- * Fase 3: collapse into repository + use-case layers with hexagonal
- * architecture (see audit F-005).
+ * New code should inject {@link PORTFOLIO_REPOSITORY} directly instead
+ * of using this service.
  */
 @Injectable({ providedIn: 'root' })
 export class PortfolioService {
-  private readonly api = inject(ApiService);
+  private readonly repo = inject(PORTFOLIO_REPOSITORY);
   private readonly injector = inject(EnvironmentInjector);
   private readonly signalCache = new Map<string, Signal<unknown>>();
 
-  // --- Pull-based observable API ---
+  // --- Pull-based observable API (delegates to repository) ---
 
   getProfile(): Observable<Profile> {
-    return this.api.get<Profile>('profile');
+    return this.repo.getProfile();
   }
 
   getExperiences(): Observable<Experience[]> {
-    return this.api.get<Experience[]>('experience');
+    return this.repo.getExperiences();
   }
 
   getTechnologies(): Observable<TechnologyGroup[]> {
-    return this.api.get<TechnologyGroup[]>('technologies');
+    return this.repo.getTechnologies();
   }
 
   getFeaturedProjects(): Observable<Project[]> {
-    return this.api.get<Project[]>('projects?featured=true');
+    return this.repo.getFeaturedProjects();
   }
 
   getEducation(): Observable<{ education: Education[]; courses: Course[] }> {
-    return this.api.get<{ education: Education[]; courses: Course[] }>('education');
+    return this.repo.getEducation();
   }
 
   getSiteConfig(): Observable<SiteConfig> {
-    return this.api.get<SiteConfig>('config/site');
+    return this.repo.getSiteConfig();
   }
 
   getSections(): Observable<SectionConfig[]> {
-    return this.api.get<SectionConfig[]>('config/sections');
+    return this.repo.getSections();
   }
 
   getSocialLinks(): Observable<SocialLink[]> {
-    return this.api.get<SocialLink[]>('config/social');
+    return this.repo.getSocialLinks();
   }
 
   getCertifications(): Observable<Certification[]> {
-    return this.api.get<Certification[]>('certifications');
+    return this.repo.getCertifications();
   }
 
   getGithubRepos(): Observable<GitHubRepo[]> {
-    return this.api.get<GitHubRepo[]>('github/repos');
+    return this.repo.getGithubRepos();
   }
 
   getAllProjects(): Observable<Project[]> {
-    return this.api.get<Project[]>('projects');
+    return this.repo.getAllProjects();
   }
 
   getProjectBySlug(slug: string): Observable<Project> {
-    return this.api.get<Project>(`projects/${slug}`);
+    return this.repo.getProjectBySlug(slug);
   }
 
   getCvUrl(): Observable<{ url: string }> {
-    return this.api.get<{ url: string }>('cv/url');
+    return this.repo.getCvUrl();
   }
 
   getCertificationById(id: string): Observable<Certification> {
-    return this.api.get<Certification>(`certifications/${id}`);
+    return this.repo.getCertificationById(id);
   }
 
   // --- Lazy signal API (back-compat with existing consumers) ---
