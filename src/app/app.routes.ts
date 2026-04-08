@@ -1,5 +1,7 @@
 import type { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
+import { projectDetailResolver } from './features/projects/project-detail/project-detail.resolver';
+import { blogPostResolver } from './features/blog/blog-post/blog-post.resolver';
 
 export const routes: Routes = [
   {
@@ -16,6 +18,7 @@ export const routes: Routes = [
   },
   {
     path: 'projects/:slug',
+    resolve: { project: projectDetailResolver },
     loadComponent: () =>
       import('./features/projects/project-detail/project-detail.component').then(
         (m) => m.ProjectDetailComponent,
@@ -43,6 +46,7 @@ export const routes: Routes = [
   },
   {
     path: 'blog/:slug',
+    resolve: { post: blogPostResolver },
     loadComponent: () =>
       import('./features/blog/blog-post/blog-post.component').then((m) => m.BlogPostComponent),
   },
