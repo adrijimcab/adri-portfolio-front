@@ -123,6 +123,25 @@ export class GenericCrudComponent<T extends { id: string }> implements OnInit {
   /** Optional override for the initial reset state. */
   readonly initialFormState = input<Record<string, unknown> | undefined>(undefined);
 
+  /**
+   * Hook called before switching to the form view, after the form has
+   * been reset/patched. Use it to sync host-owned state that lives
+   * outside the FormGroup (e.g. signals for array fields).
+   */
+  readonly onBeforeAdd = input<() => void>(() => {
+    /* noop */
+  });
+  readonly onBeforeEdit = input<(row: unknown) => void>(() => {
+    /* noop */
+  });
+
+  /**
+   * Hook that maps the create/update payload one more time, after
+   * `fromFormValue`, so editors with host-owned state (e.g. achievements
+   * signals) can merge it into the final DTO.
+   */
+  readonly augmentPayload = input<(payload: Partial<T>) => Partial<T>>((p) => p);
+
   readonly editing = signal(false);
   readonly editingId = signal<string | null>(null);
   readonly saving = signal(false);
@@ -143,6 +162,7 @@ export class GenericCrudComponent<T extends { id: string }> implements OnInit {
 
   startAdd(): void {
     this.form().reset(this.initialFormState() ?? {});
+    this.onBeforeAdd()();
     this.editingId.set(null);
     this.editing.set(true);
   }
@@ -151,6 +171,7 @@ export class GenericCrudComponent<T extends { id: string }> implements OnInit {
     const typed = row as unknown as T;
     this.form().reset(this.initialFormState() ?? {});
     this.form().patchValue(this.toFormValue()(typed));
+    this.onBeforeEdit()(typed);
     this.editingId.set(typed.id);
     this.editing.set(true);
   }
@@ -169,7 +190,7 @@ export class GenericCrudComponent<T extends { id: string }> implements OnInit {
 
     this.saving.set(true);
     const raw = form.getRawValue() as Record<string, unknown>;
-    const payload = this.fromFormValue()(raw);
+    const payload = this.augmentPayload()(this.fromFormValue()(raw));
     const id = this.editingId();
     const req = id ? this.resource().update(id, payload) : this.resource().create(payload);
 
