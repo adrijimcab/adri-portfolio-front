@@ -69,7 +69,115 @@ If you want to see how any of this is wired up, the code is on [GitHub](https://
 `,
 };
 
-const RAW_POSTS: readonly RawPost[] = [welcome];
+const shippingWithAgents: RawPost = {
+  slug: 'shipping-with-agents',
+  title: 'Shipping a production portfolio with AI sub-agents in one session',
+  description:
+    'What worked, what broke, and the five-rule cheat sheet I keep reaching for when delegating code to autonomous workers.',
+  date: '2026-04-08',
+  content: `## The setup
+
+I spent one session building this portfolio end to end: auditing the codebase, implementing every feature from a competitor scrape, fixing the bugs I introduced, and deploying to three services. The catch: I did most of the execution through autonomous sub-agents running in parallel, while the main thread orchestrated, verified and committed.
+
+This isn't a sales pitch for AI coding. It's a list of the things I had to learn the hard way for this to actually work.
+
+## Rule 1: Delegate implementation, not decisions
+
+Agents are great at writing a hundred lines of boilerplate across seven files. They are terrible at choosing between two architectures. Every time I handed a decision to an agent, I got a plausible-sounding answer that I then had to re-evaluate anyway.
+
+The split I landed on: the main thread decides what to build and how it fits together. The agent decides which exact lines to type.
+
+## Rule 2: Sandbox tooling is a real constraint
+
+Half of my sub-agents couldn't run \`git commit\`. Half could. There was no documented way to know in advance. The pattern that eventually worked: agents write and stage files, the main thread finalizes commits. Treat every sub-agent as a writer, not a releaser.
+
+## Rule 3: Trust the type checker, verify the runtime
+
+I used \`IntersectionType\` from \`@nestjs/swagger\` to combine two DTOs. TypeScript happily compiled. The server happily deployed. And then three list endpoints started throwing "undefined is not iterable" in production because \`IntersectionType\` doesn't preserve class getters. The fix took thirty seconds once I understood it:
+
+\`\`\`ts
+// Before: relied on a getter that didn't survive IntersectionType
+get range(): [number, number] {
+  const from = this.skip;
+  return [from, from + this.limit - 1];
+}
+
+// After: plain helper function, no class involved
+export function computeRange(page?: number, limit?: number): [number, number] {
+  const safePage = page ?? 1;
+  const safeLimit = limit ?? 20;
+  const from = (safePage - 1) * safeLimit;
+  return [from, from + safeLimit - 1];
+}
+\`\`\`
+
+Every time you rely on framework machinery to carry behavior through a transformation, add a real end-to-end smoke test.
+
+## Rule 4: Parallel means different files
+
+I tried running two sub-agents on the same repo in parallel. Both touched \`package.json\`. Both wrote components. Before spawning parallel agents now, I map the files each one will touch. If two agents would touch the same file, they run sequentially.
+
+## Rule 5: Always verify in production, not in the build
+
+\`npm run build\` passed. \`npm run lint\` was clean. TypeScript was happy. Nothing caught the \`IntersectionType\` bug because it was a runtime problem. Every production-affecting commit now goes through a smoke test of the real endpoints.
+
+## What I'd do differently next time
+
+Start with the hardest architectural decision first, with me alone, before any agent touches the repo. Once the skeleton is in place, unleash the agents on features. Planning quality drops noticeably when you delegate it.
+
+The portfolio you're reading this on was built with about a dozen sub-agent invocations, two Railway rate-limit incidents, and one production hotfix. Worth it.
+`,
+};
+
+const railwayMultiHop: RawPost = {
+  slug: 'railway-trust-proxy',
+  title: 'The throttler that never fired: Railway, trust proxy, and the hour I lost',
+  description:
+    'A short debugging story about rate limiting, ingress proxies, and why "trust proxy 1" is wrong on Railway.',
+  date: '2026-04-08',
+  content: `## The symptom
+
+I had just hardened the API with \`@nestjs/throttler\`. The config looked fine. The route decorator looked fine. The response headers even showed \`x-ratelimit-limit: 5\` when hitting \`/auth/login\`. But no matter how many requests I fired, the 429 never came. Every call returned 401.
+
+I bounced through three wrong explanations before I finally looked at the logs.
+
+## The logs told me everything
+
+Three consecutive requests to the same endpoint, from the same curl on the same machine, were showing up in Pino with different IPs:
+
+\`\`\`
+req {"id":3,"url":"/api/auth/login","ip":"::ffff:100.64.0.14"}
+req {"id":4,"url":"/api/auth/login","ip":"::ffff:100.64.0.20"}
+req {"id":5,"url":"/api/auth/login","ip":"::ffff:100.64.0.23"}
+\`\`\`
+
+Railway's ingress doesn't hand your container a single proxy hop. It hands you a fleet of internal gateway nodes, each with its own \`100.64.x.x\` address. Every request bounces through a different one. To Express, each request looked like a brand new client, so the throttler's per-IP bucket was always empty.
+
+## The fix
+
+I had set \`app.set('trust proxy', 1)\` — trust the first proxy in the chain. That's the recommended setting for a single-hop ingress like Vercel or Heroku. On Railway it's exactly wrong: \`1\` trusts only the first hop, so the IP Express reads is still whichever internal gateway the request bounced off, not the original client.
+
+The correction is one character:
+
+\`\`\`ts
+// Before
+app.set('trust proxy', 1);
+
+// After — trust the full chain and read the first x-forwarded-for entry
+app.set('trust proxy', true);
+\`\`\`
+
+With \`true\`, Express walks back to the start of \`x-forwarded-for\` and uses that as \`req.ip\`. The throttler suddenly saw the real client, accumulated hits, and fired the 429 on request six.
+
+## The generalisation
+
+Every time I've hit a rate limit bug in the last five years, the answer has been "you're behind a proxy you didn't know about". Cloudflare, Heroku, Fly, Railway — they all insert hops. The fix is always the same: look at what \`req.ip\` actually resolves to on the server, not what you think it should be.
+
+If you're deploying a Nest or Express app on Railway today, add \`trust proxy\` to your setup. It takes ten seconds and it prevents an entire category of silent failures.
+`,
+};
+
+const RAW_POSTS: readonly RawPost[] = [welcome, shippingWithAgents, railwayMultiHop];
 
 function calculateReadingTime(content: string): number {
   const words = content.trim().split(/\s+/).filter(Boolean).length;
