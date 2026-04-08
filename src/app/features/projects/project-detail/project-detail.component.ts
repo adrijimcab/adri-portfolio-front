@@ -1,6 +1,7 @@
 import type { OnInit } from '@angular/core';
 import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { NgOptimizedImage } from '@angular/common';
 import { PortfolioService } from '../../../core/services/portfolio.service';
 import { SeoService } from '../../../core/services/seo.service';
 import { TranslateService } from '../../../core/services/translate.service';
@@ -12,7 +13,7 @@ import type { Project } from '../../../core/models';
 @Component({
   selector: 'app-project-detail',
   standalone: true,
-  imports: [RouterLink, GlassmorphismCardComponent, TechPillComponent, ScrollAnimateDirective],
+  imports: [RouterLink, NgOptimizedImage, GlassmorphismCardComponent, TechPillComponent, ScrollAnimateDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="min-h-screen pt-24 px-6">
@@ -25,7 +26,15 @@ import type { Project } from '../../../core/models';
           <div appScrollAnimate>
             @if (p.image_url) {
               <div class="mb-8 overflow-hidden rounded-2xl">
-                <img [src]="p.image_url" [alt]="p.title" class="w-full object-cover" />
+                <img
+                  [ngSrc]="p.image_url"
+                  [alt]="p.title"
+                  width="1280"
+                  height="720"
+                  priority
+                  sizes="(max-width: 768px) 100vw, 896px"
+                  class="h-auto w-full object-cover"
+                />
               </div>
             }
 

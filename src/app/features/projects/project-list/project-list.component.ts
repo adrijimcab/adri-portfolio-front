@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy, inject, signal, computed } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { NgOptimizedImage } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { PortfolioService } from '../../../core/services/portfolio.service';
 import { GlassmorphismCardComponent } from '../../../shared/components/glassmorphism-card/glassmorphism-card.component';
@@ -13,7 +14,7 @@ import type { Project } from '../../../core/models';
 @Component({
   selector: 'app-project-list',
   standalone: true,
-  imports: [RouterLink, GlassmorphismCardComponent, TechPillComponent, SectionHeaderComponent, ScrollAnimateDirective, TiltDirective],
+  imports: [RouterLink, NgOptimizedImage, GlassmorphismCardComponent, TechPillComponent, SectionHeaderComponent, ScrollAnimateDirective, TiltDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="min-h-screen pt-24 px-6">
@@ -35,8 +36,15 @@ import type { Project } from '../../../core/models';
               <app-glass-card>
                 @if (project.image_url) {
                   <div class="mb-4 overflow-hidden rounded-lg">
-                    <img [src]="project.image_url" [alt]="project.title"
-                         class="h-40 w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                    <img
+                      [ngSrc]="project.image_url"
+                      [alt]="project.title"
+                      width="640"
+                      height="360"
+                      loading="lazy"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      class="h-40 w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
                   </div>
                 }
                 <h3 class="font-bold text-white">{{ project.title }}</h3>

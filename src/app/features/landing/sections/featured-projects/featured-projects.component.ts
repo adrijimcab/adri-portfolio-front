@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy, input, inject } from '@angular/core';
+import { NgOptimizedImage } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { SectionHeaderComponent } from '../../../../shared/components/section-header/section-header.component';
 import { GlassmorphismCardComponent } from '../../../../shared/components/glassmorphism-card/glassmorphism-card.component';
@@ -12,7 +13,7 @@ import type { Project } from '../../../../core/models';
 @Component({
   selector: 'app-featured-projects',
   standalone: true,
-  imports: [RouterLink, SectionHeaderComponent, GlassmorphismCardComponent, TechPillComponent, ScrollAnimateDirective, TiltDirective, MagneticDirective],
+  imports: [RouterLink, NgOptimizedImage, SectionHeaderComponent, GlassmorphismCardComponent, TechPillComponent, ScrollAnimateDirective, TiltDirective, MagneticDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section id="featured-projects" class="py-24 px-6">
@@ -33,8 +34,15 @@ import type { Project } from '../../../../core/models';
               <app-glass-card>
                 @if (project.image_url) {
                   <div class="mb-4 overflow-hidden rounded-lg">
-                    <img [src]="project.image_url" [alt]="project.title" loading="lazy"
-                         class="h-48 w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                    <img
+                      [ngSrc]="project.image_url"
+                      [alt]="project.title"
+                      width="800"
+                      height="450"
+                      loading="lazy"
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      class="h-48 w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
                   </div>
                 }
                 <h3 class="text-xl font-bold text-white group-hover:text-transparent group-hover:bg-clip-text"
