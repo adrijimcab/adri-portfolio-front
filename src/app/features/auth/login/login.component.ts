@@ -191,7 +191,7 @@ export class LoginComponent {
       next: (res) => {
         this.auth.handleLoginSuccess(res);
         this.loading.set(false);
-        this.router.navigate(['/admin']);
+        void this.router.navigate(['/admin']);
       },
       error: (err) => {
         this.loading.set(false);

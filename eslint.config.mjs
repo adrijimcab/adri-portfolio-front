@@ -49,9 +49,10 @@ export default tseslint.config(
         { type: 'attribute', prefix: 'app', style: 'camelCase' },
       ],
 
-      // TODO(Fase 2): subir a 'error' cuando se migren los 47 subscribes a takeUntilDestroyed
-      '@typescript-eslint/no-floating-promises': 'warn',
-      '@typescript-eslint/no-misused-promises': 'warn',
+      // Promoted to error in Fase 2.A — catches fire-and-forget async bugs
+      // and wrong async handler signatures before they ship.
+      '@typescript-eslint/no-floating-promises': 'error',
+      '@typescript-eslint/no-misused-promises': 'error',
 
       // TODO(Fase 2): subir a 'error' tras limpieza general de tipos
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],

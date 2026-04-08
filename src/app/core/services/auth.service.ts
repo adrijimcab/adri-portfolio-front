@@ -64,7 +64,7 @@ export class AuthService {
     if (isPlatformBrowser(this.platformId)) {
       localStorage.removeItem(TOKEN_KEY);
     }
-    this.router.navigate(['/login']);
+    void this.router.navigate(['/login']);
   }
 
   forgotPassword(email: string) {

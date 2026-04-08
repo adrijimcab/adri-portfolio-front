@@ -42,9 +42,11 @@ export class WebglShaderBackgroundComponent implements OnDestroy {
   private cleanup?: () => void;
 
   constructor() {
-    afterNextRender(async () => {
+    afterNextRender(() => {
       if (!isPlatformBrowser(this.platformId)) return;
-      this.cleanup = await this.initThree();
+      void this.initThree().then((cleanup) => {
+        this.cleanup = cleanup;
+      });
     });
   }
 
