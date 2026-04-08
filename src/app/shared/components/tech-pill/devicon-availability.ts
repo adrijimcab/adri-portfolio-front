@@ -16,15 +16,29 @@
 
 const STORAGE_KEY = 'devicon-failed-v1';
 
+/**
+ * Slugs confirmed missing from devicon CDN (both -original AND -plain
+ * return 403). Verified 2026-04-08 against the live jsdelivr endpoint.
+ * These NEVER render <img>, so there is zero CORB noise for them.
+ */
 const STATIC_BLOCKLIST: readonly string[] = [
+  'amazonwebservices',
+  'cypress',
   'highcharts',
-  'websocket',
   'reactivex',
   'webcomponents',
-  'jest',
-  'cypress',
-  'amazonwebservices',
+  'websocket',
 ];
+
+/**
+ * Slugs where devicon only ships `-plain.svg` (no -original). Without this
+ * map we'd request `-original` first, get a 403, CORB would log a warning,
+ * and only then fall back to `-plain`. Using the override avoids the first
+ * failed request entirely.
+ */
+export const VARIANT_OVERRIDES: Readonly<Record<string, 'original' | 'plain'>> = {
+  jest: 'plain',
+};
 
 const blockedSet = new Set<string>(STATIC_BLOCKLIST);
 

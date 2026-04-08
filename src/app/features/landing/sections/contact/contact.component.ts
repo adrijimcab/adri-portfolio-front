@@ -1,5 +1,4 @@
 import { Component, ChangeDetectionStrategy, input, inject, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { SectionHeaderComponent } from '../../../../shared/components/section-header/section-header.component';
 import { GlassmorphismCardComponent } from '../../../../shared/components/glassmorphism-card/glassmorphism-card.component';
@@ -7,7 +6,12 @@ import { LinkedinWidgetComponent } from '../../../../shared/components/linkedin-
 import { ScrollAnimateDirective } from '../../../../shared/directives/scroll-animate.directive';
 import { MagneticDirective } from '../../../../shared/directives/magnetic.directive';
 import { TranslateService } from '../../../../core/services/translate.service';
+import { ApiService } from '../../../../core/services/api.service';
 import { Profile, SocialLink } from '../../../../core/models';
+
+interface ContactResponse {
+  success: boolean;
+}
 
 @Component({
   selector: 'app-contact',
@@ -78,7 +82,7 @@ import { Profile, SocialLink } from '../../../../core/models';
   `,
 })
 export class ContactComponent {
-  private readonly http = inject(HttpClient);
+  private readonly api = inject(ApiService);
   readonly t = inject(TranslateService);
   profile = input<Profile | undefined>();
   socialLinks = input<SocialLink[]>([]);
@@ -90,28 +94,27 @@ export class ContactComponent {
   readonly formSent = signal(false);
   readonly formError = signal('');
 
-  sendMessage() {
+  sendMessage(): void {
     if (!this.formName || !this.formEmail || !this.formMessage) return;
 
     this.sending.set(true);
     this.formError.set('');
 
-    this.http.post('https://api.web3forms.com/submit', {
-      access_key: '710f3bff-efbf-47c0-b4c5-967f01e9889a',
-      name: this.formName,
-      email: this.formEmail,
-      message: this.formMessage,
-      from_name: 'Portfolio Contact Form',
-      subject: `Portfolio: Message from ${this.formName}`,
-    }).subscribe({
-      next: () => {
-        this.sending.set(false);
-        this.formSent.set(true);
-      },
-      error: () => {
-        this.sending.set(false);
-        this.formError.set(this.t.t('contact.error'));
-      },
-    });
+    this.api
+      .post<ContactResponse>('contact', {
+        name: this.formName,
+        email: this.formEmail,
+        message: this.formMessage,
+      })
+      .subscribe({
+        next: () => {
+          this.sending.set(false);
+          this.formSent.set(true);
+        },
+        error: () => {
+          this.sending.set(false);
+          this.formError.set(this.t.t('contact.error'));
+        },
+      });
   }
 }
