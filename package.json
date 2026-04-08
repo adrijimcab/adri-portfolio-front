@@ -27,6 +27,9 @@
   },
   "private": true,
   "packageManager": "npm@10.9.7",
+  "overrides": {
+    "vite": "7.3.2"
+  },
   "dependencies": {
     "@angular/animations": "^21.2.6",
     "@angular/common": "^21.1.0",
@@ -65,6 +68,6 @@
     "jsdom": "^29.0.2",
     "typescript": "~5.9.2",
     "typescript-eslint": "^8.58.1",
-    "vitest": "^3.2.4"
+    "vitest": "^4.1.3"
   }
 }
