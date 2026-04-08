@@ -8,6 +8,19 @@
       "includeFiles": "dist/adri-portfolio-front/server/**"
     }
   },
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.adrianjimenezcabello.dev"
+        }
+      ],
+      "destination": "https://adrianjimenezcabello.dev/:path*",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/(.*)",
