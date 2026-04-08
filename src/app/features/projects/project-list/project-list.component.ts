@@ -1,4 +1,5 @@
-import { Component, ChangeDetectionStrategy, inject, signal, computed, OnInit } from '@angular/core';
+import type { OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, signal, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { PortfolioService } from '../../../core/services/portfolio.service';
 import { GlassmorphismCardComponent } from '../../../shared/components/glassmorphism-card/glassmorphism-card.component';
@@ -7,7 +8,7 @@ import { SectionHeaderComponent } from '../../../shared/components/section-heade
 import { ScrollAnimateDirective } from '../../../shared/directives/scroll-animate.directive';
 import { TiltDirective } from '../../../shared/directives/tilt.directive';
 import { TranslateService } from '../../../core/services/translate.service';
-import { Project } from '../../../core/models';
+import type { Project } from '../../../core/models';
 
 @Component({
   selector: 'app-project-list',
@@ -24,7 +25,7 @@ import { Project } from '../../../core/models';
             type="text"
             placeholder="Search projects..."
             [value]="searchQuery()"
-            (input)="searchQuery.set($any($event.target).value)"
+            (input)="onSearchInput($event)"
             class="w-full rounded-xl border border-white/10 bg-white/5 px-5 py-3 text-sm text-white placeholder-white/30 outline-none backdrop-blur-sm transition-colors focus:border-white/20 focus:bg-white/[0.08]" />
         </div>
 
@@ -77,5 +78,10 @@ export class ProjectListComponent implements OnInit {
 
   ngOnInit() {
     this.portfolio.getAllProjects().subscribe((data) => this.projects.set(data));
+  }
+
+  protected onSearchInput(event: Event): void {
+    const target = event.target as HTMLInputElement | null;
+    this.searchQuery.set(target?.value ?? '');
   }
 }
