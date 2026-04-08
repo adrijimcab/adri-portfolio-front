@@ -1,10 +1,12 @@
-import { Component, ChangeDetectionStrategy, inject, signal, OnInit } from '@angular/core';
+import type { OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AdminService } from '../../../core/services/admin.service';
 import { ToastService } from '../../../shared/components/toast/toast.service';
 import { ConfirmDialogService } from '../../../shared/components/confirm-dialog/confirm-dialog.service';
-import { DataTableComponent, TableColumn } from '../../../shared/components/data-table/data-table.component';
-import { Project } from '../../../core/models';
+import type { TableColumn } from '../../../shared/components/data-table/data-table.component';
+import { DataTableComponent } from '../../../shared/components/data-table/data-table.component';
+import type { Project } from '../../../core/models';
 
 @Component({
   selector: 'app-projects-editor',

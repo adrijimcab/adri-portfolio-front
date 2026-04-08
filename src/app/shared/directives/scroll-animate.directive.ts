@@ -1,4 +1,5 @@
-import { Directive, ElementRef, inject, OnInit, OnDestroy, PLATFORM_ID, input } from '@angular/core';
+import type { OnInit, OnDestroy} from '@angular/core';
+import { Directive, ElementRef, inject, PLATFORM_ID, input } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 
 @Directive({

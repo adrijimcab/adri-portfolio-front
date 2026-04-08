@@ -14,6 +14,8 @@ const MAX_URL_LEN = 2048;
 function sanitizeText(value: string | null | undefined, maxLen: number): string {
   if (!value) return '';
   return value
+    // Control characters (U+0000..U+001F, U+007F) are intentionally stripped for SEO/JSON-LD safety.
+    // eslint-disable-next-line no-control-regex
     .replace(/[<>\u0000-\u001F\u007F]/g, '')
     .replace(/javascript:/gi, '')
     .trim()

@@ -1,4 +1,5 @@
-import { Component, ChangeDetectionStrategy, inject, signal, OnInit } from '@angular/core';
+import type { OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { PortfolioService } from '../../../core/services/portfolio.service';
 import { SeoService } from '../../../core/services/seo.service';
@@ -6,7 +7,7 @@ import { TranslateService } from '../../../core/services/translate.service';
 import { GlassmorphismCardComponent } from '../../../shared/components/glassmorphism-card/glassmorphism-card.component';
 import { TechPillComponent } from '../../../shared/components/tech-pill/tech-pill.component';
 import { ScrollAnimateDirective } from '../../../shared/directives/scroll-animate.directive';
-import { Project } from '../../../core/models';
+import type { Project } from '../../../core/models';
 
 @Component({
   selector: 'app-project-detail',

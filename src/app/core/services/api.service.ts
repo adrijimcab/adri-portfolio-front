@@ -1,8 +1,9 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
+import type { Observable} from 'rxjs';
+import { map } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { ApiResponse } from '../models';
+import type { ApiResponse } from '../models';
 import { TranslateService } from './translate.service';
 
 @Injectable({ providedIn: 'root' })

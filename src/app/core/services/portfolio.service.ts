@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ApiService } from './api.service';
-import {
+import type {
   Profile, Experience, Project, TechnologyGroup,
   SiteConfig, SectionConfig, SocialLink, Education, Course,
   Certification, GitHubRepo,

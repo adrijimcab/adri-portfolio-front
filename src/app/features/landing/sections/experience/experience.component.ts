@@ -4,7 +4,7 @@ import { GlassmorphismCardComponent } from '../../../../shared/components/glassm
 import { TechPillComponent } from '../../../../shared/components/tech-pill/tech-pill.component';
 import { ScrollAnimateDirective } from '../../../../shared/directives/scroll-animate.directive';
 import { TranslateService } from '../../../../core/services/translate.service';
-import { Experience } from '../../../../core/models';
+import type { Experience } from '../../../../core/models';
 import { DatePipe } from '@angular/common';
 
 @Component({

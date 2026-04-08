@@ -1,4 +1,5 @@
-import { HttpInterceptorFn, HttpResponse } from '@angular/common/http';
+import type { HttpInterceptorFn} from '@angular/common/http';
+import { HttpResponse } from '@angular/common/http';
 import { of, tap } from 'rxjs';
 
 interface CacheEntry {

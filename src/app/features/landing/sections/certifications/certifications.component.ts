@@ -6,7 +6,7 @@ import { GlassmorphismCardComponent } from '../../../../shared/components/glassm
 import { ScrollAnimateDirective } from '../../../../shared/directives/scroll-animate.directive';
 import { SkeletonLoaderComponent } from '../../../../shared/components/skeleton-loader/skeleton-loader.component';
 import { TranslateService } from '../../../../core/services/translate.service';
-import { Certification } from '../../../../core/models';
+import type { Certification } from '../../../../core/models';
 
 @Component({
   selector: 'app-certifications-section',

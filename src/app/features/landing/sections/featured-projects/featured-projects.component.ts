@@ -7,7 +7,7 @@ import { ScrollAnimateDirective } from '../../../../shared/directives/scroll-ani
 import { TiltDirective } from '../../../../shared/directives/tilt.directive';
 import { MagneticDirective } from '../../../../shared/directives/magnetic.directive';
 import { TranslateService } from '../../../../core/services/translate.service';
-import { Project } from '../../../../core/models';
+import type { Project } from '../../../../core/models';
 
 @Component({
   selector: 'app-featured-projects',

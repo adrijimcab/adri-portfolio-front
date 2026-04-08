@@ -75,9 +75,7 @@ export interface Course {
   certificate_url: string | null;
 }
 
-export interface SiteConfig {
-  [key: string]: string;
-}
+export type SiteConfig = Record<string, string>;
 
 export interface SectionConfig {
   id: string;

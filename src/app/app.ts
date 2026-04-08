@@ -1,7 +1,8 @@
+import type {
+  OnInit} from '@angular/core';
 import {
   Component,
   inject,
-  OnInit,
   signal,
   afterNextRender,
   PLATFORM_ID,

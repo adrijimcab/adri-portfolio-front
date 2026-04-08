@@ -1,10 +1,11 @@
+import type {
+  OnDestroy} from '@angular/core';
 import {
   Component,
   ChangeDetectionStrategy,
   input,
   signal,
   afterNextRender,
-  OnDestroy,
   PLATFORM_ID,
   inject,
 } from '@angular/core';

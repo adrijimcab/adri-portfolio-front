@@ -6,7 +6,7 @@ import { TiltDirective } from '../../../../shared/directives/tilt.directive';
 import { SkeletonLoaderComponent } from '../../../../shared/components/skeleton-loader/skeleton-loader.component';
 import { GithubCalendarComponent } from '../../../../shared/components/github-calendar/github-calendar.component';
 import { TranslateService } from '../../../../core/services/translate.service';
-import { GitHubRepo } from '../../../../core/models';
+import type { GitHubRepo } from '../../../../core/models';
 import { getLanguageColor } from '../../../../shared/helpers/language-colors';
 
 @Component({

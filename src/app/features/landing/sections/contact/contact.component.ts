@@ -7,7 +7,7 @@ import { ScrollAnimateDirective } from '../../../../shared/directives/scroll-ani
 import { MagneticDirective } from '../../../../shared/directives/magnetic.directive';
 import { TranslateService } from '../../../../core/services/translate.service';
 import { ApiService } from '../../../../core/services/api.service';
-import { Profile, SocialLink } from '../../../../core/models';
+import type { Profile, SocialLink } from '../../../../core/models';
 
 interface ContactResponse {
   success: boolean;

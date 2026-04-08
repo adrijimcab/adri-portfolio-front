@@ -1,4 +1,5 @@
-import { Component, ChangeDetectionStrategy, inject, OnInit } from '@angular/core';
+import type { OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { SeoService } from '../../core/services/seo.service';
 
 interface StackItem {

@@ -1,12 +1,13 @@
+import type {
+  ElementRef,
+  OnDestroy} from '@angular/core';
 import {
   Component,
   ChangeDetectionStrategy,
-  ElementRef,
   PLATFORM_ID,
   afterNextRender,
   inject,
-  viewChild,
-  OnDestroy,
+  viewChild
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 // Type-only import — erased at compile time, never added to any bundle.

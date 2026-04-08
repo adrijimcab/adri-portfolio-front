@@ -3,7 +3,7 @@ import { SectionHeaderComponent } from '../../../../shared/components/section-he
 import { GlassmorphismCardComponent } from '../../../../shared/components/glassmorphism-card/glassmorphism-card.component';
 import { ScrollAnimateDirective } from '../../../../shared/directives/scroll-animate.directive';
 import { TranslateService } from '../../../../core/services/translate.service';
-import { Profile } from '../../../../core/models';
+import type { Profile } from '../../../../core/models';
 
 @Component({
   selector: 'app-about',

@@ -4,7 +4,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { switchMap, catchError, of } from 'rxjs';
 import { TranslateService } from '../../../core/services/translate.service';
 import { PortfolioService } from '../../../core/services/portfolio.service';
-import { Certification } from '../../../core/models';
+import type { Certification } from '../../../core/models';
 
 /** image.thum.io public screenshot service. Free tier, no key required. */
 function thumbnailFor(url: string, width = 1200): string {

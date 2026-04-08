@@ -3,7 +3,7 @@ import { ScrollAnimateDirective } from '../../../../shared/directives/scroll-ani
 import { TypingTextComponent } from '../../../../shared/components/typing-text/typing-text.component';
 import { AnimatedCounterComponent } from '../../../../shared/components/animated-counter/animated-counter.component';
 import { TranslateService } from '../../../../core/services/translate.service';
-import { Profile, SiteConfig } from '../../../../core/models';
+import type { Profile, SiteConfig } from '../../../../core/models';
 
 @Component({
   selector: 'app-hero',

@@ -1,8 +1,9 @@
+import type {
+  ElementRef,
+  OnInit} from '@angular/core';
 import {
   ChangeDetectionStrategy,
   Component,
-  ElementRef,
-  OnInit,
   PLATFORM_ID,
   afterNextRender,
   computed,
@@ -12,7 +13,8 @@ import {
 } from '@angular/core';
 import { DatePipe, isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import type { SafeHtml } from '@angular/platform-browser';
+import { DomSanitizer } from '@angular/platform-browser';
 import { BlogService } from '../blog.service';
 import { SeoService } from '../../../core/services/seo.service';
 import type { BlogPost } from '../blog.types';

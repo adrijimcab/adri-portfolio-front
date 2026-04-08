@@ -110,7 +110,7 @@ export class DataTableComponent {
 
   readonly onEdit = output<Record<string, unknown>>();
   readonly onDelete = output<Record<string, unknown>>();
-  readonly onAdd = output<void>();
+  readonly onAdd = output();
 
   readonly searchTerm = signal('');
   readonly sortKey = signal('');

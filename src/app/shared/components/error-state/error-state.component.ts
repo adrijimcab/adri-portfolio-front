@@ -25,5 +25,5 @@ import { TranslateService } from '../../../core/services/translate.service';
 })
 export class ErrorStateComponent {
   readonly t = inject(TranslateService);
-  retry = output<void>();
+  retry = output();
 }

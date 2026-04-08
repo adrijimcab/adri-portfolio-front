@@ -1,9 +1,11 @@
-import { Component, ChangeDetectionStrategy, inject, signal, OnInit } from '@angular/core';
+import type { OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
 import { PortfolioService } from '../../core/services/portfolio.service';
 import { SeoService } from '../../core/services/seo.service';
 import { SectionHeaderComponent } from '../../shared/components/section-header/section-header.component';
 import { ScrollAnimateDirective } from '../../shared/directives/scroll-animate.directive';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import type { SafeResourceUrl } from '@angular/platform-browser';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-cv-viewer',

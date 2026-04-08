@@ -184,7 +184,7 @@ export class GithubCalendarComponent {
     const gap = 3;
     const colWidth = daySize + gap;
 
-    let currentDate = new Date(start);
+    const currentDate = new Date(start);
     let lastMonth = -1;
     let weekIndex = 0;
 

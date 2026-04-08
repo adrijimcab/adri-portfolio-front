@@ -1,9 +1,10 @@
+import type {
+  OnDestroy} from '@angular/core';
 import {
   Directive,
   inject,
   afterNextRender,
   PLATFORM_ID,
-  OnDestroy,
   output,
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
@@ -26,7 +27,7 @@ const SEQUENCE = [
 })
 export class KonamiDirective implements OnDestroy {
   private readonly platformId = inject(PLATFORM_ID);
-  readonly konami = output<void>();
+  readonly konami = output();
 
   private buffer: string[] = [];
   private handler?: (e: KeyboardEvent) => void;

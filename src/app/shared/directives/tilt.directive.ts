@@ -1,9 +1,10 @@
+import type {
+  OnDestroy} from '@angular/core';
 import {
   Directive,
   ElementRef,
   inject,
   afterNextRender,
-  OnDestroy,
   PLATFORM_ID,
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';

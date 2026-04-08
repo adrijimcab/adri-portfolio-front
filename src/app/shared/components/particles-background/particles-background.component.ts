@@ -1,10 +1,11 @@
+import type {
+  ElementRef,
+  OnDestroy} from '@angular/core';
 import {
   Component,
   ChangeDetectionStrategy,
-  ElementRef,
   viewChild,
   afterNextRender,
-  OnDestroy,
   PLATFORM_ID,
   inject,
 } from '@angular/core';
