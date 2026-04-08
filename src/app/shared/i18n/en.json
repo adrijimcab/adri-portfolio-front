@@ -16,7 +16,7 @@
     "role1": "Frontend Architect",
     "role2": "Technical Lead",
     "role3": "Senior Developer",
-    "role4": "DDD Enthusiast"
+    "role4": "I do DDD"
   },
   "about": {
     "title": "About Me",
@@ -73,29 +73,29 @@
     "cal_more": "More"
   },
   "contact": {
-    "title": "Get In Touch",
-    "label": "Contact",
-    "subtitle": "Interested in working together? Send me a message.",
+    "title": "Contact",
+    "label": "Say hi",
+    "subtitle": "Want to build something or just say hi? Drop me a line.",
     "connect_linkedin": "Connect on LinkedIn",
-    "name": "Your name",
-    "email": "Your email",
-    "message": "Your message",
-    "send": "Send Message",
+    "name": "Name",
+    "email": "Email",
+    "message": "Message",
+    "send": "Send",
     "sending": "Sending...",
-    "sent_title": "Message Sent!",
-    "sent_message": "Thanks for reaching out. I'll get back to you soon.",
-    "error": "Failed to send message. Please try again."
+    "sent_title": "Message sent",
+    "sent_message": "Thanks. I'll write back as soon as I can.",
+    "error": "Could not send. Try again in a sec."
   },
   "footer": {
     "built_with": "Built with Angular, NestJS & Supabase."
   },
   "common": {
     "loading": "Loading...",
-    "error_title": "Something went wrong",
-    "error_message": "Failed to load data. Please try again.",
+    "error_title": "Something broke",
+    "error_message": "Couldn't load that. Try refreshing.",
     "retry": "Retry",
     "not_found_title": "404",
-    "not_found_message": "The page you're looking for doesn't exist.",
+    "not_found_message": "This page doesn't exist.",
     "not_found_back": "Back to home",
     "download": "Download"
   }

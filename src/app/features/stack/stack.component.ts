@@ -24,8 +24,8 @@ interface StackCategory {
         </p>
         <h1 class="text-4xl font-bold text-white md:text-5xl">Tech stack</h1>
         <p class="mt-4 max-w-xl text-white/60">
-          The technologies behind this portfolio and the day-to-day. Each pick has
-          a real reason — no resume-driven development.
+          What this portfolio is built on, and what I reach for day to day. Every
+          choice has a reason. No resume-driven development.
         </p>
       </header>
 
@@ -62,41 +62,41 @@ export class StackComponent implements OnInit {
     {
       title: 'Frontend',
       items: [
-        { name: 'Angular 21 (zoneless + signals)', why: 'Reactive primitives without Zone.js. SSR with hydration and event replay built-in.', url: 'https://angular.dev' },
-        { name: 'Tailwind CSS 4', why: 'No BEM, no class wars. Design tokens via CSS variables, utility composition.', url: 'https://tailwindcss.com' },
-        { name: 'Standalone components', why: 'No NgModules. Lean tree-shakable bundles, lazy routes via loadComponent.' },
+        { name: 'Angular 21 (zoneless + signals)', why: 'No Zone.js, signals everywhere, SSR with hydration that actually replays events. The version that finally clicked for me.', url: 'https://angular.dev' },
+        { name: 'Tailwind CSS 4', why: 'No BEM, no class wars. Design tokens live in CSS variables and you compose from there.', url: 'https://tailwindcss.com' },
+        { name: 'Standalone components', why: 'No NgModules. Smaller bundles, lazy routes with loadComponent, less ceremony.' },
       ],
     },
     {
       title: 'Backend',
       items: [
-        { name: 'NestJS', why: 'Modular DI, decorators, guards and interceptors. Pairs naturally with TypeScript strict.', url: 'https://nestjs.com' },
-        { name: 'Express 5 (under Nest)', why: 'Mature middleware ecosystem. Helmet, throttler, validation pipes work out of the box.' },
-        { name: 'class-validator + class-transformer', why: 'Declarative DTO validation tied to the type system.' },
+        { name: 'NestJS', why: 'DI, guards, interceptors. Strict TypeScript feels at home here.', url: 'https://nestjs.com' },
+        { name: 'Express 5 (under Nest)', why: 'The middleware ecosystem is mature. Helmet, throttler, validation pipes — they just work.' },
+        { name: 'class-validator + class-transformer', why: 'DTO validation that lives next to the types instead of fighting them.' },
       ],
     },
     {
       title: 'Database',
       items: [
-        { name: 'Supabase (Postgres)', why: 'Real Postgres with RLS, auth, storage. One vendor for data, identity, files.', url: 'https://supabase.com' },
-        { name: 'Migrations as code', why: 'Versioned SQL in the repo, applied via supabase db push to production.' },
-        { name: 'Row Level Security', why: 'Authorization expressed in the database, not in app code. Reads public, writes admin-only.' },
+        { name: 'Supabase (Postgres)', why: 'It\'s real Postgres, with RLS, auth and storage on top. One vendor instead of stitching three together.', url: 'https://supabase.com' },
+        { name: 'Migrations as code', why: 'Versioned SQL in the repo, pushed to production with supabase db push.' },
+        { name: 'Row Level Security', why: 'Authorization lives in the database. Reads are public, writes are admin-only, and the rule is right next to the schema.' },
       ],
     },
     {
       title: 'Hosting & deployment',
       items: [
-        { name: 'Vercel', why: 'Auto-deploy from GitHub on push. Preview URLs per PR, edge network.', url: 'https://vercel.com' },
-        { name: 'Railway', why: 'Container hosting for the NestJS API. Auto-redeploy on push.', url: 'https://railway.com' },
-        { name: 'Cloudflare DNS', why: 'Registrar + DNS. Proxy off, Vercel handles SSL directly.', url: 'https://cloudflare.com' },
+        { name: 'Vercel', why: 'Auto-deploy from GitHub. Preview URL on every PR. I never have to think about it.', url: 'https://vercel.com' },
+        { name: 'Railway', why: 'The NestJS API runs here. Same story: push to main, container redeploys.', url: 'https://railway.com' },
+        { name: 'Cloudflare DNS', why: 'Just registrar and DNS. Proxy off. Vercel handles SSL.', url: 'https://cloudflare.com' },
       ],
     },
     {
       title: 'Quality & security',
       items: [
-        { name: 'CSP, HSTS, X-Frame-Options', why: 'Browser-enforced defense layers. Restrict where scripts and frames can come from.' },
-        { name: 'Two-tier rate limiting', why: 'Public endpoints generous, auth endpoints aggressive. Slows brute force.' },
-        { name: 'Sanitized exception filter', why: 'Generic error responses in production. Full stack traces only server-side.' },
+        { name: 'CSP, HSTS, X-Frame-Options', why: 'Tells the browser exactly where scripts and frames can come from. Cheap insurance.' },
+        { name: 'Two-tier rate limiting', why: 'Generous on public endpoints, strict on auth. Slows brute force without annoying real users.' },
+        { name: 'Sanitized exception filter', why: 'Production gets a generic error. Full stack traces stay on the server, where they belong.' },
       ],
     },
   ];
@@ -104,7 +104,7 @@ export class StackComponent implements OnInit {
   ngOnInit(): void {
     this.seo.updateMeta({
       title: 'Stack — Adrián Jiménez Cabello',
-      description: 'The technologies behind this portfolio and why each one was chosen.',
+      description: 'What this portfolio runs on, and why I picked each piece.',
       url: 'https://adrianjimenezcabello.dev/stack',
     });
   }

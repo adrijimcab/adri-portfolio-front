@@ -6,7 +6,7 @@ const welcome: RawPost = {
   slug: 'welcome',
   title: 'Building this portfolio: Angular 21, NestJS, Supabase',
   description:
-    'Stack, decisions, gotchas and what I learned shipping a production portfolio in a week.',
+    'The stack, the decisions that took longer than they should have, and what I learned shipping it in a week.',
   date: '2026-04-07',
   content: `## Why this exists
 
@@ -73,7 +73,7 @@ const shippingWithAgents: RawPost = {
   slug: 'shipping-with-agents',
   title: 'Shipping a production portfolio with AI sub-agents in one session',
   description:
-    'What worked, what broke, and the five-rule cheat sheet I keep reaching for when delegating code to autonomous workers.',
+    'What worked, what broke, and five rules I keep reaching for whenever I let autonomous agents touch a real codebase.',
   date: '2026-04-08',
   content: `## The setup
 

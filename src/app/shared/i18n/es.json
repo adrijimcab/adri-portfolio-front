@@ -16,7 +16,7 @@
     "role1": "Arquitecto Frontend",
     "role2": "Technical Lead",
     "role3": "Senior Developer",
-    "role4": "DDD Enthusiast"
+    "role4": "Me gusta DDD"
   },
   "about": {
     "title": "Sobre Mí",
@@ -74,28 +74,28 @@
   },
   "contact": {
     "title": "Contacto",
-    "label": "Conectemos",
-    "subtitle": "¿Interesado en trabajar juntos? Envíame un mensaje.",
+    "label": "Hablemos",
+    "subtitle": "Si quieres montar algo o solo saludar, escríbeme.",
     "connect_linkedin": "Conectar en LinkedIn",
-    "name": "Tu nombre",
-    "email": "Tu email",
-    "message": "Tu mensaje",
-    "send": "Enviar Mensaje",
+    "name": "Nombre",
+    "email": "Email",
+    "message": "Mensaje",
+    "send": "Enviar",
     "sending": "Enviando...",
-    "sent_title": "¡Mensaje Enviado!",
-    "sent_message": "Gracias por contactarme. Te responderé lo antes posible.",
-    "error": "Error al enviar el mensaje. Inténtalo de nuevo."
+    "sent_title": "Mensaje enviado",
+    "sent_message": "Gracias. Te contesto en cuanto pueda.",
+    "error": "No se ha podido enviar. Prueba otra vez."
   },
   "footer": {
     "built_with": "Construido con Angular, NestJS & Supabase."
   },
   "common": {
     "loading": "Cargando...",
-    "error_title": "Algo salió mal",
-    "error_message": "No se pudieron cargar los datos. Por favor, inténtalo de nuevo.",
+    "error_title": "Algo ha fallado",
+    "error_message": "No han cargado los datos. Prueba a refrescar.",
     "retry": "Reintentar",
     "not_found_title": "404",
-    "not_found_message": "La página que buscas no existe.",
+    "not_found_message": "Esta página no existe.",
     "not_found_back": "Volver al inicio",
     "download": "Descargar"
   }

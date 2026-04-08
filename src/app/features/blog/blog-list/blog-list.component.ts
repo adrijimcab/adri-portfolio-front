@@ -27,13 +27,13 @@ import { HoverPreviewDirective } from '../../../shared/directives/hover-preview.
         </p>
         <h1 class="text-4xl font-bold text-white md:text-5xl">Writing</h1>
         <p class="mt-4 max-w-xl text-white/60">
-          Notes on the things I build, the decisions behind them, and the bugs I had to learn the
-          hard way. Short, technical, and updated when I have something worth saying.
+          Notes on what I build and the bugs I had to learn the hard way.
+          New posts when I actually have something worth saying.
         </p>
       </header>
 
       @if (posts().length === 0) {
-        <p class="text-white/50">No posts yet. Check back soon.</p>
+        <p class="text-white/50">Nothing here yet.</p>
       } @else {
         <ul class="space-y-8">
           @for (post of posts(); track post.slug) {
@@ -82,7 +82,7 @@ export class BlogListComponent implements OnInit {
     this.seo.updateMeta({
       title: 'Blog — Adrián Jiménez Cabello',
       description:
-        'Technical writing on Angular, NestJS, Supabase and the things I learn shipping software.',
+        'Technical writing on Angular, NestJS and Supabase, plus the things I learn while shipping.',
       url: 'https://adrianjimenezcabello.dev/blog',
     });
 

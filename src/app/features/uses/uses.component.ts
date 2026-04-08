@@ -24,8 +24,8 @@ interface UsesGroup {
         </p>
         <h1 class="text-4xl font-bold text-white md:text-5xl">My setup</h1>
         <p class="mt-4 max-w-xl text-white/60">
-          Hardware, editor, terminal, and everyday tools I use to build things.
-          Updated whenever something changes for real, not just for trends.
+          The stuff I actually use day to day. I update this page when something
+          changes, not when a new tool goes viral.
         </p>
       </header>
 
@@ -62,44 +62,44 @@ export class UsesComponent implements OnInit {
     {
       title: 'Hardware',
       items: [
-        { name: 'MacBook (Apple Silicon)', description: 'Daily driver for development.' },
-        { name: 'External display', description: 'Productivity boost for split layouts.' },
-        { name: 'Mechanical keyboard', description: 'Tactile feedback, low actuation.' },
+        { name: 'MacBook (Apple Silicon)', description: 'My daily machine. Battery still surprises me.' },
+        { name: 'External display', description: 'For long sessions where I need an editor and a browser side by side.' },
+        { name: 'Mechanical keyboard', description: 'Low actuation switches. I type a lot, the wrists thank me.' },
       ],
     },
     {
       title: 'Editor & Terminal',
       items: [
-        { name: 'VS Code', description: 'Primary editor with Angular and TypeScript extensions.', url: 'https://code.visualstudio.com' },
-        { name: 'iTerm2 + Zsh', description: 'Terminal of choice with custom prompt and aliases.' },
-        { name: 'Tmux', description: 'Session multiplexer for parallel workflows.' },
-        { name: 'Claude Code', description: 'AI pair-programmer for orchestrated workflows.', url: 'https://claude.com/code' },
+        { name: 'VS Code', description: 'Where I live. A few Angular and TypeScript extensions and not much else.', url: 'https://code.visualstudio.com' },
+        { name: 'iTerm2 + Zsh', description: 'Custom prompt, aliases I forgot I added years ago.' },
+        { name: 'Tmux', description: 'One window, many panes. Hard to go back once you start using it.' },
+        { name: 'Claude Code', description: 'My pair-programmer when I want to move faster than my hands let me.', url: 'https://claude.com/code' },
       ],
     },
     {
       title: 'Languages & Frameworks',
       items: [
-        { name: 'Angular 21', description: 'Frontend framework with standalone, signals, SSR.', url: 'https://angular.dev' },
-        { name: 'NestJS', description: 'Backend framework on Node.js with strong typing.', url: 'https://nestjs.com' },
-        { name: 'TypeScript', description: 'Static types everywhere, strict mode on.', url: 'https://www.typescriptlang.org' },
-        { name: 'Tailwind 4', description: 'Utility-first CSS for rapid UI iteration.', url: 'https://tailwindcss.com' },
+        { name: 'Angular 21', description: 'Standalone, signals, SSR. The version I always wanted.', url: 'https://angular.dev' },
+        { name: 'NestJS', description: 'Node on the backend without giving up structure.', url: 'https://nestjs.com' },
+        { name: 'TypeScript', description: 'Strict mode, always. Anything else is borrowed time.', url: 'https://www.typescriptlang.org' },
+        { name: 'Tailwind 4', description: 'I stopped fighting CSS naming and never looked back.', url: 'https://tailwindcss.com' },
       ],
     },
     {
       title: 'Infra & Hosting',
       items: [
-        { name: 'Vercel', description: 'Frontend hosting with auto preview deploys.', url: 'https://vercel.com' },
-        { name: 'Railway', description: 'Backend container deployments.', url: 'https://railway.com' },
-        { name: 'Supabase', description: 'Postgres + auth + storage all-in-one.', url: 'https://supabase.com' },
-        { name: 'Cloudflare', description: 'DNS and registrar.', url: 'https://cloudflare.com' },
+        { name: 'Vercel', description: 'The frontend lives here. Preview deploys on every push.', url: 'https://vercel.com' },
+        { name: 'Railway', description: 'Where the NestJS API runs. Push, redeploy, done.', url: 'https://railway.com' },
+        { name: 'Supabase', description: 'Postgres with auth and storage on top. One vendor, less to babysit.', url: 'https://supabase.com' },
+        { name: 'Cloudflare', description: 'Domain and DNS. Nothing fancy.', url: 'https://cloudflare.com' },
       ],
     },
     {
       title: 'CLI & Productivity',
       items: [
         { name: 'gh', description: 'GitHub CLI for everything I would do in the web UI.', url: 'https://cli.github.com' },
-        { name: 'rg / fd / bat / eza', description: 'Modern Rust replacements for grep / find / cat / ls.' },
-        { name: 'jq', description: 'JSON manipulation in pipelines.', url: 'https://jqlang.github.io/jq/' },
+        { name: 'rg / fd / bat / eza', description: 'The modern Rust takes on grep, find, cat and ls. Once you switch, you can\'t unsee it.' },
+        { name: 'jq', description: 'When a pipeline meets JSON.', url: 'https://jqlang.github.io/jq/' },
       ],
     },
   ];
@@ -107,7 +107,7 @@ export class UsesComponent implements OnInit {
   ngOnInit(): void {
     this.seo.updateMeta({
       title: 'Uses — Adrián Jiménez Cabello',
-      description: 'Hardware, editor, terminal and tools I use every day to build software.',
+      description: 'The hardware, editor and tools I actually use every day to ship software.',
       url: 'https://adrianjimenezcabello.dev/uses',
     });
   }
