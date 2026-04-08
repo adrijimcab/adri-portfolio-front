@@ -19,6 +19,7 @@ export default tseslint.config(
       'middleware.ts',
       'playwright.config.ts',
       'eslint.config.mjs',
+      'vitest.config.ts',
     ],
   },
   {

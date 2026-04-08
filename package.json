@@ -8,7 +8,9 @@
     "watch": "ng build --watch --configuration development",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "test": "ng test",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:cov": "vitest run --coverage",
     "serve:ssr:adri-portfolio-front": "node dist/adri-portfolio-front/server/server.mjs"
   },
   "prettier": {
@@ -49,6 +51,8 @@
     "tslib": "^2.3.0"
   },
   "devDependencies": {
+    "@analogjs/vite-plugin-angular": "^3.0.0-alpha.26",
+    "@analogjs/vitest-angular": "^3.0.0-alpha.26",
     "@angular/build": "^21.1.1",
     "@angular/cli": "^21.1.1",
     "@angular/compiler-cli": "^21.1.0",
@@ -59,7 +63,10 @@
     "@types/node": "^20.17.19",
     "angular-eslint": "^21.3.1",
     "eslint": "^9.39.4",
+    "happy-dom": "^20.8.9",
+    "jsdom": "^29.0.2",
     "typescript": "~5.9.2",
-    "typescript-eslint": "^8.58.1"
+    "typescript-eslint": "^8.58.1",
+    "vitest": "^3.2.4"
   }
 }
