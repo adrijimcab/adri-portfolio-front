@@ -14,6 +14,7 @@ import {
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
+import { ThemeService } from '../../../core/services/theme.service';
 
 interface Command {
   id: string;
@@ -79,6 +80,7 @@ interface Command {
             <kbd>↑↓</kbd> navigate
             <kbd>↵</kbd> select
             <kbd>esc</kbd> close
+            <kbd>?</kbd> open
           </footer>
         </div>
       </div>
@@ -185,6 +187,7 @@ interface Command {
 export class CommandPaletteComponent implements OnDestroy {
   private readonly router = inject(Router);
   private readonly platformId = inject(PLATFORM_ID);
+  private readonly themeService = inject(ThemeService);
 
   private readonly searchInput = viewChild<ElementRef<HTMLInputElement>>('search');
 
@@ -192,17 +195,43 @@ export class CommandPaletteComponent implements OnDestroy {
   readonly query = signal('');
   readonly activeId = signal<string | null>(null);
 
+  /** Keyboard buffer for vim-style sequences (e.g. `g` + `h`). */
+  private keyBuffer = '';
+  private bufferTimeout?: ReturnType<typeof setTimeout>;
+  private static readonly BUFFER_TIMEOUT_MS = 800;
+
   private readonly commands: Command[] = [
     { id: 'home',    label: 'Home',          hint: 'g h', group: 'Navigation', action: () => this.go('/') },
     { id: 'projects',label: 'Projects',      hint: 'g p', group: 'Navigation', action: () => this.go('/projects') },
+    { id: 'blog',    label: 'Blog',          hint: 'g b', group: 'Navigation', action: () => this.go('/blog') },
     { id: 'cv',      label: 'CV',            hint: 'g c', group: 'Navigation', action: () => this.go('/cv') },
     { id: 'uses',    label: 'Uses',          hint: 'g u', group: 'Navigation', action: () => this.go('/uses') },
     { id: 'stack',   label: 'Stack',         hint: 'g s', group: 'Navigation', action: () => this.go('/stack') },
-    { id: 'theme',   label: 'Toggle theme',  hint: 't',   group: 'Actions',    action: () => this.toggleTheme() },
+    { id: 'now',     label: 'Now',           hint: 'g n', group: 'Navigation', action: () => this.go('/now') },
+    { id: 'lab',     label: 'Lab',           hint: 'g l', group: 'Navigation', action: () => this.go('/lab') },
+    { id: 'theme',   label: 'Toggle theme',  hint: 't',   group: 'Actions',    action: () => this.themeService.toggle() },
     { id: 'top',     label: 'Scroll to top', hint: 'gg',  group: 'Actions',    action: () => this.scrollTop() },
     { id: 'github',  label: 'GitHub',        hint: '↗',   group: 'External',   action: () => this.openExternal('https://github.com/adrijimcab') },
     { id: 'linkedin',label: 'LinkedIn',      hint: '↗',   group: 'External',   action: () => this.openExternal('https://www.linkedin.com/in/adrianjimenezcabello') },
   ];
+
+  /**
+   * Static map of vim-style shortcut → action. Matched against {@link keyBuffer}
+   * after every keystroke. Kept as a plain object so it is tree-shake friendly
+   * and trivially unit-testable via {@link matchShortcut}.
+   */
+  private readonly shortcutMap: Record<string, () => void> = {
+    gh: () => this.go('/'),
+    gp: () => this.go('/projects'),
+    gb: () => this.go('/blog'),
+    gu: () => this.go('/uses'),
+    gs: () => this.go('/stack'),
+    gn: () => this.go('/now'),
+    gl: () => this.go('/lab'),
+    gc: () => this.go('/cv'),
+    gg: () => this.scrollTop(),
+    t: () => this.themeService.toggle(),
+  };
 
   readonly filtered = computed<Command[]>(() => {
     const q = this.query().trim().toLowerCase();
@@ -231,16 +260,7 @@ export class CommandPaletteComponent implements OnDestroy {
   constructor() {
     afterNextRender(() => {
       if (!isPlatformBrowser(this.platformId)) return;
-      this.keyHandler = (e: KeyboardEvent) => {
-        const isMac = navigator.platform.toUpperCase().includes('MAC');
-        const cmdK = (isMac ? e.metaKey : e.ctrlKey) && e.key.toLowerCase() === 'k';
-        if (cmdK) {
-          e.preventDefault();
-          this.toggle();
-        } else if (e.key === 'Escape' && this.open()) {
-          this.close();
-        }
-      };
+      this.keyHandler = (e: KeyboardEvent) => this.handleGlobalKey(e);
       window.addEventListener('keydown', this.keyHandler);
     });
 
@@ -305,20 +325,6 @@ export class CommandPaletteComponent implements OnDestroy {
     void this.router.navigate([path]);
   }
 
-  private toggleTheme(): void {
-    if (!isPlatformBrowser(this.platformId)) return;
-    const root = document.documentElement;
-    const current = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-    root.setAttribute('data-theme', current);
-    root.classList.remove('dark', 'light');
-    root.classList.add(current);
-    try {
-      localStorage.setItem('theme', current);
-    } catch (e) {
-      // localStorage may be blocked; theme still applies for the session.
-    }
-  }
-
   private scrollTop(): void {
     if (!isPlatformBrowser(this.platformId)) return;
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -329,9 +335,102 @@ export class CommandPaletteComponent implements OnDestroy {
     window.open(url, '_blank', 'noopener,noreferrer');
   }
 
+  /**
+   * Root keyboard handler. Dispatches:
+   *   1. Cmd/Ctrl+K and `?` → open palette
+   *   2. Esc → close palette (only when open)
+   *   3. Printable keys → vim-style buffer (`gh`, `gp`, `gg`, `t`, …)
+   *
+   * Ignores events that originate from text inputs / contenteditable so users
+   * can type freely in forms without hijacking keystrokes.
+   */
+  private handleGlobalKey(e: KeyboardEvent): void {
+    const target = e.target as HTMLElement | null;
+    const tag = target?.tagName;
+    const isEditable =
+      tag === 'INPUT' ||
+      tag === 'TEXTAREA' ||
+      tag === 'SELECT' ||
+      target?.isContentEditable === true;
+
+    // Always honor the palette toggles, even while typing? No — if the user is
+    // in the palette's own input, that input handles Esc/Enter/Arrows itself.
+    // Outside of editable fields we handle global hotkeys.
+    if (!isEditable) {
+      const isCmdK = (e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k';
+      if (isCmdK || e.key === '?') {
+        e.preventDefault();
+        this.toggle();
+        this.resetBuffer();
+        return;
+      }
+    }
+
+    if (e.key === 'Escape' && this.open()) {
+      this.close();
+      this.resetBuffer();
+      return;
+    }
+
+    // Don't intercept typing, shortcut sequences, or while palette is open.
+    if (isEditable || this.open()) return;
+
+    // Ignore modifier-only combos (Cmd+X, Ctrl+X, Alt+X). Shift is fine so
+    // printable keys like `?` still work if typed via shift.
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+
+    // Only printable single-char keys contribute to the sequence buffer.
+    if (e.key.length !== 1) return;
+
+    this.keyBuffer += e.key.toLowerCase();
+    this.scheduleBufferReset();
+
+    const matched = this.matchShortcut(this.keyBuffer);
+    if (matched) {
+      e.preventDefault();
+      matched();
+      this.resetBuffer();
+    } else if (!this.hasPrefix(this.keyBuffer)) {
+      // Buffer can't lead to any shortcut — flush it so the next key starts clean.
+      this.resetBuffer();
+    }
+  }
+
+  /** Exposed for unit tests. Returns the action bound to a sequence, or null. */
+  matchShortcut(sequence: string): (() => void) | null {
+    return this.shortcutMap[sequence] ?? null;
+  }
+
+  /** True when `sequence` is a strict prefix of at least one registered shortcut. */
+  private hasPrefix(sequence: string): boolean {
+    for (const key of Object.keys(this.shortcutMap)) {
+      if (key !== sequence && key.startsWith(sequence)) return true;
+    }
+    return false;
+  }
+
+  private scheduleBufferReset(): void {
+    if (this.bufferTimeout) clearTimeout(this.bufferTimeout);
+    this.bufferTimeout = setTimeout(
+      () => this.resetBuffer(),
+      CommandPaletteComponent.BUFFER_TIMEOUT_MS,
+    );
+  }
+
+  private resetBuffer(): void {
+    this.keyBuffer = '';
+    if (this.bufferTimeout) {
+      clearTimeout(this.bufferTimeout);
+      this.bufferTimeout = undefined;
+    }
+  }
+
   ngOnDestroy(): void {
     if (this.keyHandler) {
       window.removeEventListener('keydown', this.keyHandler);
+    }
+    if (this.bufferTimeout) {
+      clearTimeout(this.bufferTimeout);
     }
   }
 }
