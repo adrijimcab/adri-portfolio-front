@@ -26,15 +26,15 @@ import { Profile, SocialLink } from '../../../../core/models';
 
               <form (ngSubmit)="sendMessage()" class="space-y-4 text-left">
                 <div>
-                  <input type="text" [(ngModel)]="formName" name="name" [placeholder]="t.t('contact.name')" required
+                  <input id="contact-name" type="text" [(ngModel)]="formName" name="name" autocomplete="name" [placeholder]="t.t('contact.name')" required
                     class="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder-white/30 outline-none transition-colors focus:border-white/20 focus:bg-white/[0.08]" />
                 </div>
                 <div>
-                  <input type="email" [(ngModel)]="formEmail" name="email" [placeholder]="t.t('contact.email')" required
+                  <input id="contact-email" type="email" [(ngModel)]="formEmail" name="email" autocomplete="email" [placeholder]="t.t('contact.email')" required
                     class="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder-white/30 outline-none transition-colors focus:border-white/20 focus:bg-white/[0.08]" />
                 </div>
                 <div>
-                  <textarea [(ngModel)]="formMessage" name="message" [placeholder]="t.t('contact.message')" required rows="4"
+                  <textarea id="contact-message" [(ngModel)]="formMessage" name="message" autocomplete="off" [placeholder]="t.t('contact.message')" required rows="4"
                     class="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder-white/30 outline-none transition-colors focus:border-white/20 focus:bg-white/[0.08] resize-none"></textarea>
                 </div>
                 <button type="submit" [disabled]="sending()"

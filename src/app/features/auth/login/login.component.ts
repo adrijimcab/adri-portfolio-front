@@ -37,19 +37,23 @@ import { AuthService } from '../../../core/services/auth.service';
           <!-- Login Form -->
           <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="space-y-5">
             <div>
-              <label class="mb-1.5 block text-xs font-medium text-white/60">Email</label>
+              <label for="login-email" class="mb-1.5 block text-xs font-medium text-white/60">Email</label>
               <input
+                id="login-email"
                 formControlName="email"
                 type="email"
+                autocomplete="username"
                 placeholder="your@email.com"
                 class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-3 text-sm text-white placeholder-white/20 outline-none transition-colors focus:border-indigo-500/50 focus:bg-white/[0.06]"
               />
             </div>
             <div>
-              <label class="mb-1.5 block text-xs font-medium text-white/60">Password</label>
+              <label for="login-password" class="mb-1.5 block text-xs font-medium text-white/60">Password</label>
               <input
+                id="login-password"
                 formControlName="password"
                 type="password"
+                autocomplete="current-password"
                 placeholder="••••••••"
                 class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-3 text-sm text-white placeholder-white/20 outline-none transition-colors focus:border-indigo-500/50 focus:bg-white/[0.06]"
               />
@@ -107,10 +111,12 @@ import { AuthService } from '../../../core/services/auth.service';
               Enter your email and we'll send you a password reset link.
             </p>
             <div>
-              <label class="mb-1.5 block text-xs font-medium text-white/60">Email</label>
+              <label for="forgot-email" class="mb-1.5 block text-xs font-medium text-white/60">Email</label>
               <input
+                id="forgot-email"
                 formControlName="email"
                 type="email"
+                autocomplete="username"
                 placeholder="your@email.com"
                 class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-3 text-sm text-white placeholder-white/20 outline-none transition-colors focus:border-indigo-500/50 focus:bg-white/[0.06]"
               />
