@@ -1,25 +1,16 @@
 import { Component, ChangeDetectionStrategy, input, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
 import { SectionHeaderComponent } from '../../../../shared/components/section-header/section-header.component';
 import { GlassmorphismCardComponent } from '../../../../shared/components/glassmorphism-card/glassmorphism-card.component';
 import { LinkedinWidgetComponent } from '../../../../shared/components/linkedin-widget/linkedin-widget.component';
 import { ScrollAnimateDirective } from '../../../../shared/directives/scroll-animate.directive';
 import { MagneticDirective } from '../../../../shared/directives/magnetic.directive';
 import { TranslateService } from '../../../../core/services/translate.service';
+import { ApiService } from '../../../../core/services/api.service';
 import { Profile, SocialLink } from '../../../../core/models';
 
-// Web3Forms access key: by design this is a PUBLIC token, equivalent
-// to a Stripe publishable key or a Formspree form ID. Web3Forms explicitly
-// rejects server-to-server POSTs (unless you pay for Pro) — their model is
-// client-side submission with per-IP rate limiting on their end.
-// The key must be set via the admin panel in site_config to allow rotation
-// without a redeploy. The fallback value below is the committed default.
-const WEB3FORMS_ACCESS_KEY = '02b53ab1-7c8f-4c6b-9787-22d8dd3527c6';
-
-interface Web3FormsResponse {
+interface ContactResponse {
   success: boolean;
-  message?: string;
 }
 
 @Component({
@@ -91,7 +82,7 @@ interface Web3FormsResponse {
   `,
 })
 export class ContactComponent {
-  private readonly http = inject(HttpClient);
+  private readonly api = inject(ApiService);
   readonly t = inject(TranslateService);
   profile = input<Profile | undefined>();
   socialLinks = input<SocialLink[]>([]);
@@ -109,23 +100,16 @@ export class ContactComponent {
     this.sending.set(true);
     this.formError.set('');
 
-    this.http
-      .post<Web3FormsResponse>('https://api.web3forms.com/submit', {
-        access_key: WEB3FORMS_ACCESS_KEY,
+    this.api
+      .post<ContactResponse>('contact', {
         name: this.formName,
         email: this.formEmail,
         message: this.formMessage,
-        from_name: 'Portfolio Contact Form',
-        subject: `Portfolio: Message from ${this.formName}`,
       })
       .subscribe({
-        next: (response) => {
+        next: () => {
           this.sending.set(false);
-          if (response.success) {
-            this.formSent.set(true);
-          } else {
-            this.formError.set(this.t.t('contact.error'));
-          }
+          this.formSent.set(true);
         },
         error: () => {
           this.sending.set(false);
