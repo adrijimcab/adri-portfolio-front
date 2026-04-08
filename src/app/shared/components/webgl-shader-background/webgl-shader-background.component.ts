@@ -145,51 +145,57 @@ export class WebglShaderBackgroundComponent implements OnDestroy {
         vec2 auv = vec2(uv.x * aspect, uv.y);
 
         // Mouse vector (also aspect-corrected) and an attractor pull strength
-        // that fades with distance from the cursor.
+        // that fades with distance from the cursor. Much stronger than v1.
         vec2 mouse = vec2(uMouse.x * aspect, uMouse.y);
         float md = distance(auv, mouse);
-        float pull = exp(-md * 2.5) * 0.18;
+        float pull = exp(-md * 1.8) * 0.45;
 
-        float t = uTime * 0.18;
+        float t = uTime * 0.22;
 
-        // 5 drifting blobs at different speeds + slight bias toward the cursor.
-        vec2 c1 = vec2(0.20 * aspect + 0.16 * sin(t * 1.10), 0.78 + 0.10 * cos(t * 0.90));
-        vec2 c2 = vec2(0.78 * aspect + 0.14 * cos(t * 0.80), 0.22 + 0.10 * sin(t * 1.20));
-        vec2 c3 = vec2(0.50 * aspect + 0.20 * sin(t * 0.65), 0.50 + 0.12 * cos(t * 0.75));
-        vec2 c4 = vec2(0.10 * aspect + 0.10 * cos(t * 1.30), 0.30 + 0.08 * sin(t * 1.05));
-        vec2 c5 = vec2(0.90 * aspect + 0.10 * sin(t * 0.95), 0.85 + 0.08 * cos(t * 1.15));
-        c1 = mix(c1, mouse, pull * 1.3);
-        c2 = mix(c2, mouse, pull * 1.0);
-        c3 = mix(c3, mouse, pull * 1.6);
+        // 5 drifting blobs at different speeds + strong bias toward the cursor.
+        vec2 c1 = vec2(0.20 * aspect + 0.22 * sin(t * 1.10), 0.78 + 0.14 * cos(t * 0.90));
+        vec2 c2 = vec2(0.78 * aspect + 0.20 * cos(t * 0.80), 0.22 + 0.14 * sin(t * 1.20));
+        vec2 c3 = vec2(0.50 * aspect + 0.28 * sin(t * 0.65), 0.50 + 0.16 * cos(t * 0.75));
+        vec2 c4 = vec2(0.10 * aspect + 0.14 * cos(t * 1.30), 0.30 + 0.10 * sin(t * 1.05));
+        vec2 c5 = vec2(0.90 * aspect + 0.14 * sin(t * 0.95), 0.85 + 0.10 * cos(t * 1.15));
+        c1 = mix(c1, mouse, pull * 1.6);
+        c2 = mix(c2, mouse, pull * 1.3);
+        c3 = mix(c3, mouse, pull * 2.0);
+        c4 = mix(c4, mouse, pull * 0.9);
+        c5 = mix(c5, mouse, pull * 0.9);
 
-        float b1 = blob(auv, c1, 0.65);
-        float b2 = blob(auv, c2, 0.60);
-        float b3 = blob(auv, c3, 0.55);
-        float b4 = blob(auv, c4, 0.45);
-        float b5 = blob(auv, c5, 0.50);
+        float b1 = blob(auv, c1, 0.72);
+        float b2 = blob(auv, c2, 0.66);
+        float b3 = blob(auv, c3, 0.62);
+        float b4 = blob(auv, c4, 0.50);
+        float b5 = blob(auv, c5, 0.55);
 
         // Domain-warped FBM noise field gives that "fluid plasma" look you cannot
-        // produce with CSS gradients alone.
+        // produce with CSS gradients alone. The warp field also reacts to pull.
         vec2 q = auv * 2.5;
         vec2 warp = vec2(
-          fbm(q + vec2(0.0, t)),
-          fbm(q + vec2(5.2, -t * 0.9))
+          fbm(q + vec2(0.0, t) + (mouse - auv) * pull),
+          fbm(q + vec2(5.2, -t * 0.9) - (mouse - auv) * pull)
         );
-        float n = fbm(q * 1.6 + warp * 1.8 + t * 0.35);
+        float n = fbm(q * 1.6 + warp * 2.2 + t * 0.35);
 
         vec3 col = vec3(0.0);
-        col += uColorPrimary   * b1 * 0.45;
-        col += uColorSecondary * b2 * 0.38;
-        col += uColorAccent    * b3 * 0.42;
-        col += uColorPrimary   * b4 * 0.22;
-        col += uColorSecondary * b5 * 0.22;
+        col += uColorPrimary   * b1 * 0.75;
+        col += uColorSecondary * b2 * 0.62;
+        col += uColorAccent    * b3 * 0.70;
+        col += uColorPrimary   * b4 * 0.35;
+        col += uColorSecondary * b5 * 0.35;
 
-        // Plasma noise overlay (drives the most visible movement).
-        col += mix(uColorPrimary, uColorAccent, n) * 0.18 * smoothstep(0.2, 0.9, n);
+        // Plasma noise overlay drives the most visible movement.
+        col += mix(uColorPrimary, uColorAccent, n) * 0.32 * smoothstep(0.15, 0.9, n);
+
+        // Cursor glow ring — a soft halo that follows the pointer.
+        float glow = exp(-md * 3.2) * 0.35;
+        col += uColorAccent * glow;
 
         // Soft vignette that pulses gently with the noise field.
-        float vig = smoothstep(1.2, 0.35, distance(uv, vec2(0.5)));
-        col *= 0.55 + vig * 0.6;
+        float vig = smoothstep(1.2, 0.3, distance(uv, vec2(0.5)));
+        col *= 0.55 + vig * 0.65;
 
         // Faint dot grid (carry-over from Aurora identity).
         vec2 grid = fract(uv * uResolution / 26.0) - 0.5;

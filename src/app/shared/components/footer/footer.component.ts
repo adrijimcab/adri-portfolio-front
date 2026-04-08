@@ -9,7 +9,9 @@ import { SpotifyNowPlayingComponent } from '../spotify-now-playing/spotify-now-p
   template: `
     <footer class="border-t border-white/[0.06] py-12">
       <div class="mx-auto max-w-6xl px-6 text-center">
-        <app-spotify-now-playing />
+        <div class="flex justify-center pl-6 sm:pl-10">
+          <app-spotify-now-playing />
+        </div>
         <p class="mt-12 text-sm text-white/50">
           &copy; {{ currentYear }} Adrián Jiménez Cabello
         </p>
