@@ -1,101 +1,103 @@
-import type { OnInit } from '@angular/core';
-import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { map, type Observable } from 'rxjs';
 import { AdminService } from '../../../core/services/admin.service';
-import { ToastService } from '../../../shared/components/toast/toast.service';
-import { ConfirmDialogService } from '../../../shared/components/confirm-dialog/confirm-dialog.service';
+import { GenericCrudComponent } from '../../../shared/components/generic-crud/generic-crud.component';
 import type { TableColumn } from '../../../shared/components/data-table/data-table.component';
-import { DataTableComponent } from '../../../shared/components/data-table/data-table.component';
-import type { Education } from '../../../core/models';
+import type { CrudResource } from '../../../core/domain/repositories';
+import type { Education } from '../../../core/domain/entities';
 
 @Component({
   selector: 'app-education-editor',
   standalone: true,
-  imports: [ReactiveFormsModule, DataTableComponent],
+  imports: [ReactiveFormsModule, GenericCrudComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="space-y-6">
-      <h1 class="text-2xl font-bold text-white">Education</h1>
-
-      @if (!editing()) {
-        <app-data-table
-          [columns]="columns"
-          [data]="tableData()"
-          (onAdd)="startAdd()"
-          (onEdit)="startEdit($event)"
-          (onDelete)="confirmDelete($event)"
-        />
-      } @else {
-        <form
-          [formGroup]="form"
-          (ngSubmit)="save()"
-          class="space-y-5 rounded-2xl border border-white/[0.06] bg-white/[0.03] p-6 backdrop-blur-xl"
-        >
-          <div class="flex items-center justify-between">
-            <h2 class="text-lg font-semibold text-white">{{ editingId() ? 'Edit' : 'New' }} Education</h2>
-            <button type="button" (click)="editing.set(false)" class="text-sm text-white/40 hover:text-white/60">Cancel</button>
-          </div>
-
-          <div class="grid gap-4 md:grid-cols-2">
-            <div>
-              <label class="mb-1 block text-xs text-white/50">Institution *</label>
-              <input formControlName="institution" class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50" />
-            </div>
-            <div>
-              <label class="mb-1 block text-xs text-white/50">Degree *</label>
-              <input formControlName="degree" class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50" />
-            </div>
-            <div>
-              <label class="mb-1 block text-xs text-white/50">Degree (EN)</label>
-              <input formControlName="degree_en" class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50" />
-            </div>
-            <div>
-              <label class="mb-1 block text-xs text-white/50">Field</label>
-              <input formControlName="field" class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50" />
-            </div>
-            <div>
-              <label class="mb-1 block text-xs text-white/50">Field (EN)</label>
-              <input formControlName="field_en" class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50" />
-            </div>
-            <div>
-              <label class="mb-1 block text-xs text-white/50">Year Start</label>
-              <input formControlName="year_start" type="number" class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50" />
-            </div>
-            <div>
-              <label class="mb-1 block text-xs text-white/50">Year End</label>
-              <input formControlName="year_end" type="number" class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50" />
-            </div>
+    <app-generic-crud
+      title="Education"
+      entityLabel="Education"
+      [resource]="resource"
+      [columns]="columns"
+      [form]="form"
+      [toFormValue]="toFormValue"
+    >
+      <div [formGroup]="form" class="space-y-5">
+        <div class="grid gap-4 md:grid-cols-2">
+          <div>
+            <label class="mb-1 block text-xs text-white/50">Institution *</label>
+            <input
+              formControlName="institution"
+              class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
+            />
           </div>
           <div>
-            <label class="mb-1 block text-xs text-white/50">Description</label>
-            <textarea formControlName="description" rows="3" class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"></textarea>
+            <label class="mb-1 block text-xs text-white/50">Degree *</label>
+            <input
+              formControlName="degree"
+              class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
+            />
           </div>
           <div>
-            <label class="mb-1 block text-xs text-white/50">Description (EN)</label>
-            <textarea formControlName="description_en" rows="3" class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"></textarea>
+            <label class="mb-1 block text-xs text-white/50">Degree (EN)</label>
+            <input
+              formControlName="degree_en"
+              class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
+            />
           </div>
-
-          <div class="flex justify-end gap-3">
-            <button type="button" (click)="editing.set(false)" class="rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2 text-sm text-white/60 hover:bg-white/[0.08]">Cancel</button>
-            <button type="submit" [disabled]="saving()" class="rounded-lg bg-gradient-to-r from-indigo-500 to-purple-500 px-6 py-2 text-sm font-semibold text-white disabled:opacity-50">
-              {{ saving() ? 'Saving...' : 'Save' }}
-            </button>
+          <div>
+            <label class="mb-1 block text-xs text-white/50">Field</label>
+            <input
+              formControlName="field"
+              class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
+            />
           </div>
-        </form>
-      }
-    </div>
+          <div>
+            <label class="mb-1 block text-xs text-white/50">Field (EN)</label>
+            <input
+              formControlName="field_en"
+              class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
+            />
+          </div>
+          <div>
+            <label class="mb-1 block text-xs text-white/50">Year Start</label>
+            <input
+              formControlName="year_start"
+              type="number"
+              class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
+            />
+          </div>
+          <div>
+            <label class="mb-1 block text-xs text-white/50">Year End</label>
+            <input
+              formControlName="year_end"
+              type="number"
+              class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
+            />
+          </div>
+        </div>
+        <div>
+          <label class="mb-1 block text-xs text-white/50">Description</label>
+          <textarea
+            formControlName="description"
+            rows="3"
+            class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
+          ></textarea>
+        </div>
+        <div>
+          <label class="mb-1 block text-xs text-white/50">Description (EN)</label>
+          <textarea
+            formControlName="description_en"
+            rows="3"
+            class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
+          ></textarea>
+        </div>
+      </div>
+    </app-generic-crud>
   `,
 })
-export class EducationEditorComponent implements OnInit {
+export class EducationEditorComponent {
   private readonly admin = inject(AdminService);
-  private readonly toast = inject(ToastService);
-  private readonly confirm = inject(ConfirmDialogService);
   private readonly fb = inject(FormBuilder);
-
-  readonly editing = signal(false);
-  readonly editingId = signal<string | null>(null);
-  readonly saving = signal(false);
-  readonly tableData = signal<Record<string, unknown>[]>([]);
 
   readonly columns: TableColumn[] = [
     { key: 'institution', label: 'Institution' },
@@ -117,63 +119,33 @@ export class EducationEditorComponent implements OnInit {
     description_en: [''],
   });
 
-  ngOnInit(): void { this.loadData(); }
+  readonly resource: CrudResource<Education> = {
+    list: (): Observable<Education[]> =>
+      this.admin.getEducation().pipe(
+        // API may return { education: [...], courses: [...] } or a raw array
+        map((res: unknown) =>
+          Array.isArray(res)
+            ? (res as Education[])
+            : ((res as { education?: Education[] }).education ?? []),
+        ),
+      ),
+    create: (dto) => this.admin.createEducation(dto),
+    update: (id, dto) => this.admin.updateEducation(id, dto),
+    delete: (id) => this.admin.deleteEducation(id),
+  };
 
-  private loadData(): void {
-    this.admin.getEducation().subscribe({
-      next: (res) => {
-        // API returns { education: [...], courses: [...] } or just array
-        const items = Array.isArray(res) ? res : (res as unknown as { education: Education[] }).education ?? [];
-        this.tableData.set(items as unknown as Record<string, unknown>[]);
-      },
-    });
-  }
-
-  startAdd(): void {
-    this.form.reset();
-    this.editingId.set(null);
-    this.editing.set(true);
-  }
-
-  startEdit(row: Record<string, unknown>): void {
-    const e = row as unknown as Education & Record<string, unknown>;
-    this.form.patchValue({
+  readonly toFormValue = (e: Education): Record<string, unknown> => {
+    const extra = e as Education & Record<string, unknown>;
+    return {
       institution: e.institution,
       degree: e.degree,
-      degree_en: (e['degree_en'] as string) ?? '',
+      degree_en: (extra['degree_en'] as string) ?? '',
       field: e.field ?? '',
-      field_en: (e['field_en'] as string) ?? '',
+      field_en: (extra['field_en'] as string) ?? '',
       year_start: e.year_start,
       year_end: e.year_end,
       description: e.description ?? '',
-      description_en: (e['description_en'] as string) ?? '',
-    });
-    this.editingId.set(e.id);
-    this.editing.set(true);
-  }
-
-  save(): void {
-    if (this.form.invalid) return;
-    this.saving.set(true);
-    const id = this.editingId();
-    const req = id
-      ? this.admin.updateEducation(id, this.form.getRawValue() as Partial<Education>)
-      : this.admin.createEducation(this.form.getRawValue() as Partial<Education>);
-    req.subscribe({
-      next: () => { this.saving.set(false); this.editing.set(false); this.toast.success(id ? 'Updated' : 'Created'); this.loadData(); },
-      error: () => { this.saving.set(false); this.toast.error('Failed to save'); },
-    });
-  }
-
-  confirmDelete(row: Record<string, unknown>): void {
-    this.confirm.confirm('Delete Education', 'Are you sure?').subscribe({
-      next: (ok) => {
-        if (!ok) return;
-        this.admin.deleteEducation(row['id'] as string).subscribe({
-          next: () => { this.toast.success('Deleted'); this.loadData(); },
-          error: () => this.toast.error('Failed to delete'),
-        });
-      },
-    });
-  }
+      description_en: (extra['description_en'] as string) ?? '',
+    };
+  };
 }
