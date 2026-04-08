@@ -22,10 +22,11 @@
     }
   ],
   "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/api/ssr"
-    }
+    { "source": "/sitemap.xml", "destination": "/api/sitemap" },
+    { "source": "/rss.xml", "destination": "/api/rss" },
+    { "source": "/feed.json", "destination": "/api/feed" },
+    { "source": "/og", "destination": "/api/og" },
+    { "source": "/(.*)", "destination": "/api/ssr" }
   ],
   "headers": [
     {
