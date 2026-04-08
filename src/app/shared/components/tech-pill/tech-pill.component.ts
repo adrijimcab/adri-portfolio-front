@@ -1,7 +1,11 @@
-import { Component, ChangeDetectionStrategy, computed, effect, input, signal } from '@angular/core';
-import { VARIANT_OVERRIDES, isSlugFailed, markSlugFailed } from './devicon-availability';
-
-type IconVariant = 'original' | 'plain';
+import { Component, ChangeDetectionStrategy, computed, input, signal } from '@angular/core';
+import {
+  BRAND_ICON_CDN,
+  VARIANT_OVERRIDES,
+  getInlineIconDataUri,
+  hasAnyIconSource,
+  markSlugFailed,
+} from './devicon-availability';
 
 @Component({
   selector: 'app-tech-pill',
@@ -10,8 +14,8 @@ type IconVariant = 'original' | 'plain';
   template: `
     <span class="inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs transition-all duration-200 hover:scale-105"
           style="border-color: color-mix(in srgb, var(--color-primary) 30%, transparent); background: color-mix(in srgb, var(--color-primary) 8%, transparent); color: var(--color-primary);">
-      @if (shouldShowIcon()) {
-        <img [src]="iconUrl()"
+      @if (iconUrl()) {
+        <img [src]="iconUrl()!"
              [alt]="name()"
              class="h-3.5 w-3.5"
              loading="lazy"
@@ -25,42 +29,48 @@ type IconVariant = 'original' | 'plain';
 export class TechPillComponent {
   name = input.required<string>();
   iconSlug = input<string>('');
-  readonly iconFailed = signal(false);
-  // Some devicon slugs only ship `-plain.svg` (jest, nextjs) while most
-  // ship `-original.svg`. Fall back to the plain variant before giving up.
-  readonly variant = signal<IconVariant>('original');
 
-  constructor() {
-    // Honor per-slug variant overrides (e.g. jest only ships -plain),
-    // so we never issue a doomed -original request that would CORB.
-    effect(() => {
-      const slug = this.iconSlug();
-      const preferred = slug ? VARIANT_OVERRIDES[slug] : undefined;
-      if (preferred) {
-        this.variant.set(preferred);
-      }
-    });
-  }
+  // First attempt failed — try the next source in the cascade.
+  readonly attemptedPlain = signal(false);
+  readonly hardFailed = signal(false);
 
-  readonly shouldShowIcon = computed(() => {
+  readonly iconUrl = computed<string | null>(() => {
     const slug = this.iconSlug();
-    return !!slug && !this.iconFailed() && !isSlugFailed(slug);
-  });
+    if (!slug || this.hardFailed() || !hasAnyIconSource(slug)) {
+      return null;
+    }
 
-  readonly iconUrl = computed(() => {
-    const slug = this.iconSlug();
-    return `https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/${slug}/${slug}-${this.variant()}.svg`;
+    // 1. Inline SVG data URI (zero network, can't fail) wins first.
+    const inline = getInlineIconDataUri(slug);
+    if (inline) return inline;
+
+    // 2. Brand icon on simple-icons CDN (for slugs missing from devicon).
+    const brandCdn = BRAND_ICON_CDN[slug];
+    if (brandCdn) return brandCdn;
+
+    // 3. Devicon — try the preferred variant for this slug, then -plain
+    //    as fallback (some slugs only ship -plain, e.g. jest).
+    const preferred = VARIANT_OVERRIDES[slug];
+    const variant = preferred ?? (this.attemptedPlain() ? 'plain' : 'original');
+    return `https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/${slug}/${slug}-${variant}.svg`;
   });
 
   onIconError(): void {
-    if (this.variant() === 'original') {
-      this.variant.set('plain');
+    const slug = this.iconSlug();
+    if (!slug) {
+      this.hardFailed.set(true);
       return;
     }
-    const slug = this.iconSlug();
-    if (slug) {
+
+    // If the override was already applied OR we already fell back to plain,
+    // there's nothing else to try — mark the slug as failed for the session
+    // so sibling pills with the same slug never re-request it.
+    if (VARIANT_OVERRIDES[slug] || this.attemptedPlain()) {
       markSlugFailed(slug);
+      this.hardFailed.set(true);
+      return;
     }
-    this.iconFailed.set(true);
+
+    this.attemptedPlain.set(true);
   }
 }
