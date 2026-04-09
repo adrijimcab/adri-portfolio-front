@@ -15,6 +15,7 @@ import { WebglShaderBackgroundComponent } from './shared/components/webgl-shader
 import { ParticlesBackgroundComponent } from './shared/components/particles-background/particles-background.component';
 import { ScrollProgressComponent } from './shared/components/scroll-progress/scroll-progress.component';
 import { CommandPaletteComponent } from './shared/components/command-palette/command-palette.component';
+import { ChatWidgetComponent } from './shared/components/chat-widget/chat-widget.component';
 import { KonamiDirective } from './shared/directives/konami.directive';
 import { ThemeService } from './core/services/theme.service';
 
@@ -29,6 +30,7 @@ import { ThemeService } from './core/services/theme.service';
     ParticlesBackgroundComponent,
     ScrollProgressComponent,
     CommandPaletteComponent,
+    ChatWidgetComponent,
     KonamiDirective,
   ],
   template: `
@@ -47,6 +49,16 @@ import { ThemeService } from './core/services/theme.service';
     </main>
     <app-footer />
     <app-command-palette />
+    @defer (on interaction; prefetch on idle) {
+      <app-chat-widget />
+    } @placeholder {
+      <button
+        class="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-violet-600 to-emerald-500 shadow-lg"
+        aria-label="Abrir chat"
+      >
+        <span class="text-xl text-white">&#10024;</span>
+      </button>
+    }
     @if (konamiActive()) {
       <div class="konami-toast" role="status" aria-live="polite">
         🎮 Konami unlocked
