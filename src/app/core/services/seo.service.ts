@@ -48,13 +48,15 @@ export interface ListItemInput {
  */
 function sanitizeText(value: string | null | undefined, maxLen: number): string {
   if (!value) return '';
-  return value
-    // Control characters (U+0000..U+001F, U+007F) are intentionally stripped for SEO/JSON-LD safety.
-    // eslint-disable-next-line no-control-regex
-    .replace(/[<>\u0000-\u001F\u007F]/g, '')
-    .replace(/javascript:/gi, '')
-    .trim()
-    .slice(0, maxLen);
+  return (
+    value
+      // Control characters (U+0000..U+001F, U+007F) are intentionally stripped for SEO/JSON-LD safety.
+      // eslint-disable-next-line no-control-regex
+      .replace(/[<>\u0000-\u001F\u007F]/g, '')
+      .replace(/javascript:/gi, '')
+      .trim()
+      .slice(0, maxLen)
+  );
 }
 
 function sanitizeUrl(value: string | null | undefined): string {
@@ -118,7 +120,13 @@ export class SeoService {
     }
   }
 
-  setPersonSchema(profile: { full_name: string; title: string; email?: string | null; location?: string | null; url?: string }) {
+  setPersonSchema(profile: {
+    full_name: string;
+    title: string;
+    email?: string | null;
+    location?: string | null;
+    url?: string;
+  }) {
     const address: Record<string, string> = profile.location
       ? { '@type': 'PostalAddress', addressLocality: profile.location, addressCountry: 'ES' }
       : { '@type': 'PostalAddress', addressCountry: 'ES' };
@@ -137,15 +145,21 @@ export class SeoService {
       address,
       nationality: { '@type': 'Country', name: 'Spain' },
       knowsAbout: [
-        'Angular', 'NestJS', 'React', 'TypeScript', 'Node.js',
-        'Supabase', 'PostgreSQL', 'Tailwind CSS', 'SSR',
-        'Full Stack Development', 'Frontend Architecture',
-        'Clean Architecture', 'Design Patterns',
+        'Angular',
+        'NestJS',
+        'React',
+        'TypeScript',
+        'Node.js',
+        'Supabase',
+        'PostgreSQL',
+        'Tailwind CSS',
+        'SSR',
+        'Full Stack Development',
+        'Frontend Architecture',
+        'Clean Architecture',
+        'Design Patterns',
       ],
-      sameAs: [
-        'https://www.linkedin.com/in/adrianjimenezcabello',
-        'https://github.com/adrijimcab',
-      ],
+      sameAs: ['https://www.linkedin.com/in/adrianjimenezcabello', 'https://github.com/adrijimcab'],
     };
 
     if (profile.email) {
@@ -156,21 +170,25 @@ export class SeoService {
   }
 
   setWebSiteSchema() {
-    this.setJsonLd({
-      '@context': 'https://schema.org',
-      '@type': 'WebSite',
-      '@id': 'https://adrianjimenezcabello.dev/#website',
-      url: 'https://adrianjimenezcabello.dev/',
-      name: 'Adrián Jiménez Cabello',
-      description: 'Portfolio personal de Adrián Jiménez Cabello, Full Stack Developer especializado en Angular, NestJS y React.',
-      inLanguage: ['es', 'en'],
-      author: { '@id': 'https://adrianjimenezcabello.dev/#person' },
-      potentialAction: {
-        '@type': 'SearchAction',
-        target: 'https://adrianjimenezcabello.dev/?q={search_term_string}',
-        'query-input': 'required name=search_term_string',
+    this.setJsonLd(
+      {
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        '@id': 'https://adrianjimenezcabello.dev/#website',
+        url: 'https://adrianjimenezcabello.dev/',
+        name: 'Adrián Jiménez Cabello',
+        description:
+          'Portfolio personal de Adrián Jiménez Cabello, Full Stack Developer especializado en Angular, NestJS y React.',
+        inLanguage: ['es', 'en'],
+        author: { '@id': 'https://adrianjimenezcabello.dev/#person' },
+        potentialAction: {
+          '@type': 'SearchAction',
+          target: 'https://adrianjimenezcabello.dev/?q={search_term_string}',
+          'query-input': 'required name=search_term_string',
+        },
       },
-    }, 'schema-website');
+      'schema-website',
+    );
   }
 
   setBreadcrumbList(items: readonly BreadcrumbItem[]) {
@@ -272,15 +290,50 @@ export class SeoService {
     );
   }
 
+  /**
+   * Sets `<link rel="alternate" hreflang="...">` tags for every supported
+   * language plus the `x-default` entry. Removes stale hreflang links first
+   * so they stay in sync when the user navigates between pages.
+   *
+   * @param path - The route path WITHOUT the language prefix (e.g. `/projects`).
+   *               Pass an empty string for the home page.
+   */
+  setHreflang(path: string): void {
+    // Remove existing hreflang links
+    const existing = this.doc.querySelectorAll('link[rel="alternate"][hreflang]');
+    existing.forEach((el) => el.remove());
+
+    const base = SITE_ORIGIN;
+    const cleanPath = path.startsWith('/') ? path : `/${path}`;
+    const suffix = cleanPath === '/' ? '' : cleanPath;
+
+    const langs: readonly { hreflang: string; lang: string }[] = [
+      { hreflang: 'es', lang: 'es' },
+      { hreflang: 'en', lang: 'en' },
+      { hreflang: 'x-default', lang: 'es' },
+    ];
+
+    for (const { hreflang, lang } of langs) {
+      const link = this.doc.createElement('link');
+      link.setAttribute('rel', 'alternate');
+      link.setAttribute('hreflang', hreflang);
+      link.setAttribute('href', `${base}/${lang}${suffix}`);
+      this.doc.head.appendChild(link);
+    }
+  }
+
   setProfessionalServiceSchema() {
-    this.setJsonLd({
-      '@context': 'https://schema.org',
-      '@type': 'ProfessionalService',
-      '@id': 'https://adrianjimenezcabello.dev/#service',
-      name: 'Full Stack Development Services',
-      provider: { '@id': 'https://adrianjimenezcabello.dev/#person' },
-      areaServed: { '@type': 'Country', name: 'Spain' },
-      serviceType: ['Web Development', 'Frontend Development', 'Backend Development'],
-    }, 'schema-service');
+    this.setJsonLd(
+      {
+        '@context': 'https://schema.org',
+        '@type': 'ProfessionalService',
+        '@id': 'https://adrianjimenezcabello.dev/#service',
+        name: 'Full Stack Development Services',
+        provider: { '@id': 'https://adrianjimenezcabello.dev/#person' },
+        areaServed: { '@type': 'Country', name: 'Spain' },
+        serviceType: ['Web Development', 'Frontend Development', 'Backend Development'],
+      },
+      'schema-service',
+    );
   }
 }

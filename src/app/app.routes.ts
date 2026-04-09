@@ -1,9 +1,18 @@
 import type { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
+import { languageGuard } from './core/guards/language.guard';
 import { projectDetailResolver } from './features/projects/project-detail/project-detail.resolver';
 import { blogPostResolver } from './features/blog/blog-post/blog-post.resolver';
 
-export const routes: Routes = [
+/**
+ * All public routes live under `/:lang/...` so every page has a language prefix
+ * in its URL (/es/projects, /en/blog, etc.).
+ *
+ * Legacy routes without the prefix redirect to `/es/...` for backward compatibility.
+ * Auth routes (login, admin) stay at the root level — no language prefix needed.
+ */
+
+const publicChildren: Routes = [
   {
     path: '',
     loadComponent: () =>
@@ -31,13 +40,11 @@ export const routes: Routes = [
   },
   {
     path: 'uses',
-    loadComponent: () =>
-      import('./features/uses/uses.component').then((m) => m.UsesComponent),
+    loadComponent: () => import('./features/uses/uses.component').then((m) => m.UsesComponent),
   },
   {
     path: 'stack',
-    loadComponent: () =>
-      import('./features/stack/stack.component').then((m) => m.StackComponent),
+    loadComponent: () => import('./features/stack/stack.component').then((m) => m.StackComponent),
   },
   {
     path: 'now',
@@ -46,6 +53,11 @@ export const routes: Routes = [
   {
     path: 'lab',
     loadComponent: () => import('./features/lab/lab.component').then((m) => m.LabComponent),
+  },
+  {
+    path: 'guestbook',
+    loadComponent: () =>
+      import('./features/guestbook/guestbook.component').then((m) => m.GuestbookComponent),
   },
   {
     path: 'blog',
@@ -61,10 +73,17 @@ export const routes: Routes = [
   {
     path: 'certifications/:id',
     loadComponent: () =>
-      import(
-        './features/certifications/certification-detail/certification-detail.component'
-      ).then((m) => m.CertificationDetailComponent),
+      import('./features/certifications/certification-detail/certification-detail.component').then(
+        (m) => m.CertificationDetailComponent,
+      ),
   },
+];
+
+export const routes: Routes = [
+  // Bare root -> default language
+  { path: '', redirectTo: '/es', pathMatch: 'full' },
+
+  // Auth routes — no language prefix
   {
     path: 'login',
     loadComponent: () =>
@@ -150,6 +169,28 @@ export const routes: Routes = [
       },
     ],
   },
+
+  // -- Legacy redirects (routes without lang prefix -> /es/...) --
+  { path: 'projects', redirectTo: '/es/projects', pathMatch: 'full' },
+  { path: 'projects/:slug', redirectTo: '/es/projects/:slug' },
+  { path: 'blog', redirectTo: '/es/blog', pathMatch: 'full' },
+  { path: 'blog/:slug', redirectTo: '/es/blog/:slug' },
+  { path: 'cv', redirectTo: '/es/cv', pathMatch: 'full' },
+  { path: 'uses', redirectTo: '/es/uses', pathMatch: 'full' },
+  { path: 'stack', redirectTo: '/es/stack', pathMatch: 'full' },
+  { path: 'now', redirectTo: '/es/now', pathMatch: 'full' },
+  { path: 'lab', redirectTo: '/es/lab', pathMatch: 'full' },
+  { path: 'guestbook', redirectTo: '/es/guestbook', pathMatch: 'full' },
+  { path: 'certifications/:id', redirectTo: '/es/certifications/:id' },
+
+  // -- Language-prefixed public routes --
+  {
+    path: ':lang',
+    canActivate: [languageGuard],
+    children: publicChildren,
+  },
+
+  // -- Catch-all 404 --
   {
     path: '**',
     loadComponent: () =>

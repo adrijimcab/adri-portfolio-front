@@ -13,7 +13,16 @@ import type { Project } from '../../../../core/models';
 @Component({
   selector: 'app-featured-projects',
   standalone: true,
-  imports: [RouterLink, NgOptimizedImage, SectionHeaderComponent, GlassmorphismCardComponent, TechPillComponent, ScrollAnimateDirective, TiltDirective, MagneticDirective],
+  imports: [
+    RouterLink,
+    NgOptimizedImage,
+    SectionHeaderComponent,
+    GlassmorphismCardComponent,
+    TechPillComponent,
+    ScrollAnimateDirective,
+    TiltDirective,
+    MagneticDirective,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section id="featured-projects" class="py-24 px-6">
@@ -23,7 +32,7 @@ import type { Project } from '../../../../core/models';
         <div class="bento-grid">
           @for (project of projects(); track project.id; let i = $index) {
             <a
-              [routerLink]="['/projects', project.slug]"
+              [routerLink]="['/', t.currentLang(), 'projects', project.slug]"
               class="bento-cell group"
               [class.bento-featured]="i === 0"
               [class.bento-tall]="i === 1"
@@ -45,8 +54,10 @@ import type { Project } from '../../../../core/models';
                     />
                   </div>
                 }
-                <h3 class="text-xl font-bold text-white group-hover:text-transparent group-hover:bg-clip-text"
-                    style="background-image: linear-gradient(90deg, var(--color-primary), var(--color-secondary));">
+                <h3
+                  class="text-xl font-bold text-white group-hover:text-transparent group-hover:bg-clip-text"
+                  style="background-image: linear-gradient(90deg, var(--color-primary), var(--color-secondary));"
+                >
                   {{ project.title }}
                 </h3>
                 @if (project.short_description) {
@@ -65,47 +76,51 @@ import type { Project } from '../../../../core/models';
         </div>
 
         <div class="mt-8 text-center" appScrollAnimate>
-          <a routerLink="/projects"
-             appMagnetic
-             [strength]="0.2"
-             class="inline-flex items-center gap-2 rounded-lg border border-white/10 px-6 py-3 text-sm text-white/60 transition-all hover:border-white/20 hover:text-white">
+          <a
+            [routerLink]="['/', t.currentLang(), 'projects']"
+            appMagnetic
+            [strength]="0.2"
+            class="inline-flex items-center gap-2 rounded-lg border border-white/10 px-6 py-3 text-sm text-white/60 transition-all hover:border-white/20 hover:text-white"
+          >
             {{ t.t('projects.view_all') }}
           </a>
         </div>
       </div>
     </section>
   `,
-  styles: [`
-    .bento-grid {
-      display: grid;
-      gap: 1.5rem;
-      grid-template-columns: 1fr;
-    }
-
-    @media (min-width: 768px) {
+  styles: [
+    `
       .bento-grid {
-        grid-template-columns: repeat(3, 1fr);
-        grid-auto-rows: minmax(280px, auto);
+        display: grid;
+        gap: 1.5rem;
+        grid-template-columns: 1fr;
       }
-      .bento-featured {
-        grid-column: span 2;
-        grid-row: span 2;
-      }
-      .bento-tall {
-        grid-row: span 2;
-      }
-    }
 
-    .bento-cell {
-      display: block;
-      min-width: 0;
-    }
+      @media (min-width: 768px) {
+        .bento-grid {
+          grid-template-columns: repeat(3, 1fr);
+          grid-auto-rows: minmax(280px, auto);
+        }
+        .bento-featured {
+          grid-column: span 2;
+          grid-row: span 2;
+        }
+        .bento-tall {
+          grid-row: span 2;
+        }
+      }
 
-    .bento-cell :host ::ng-deep app-glass-card,
-    .bento-cell app-glass-card {
-      height: 100%;
-    }
-  `],
+      .bento-cell {
+        display: block;
+        min-width: 0;
+      }
+
+      .bento-cell :host ::ng-deep app-glass-card,
+      .bento-cell app-glass-card {
+        height: 100%;
+      }
+    `,
+  ],
 })
 export class FeaturedProjectsComponent {
   readonly t = inject(TranslateService);

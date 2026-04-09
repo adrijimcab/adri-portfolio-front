@@ -86,6 +86,21 @@
     "sent_message": "Thanks. I'll write back as soon as I can.",
     "error": "Could not send. Try again in a sec."
   },
+  "guestbook": {
+    "title": "Guestbook",
+    "label": "Leave a message",
+    "subtitle": "Sign the guestbook with your GitHub account and leave a message.",
+    "sign_button": "Sign with GitHub",
+    "signed_as": "Signed in as",
+    "placeholder": "Your message…",
+    "submit": "Sign",
+    "submitting": "Signing…",
+    "chars_remaining": "characters remaining",
+    "empty": "No one has signed yet. Be the first!",
+    "error_auth": "Authentication failed. Try again.",
+    "error_submit": "Could not post. Try again.",
+    "rate_limited": "You can only sign once per hour."
+  },
   "footer": {
     "built_with": "Built with Angular, NestJS & Supabase."
   },

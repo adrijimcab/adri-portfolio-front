@@ -14,12 +14,23 @@ import type { Project } from '../../../core/models';
 @Component({
   selector: 'app-project-list',
   standalone: true,
-  imports: [RouterLink, NgOptimizedImage, GlassmorphismCardComponent, TechPillComponent, SectionHeaderComponent, ScrollAnimateDirective, TiltDirective],
+  imports: [
+    RouterLink,
+    NgOptimizedImage,
+    GlassmorphismCardComponent,
+    TechPillComponent,
+    SectionHeaderComponent,
+    ScrollAnimateDirective,
+    TiltDirective,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="min-h-screen pt-24 px-6">
       <div class="mx-auto max-w-6xl">
-        <app-section-header [title]="t.t('projects.all_title')" [label]="t.t('projects.all_label')" />
+        <app-section-header
+          [title]="t.t('projects.all_title')"
+          [label]="t.t('projects.all_label')"
+        />
 
         <div class="mb-8" appScrollAnimate>
           <input
@@ -27,12 +38,19 @@ import type { Project } from '../../../core/models';
             placeholder="Search projects..."
             [value]="searchQuery()"
             (input)="onSearchInput($event)"
-            class="w-full rounded-xl border border-white/10 bg-white/5 px-5 py-3 text-sm text-white placeholder-white/30 outline-none backdrop-blur-sm transition-colors focus:border-white/20 focus:bg-white/[0.08]" />
+            class="w-full rounded-xl border border-white/10 bg-white/5 px-5 py-3 text-sm text-white placeholder-white/30 outline-none backdrop-blur-sm transition-colors focus:border-white/20 focus:bg-white/[0.08]"
+          />
         </div>
 
         <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           @for (project of filteredProjects(); track project.id; let i = $index) {
-            <a [routerLink]="['/projects', project.slug]" class="group" appScrollAnimate [delay]="i * 80" appTilt>
+            <a
+              [routerLink]="['/', t.currentLang(), 'projects', project.slug]"
+              class="group"
+              appScrollAnimate
+              [delay]="i * 80"
+              appTilt
+            >
               <app-glass-card>
                 @if (project.image_url) {
                   <div class="mb-4 overflow-hidden rounded-lg">

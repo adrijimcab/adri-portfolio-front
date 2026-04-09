@@ -1,5 +1,4 @@
-import type {
-  OnInit} from '@angular/core';
+import type { OnInit } from '@angular/core';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -13,6 +12,7 @@ import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { BlogService } from '../blog.service';
 import { SeoService } from '../../../core/services/seo.service';
+import { TranslateService } from '../../../core/services/translate.service';
 import { HoverPreviewDirective } from '../../../shared/directives/hover-preview.directive';
 
 @Component({
@@ -28,8 +28,8 @@ import { HoverPreviewDirective } from '../../../shared/directives/hover-preview.
         </p>
         <h1 class="text-4xl font-bold text-white md:text-5xl">Writing</h1>
         <p class="mt-4 max-w-xl text-white/60">
-          Notes on what I build and the bugs I had to learn the hard way.
-          New posts when I actually have something worth saying.
+          Notes on what I build and the bugs I had to learn the hard way. New posts when I actually
+          have something worth saying.
         </p>
       </header>
 
@@ -42,7 +42,7 @@ import { HoverPreviewDirective } from '../../../shared/directives/hover-preview.
               class="rounded-2xl border border-white/10 bg-white/[0.02] p-6 backdrop-blur transition hover:border-white/20 hover:bg-white/[0.04]"
             >
               <a
-                [routerLink]="['/blog', post.slug]"
+                [routerLink]="['/', t.currentLang(), 'blog', post.slug]"
                 [appHoverPreview]="post.slug"
                 class="block"
               >
@@ -75,6 +75,7 @@ export class BlogListComponent implements OnInit {
   private readonly blog = inject(BlogService);
   private readonly seo = inject(SeoService);
   private readonly destroyRef = inject(DestroyRef);
+  readonly t = inject(TranslateService);
 
   readonly posts = computed(() => this.blog.getAllPosts());
   private readonly viewCounts = signal<ReadonlyMap<string, number>>(new Map());

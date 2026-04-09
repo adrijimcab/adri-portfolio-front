@@ -18,6 +18,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import DOMPurify from 'isomorphic-dompurify';
 import { BlogService } from '../blog.service';
 import { SeoService } from '../../../core/services/seo.service';
+import { TranslateService } from '../../../core/services/translate.service';
 import type { BlogPost } from '../blog.types';
 
 @Component({
@@ -29,7 +30,7 @@ import type { BlogPost } from '../blog.types';
     @if (post(); as p) {
       <main class="mx-auto max-w-3xl px-6 py-24">
         <a
-          routerLink="/blog"
+          [routerLink]="['/', lang(), 'blog']"
           class="mb-12 inline-flex items-center gap-2 text-xs uppercase tracking-wider text-white/50 transition hover:text-white"
         >
           &larr; Back to blog
@@ -57,7 +58,7 @@ import type { BlogPost } from '../blog.types';
 
         <footer class="mt-16 border-t border-white/10 pt-8">
           <a
-            routerLink="/blog"
+            [routerLink]="['/', lang(), 'blog']"
             class="text-xs uppercase tracking-wider text-white/50 transition hover:text-white"
           >
             &larr; Back to blog
@@ -192,6 +193,8 @@ export class BlogPostComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly blog = inject(BlogService);
   private readonly seo = inject(SeoService);
+  private readonly t = inject(TranslateService);
+  readonly lang = this.t.currentLang;
   private readonly sanitizer = inject(DomSanitizer);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly destroyRef = inject(DestroyRef);
@@ -234,7 +237,7 @@ export class BlogPostComponent implements OnInit {
   ngOnInit(): void {
     const resolved = this.route.snapshot.data['post'] as BlogPost | null | undefined;
     if (!resolved) {
-      void this.router.navigate(['/blog']);
+      void this.router.navigate(['/', this.lang(), 'blog']);
       return;
     }
     this.post.set(resolved);

@@ -13,12 +13,21 @@ import type { Project } from '../../../core/models';
 @Component({
   selector: 'app-project-detail',
   standalone: true,
-  imports: [RouterLink, NgOptimizedImage, GlassmorphismCardComponent, TechPillComponent, ScrollAnimateDirective],
+  imports: [
+    RouterLink,
+    NgOptimizedImage,
+    GlassmorphismCardComponent,
+    TechPillComponent,
+    ScrollAnimateDirective,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="min-h-screen pt-24 px-6">
       <div class="mx-auto max-w-4xl">
-        <a routerLink="/projects" class="mb-8 inline-flex items-center gap-2 text-sm text-white/40 hover:text-white transition-colors">
+        <a
+          [routerLink]="['/', t.currentLang(), 'projects']"
+          class="mb-8 inline-flex items-center gap-2 text-sm text-white/40 hover:text-white transition-colors"
+        >
           {{ t.t('projects.back') }}
         </a>
 
@@ -51,22 +60,32 @@ import type { Project } from '../../../core/models';
             @if (p.description) {
               <div class="mt-8">
                 <app-glass-card>
-                  <p class="text-white/70 leading-relaxed whitespace-pre-line">{{ p.description }}</p>
+                  <p class="text-white/70 leading-relaxed whitespace-pre-line">
+                    {{ p.description }}
+                  </p>
                 </app-glass-card>
               </div>
             }
 
             <div class="mt-6 flex gap-4">
               @if (p.demo_url) {
-                <a [href]="p.demo_url" target="_blank" rel="noopener"
-                   class="rounded-lg px-6 py-3 text-sm font-medium text-white transition-all hover:scale-105"
-                   style="background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));">
+                <a
+                  [href]="p.demo_url"
+                  target="_blank"
+                  rel="noopener"
+                  class="rounded-lg px-6 py-3 text-sm font-medium text-white transition-all hover:scale-105"
+                  style="background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));"
+                >
                   {{ t.t('projects.demo') }}
                 </a>
               }
               @if (p.repo_url) {
-                <a [href]="p.repo_url" target="_blank" rel="noopener"
-                   class="rounded-lg border border-white/10 px-6 py-3 text-sm text-white/60 transition-all hover:border-white/20 hover:text-white">
+                <a
+                  [href]="p.repo_url"
+                  target="_blank"
+                  rel="noopener"
+                  class="rounded-lg border border-white/10 px-6 py-3 text-sm text-white/60 transition-all hover:border-white/20 hover:text-white"
+                >
                   {{ t.t('projects.code') }}
                 </a>
               }

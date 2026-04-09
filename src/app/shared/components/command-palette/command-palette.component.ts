@@ -1,6 +1,4 @@
-import type {
-  OnDestroy,
-  ElementRef} from '@angular/core';
+import type { OnDestroy, ElementRef } from '@angular/core';
 import {
   Component,
   ChangeDetectionStrategy,
@@ -15,6 +13,7 @@ import {
 import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import { ThemeService } from '../../../core/services/theme.service';
+import { TranslateService } from '../../../core/services/translate.service';
 
 interface Command {
   id: string;
@@ -42,7 +41,13 @@ interface Command {
         (click)="close()"
         (keydown.escape)="close()"
       >
-        <div class="cmdk-panel" role="presentation" tabindex="-1" (click)="$event.stopPropagation()" (keydown.escape)="close()">
+        <div
+          class="cmdk-panel"
+          role="presentation"
+          tabindex="-1"
+          (click)="$event.stopPropagation()"
+          (keydown.escape)="close()"
+        >
           <input
             #search
             class="cmdk-input"
@@ -78,117 +83,125 @@ interface Command {
             }
           </div>
           <footer class="cmdk-footer">
-            <kbd>↑↓</kbd> navigate
-            <kbd>↵</kbd> select
-            <kbd>esc</kbd> close
-            <kbd>?</kbd> open
+            <kbd>↑↓</kbd> navigate <kbd>↵</kbd> select <kbd>esc</kbd> close <kbd>?</kbd> open
           </footer>
         </div>
       </div>
     }
   `,
-  styles: [`
-    .cmdk-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      z-index: 1000;
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
-      padding-top: 12vh;
-    }
-    .cmdk-panel {
-      width: 100%;
-      max-width: 36rem;
-      background: rgba(20, 20, 26, 0.92);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 0.75rem;
-      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
-      overflow: hidden;
-      animation: cmdk-pop 0.18s ease-out;
-    }
-    @keyframes cmdk-pop {
-      from { opacity: 0; transform: translateY(-8px) scale(0.98); }
-      to   { opacity: 1; transform: translateY(0) scale(1); }
-    }
-    .cmdk-input {
-      width: 100%;
-      padding: 1.1rem 1.25rem;
-      background: transparent;
-      border: 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      color: #fff;
-      font-size: 1rem;
-      outline: none;
-    }
-    .cmdk-input::placeholder { color: rgba(255, 255, 255, 0.35); }
-    .cmdk-results {
-      max-height: 22rem;
-      overflow-y: auto;
-      padding: 0.5rem;
-    }
-    .cmdk-group-label {
-      padding: 0.5rem 0.75rem 0.25rem;
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: rgba(255, 255, 255, 0.4);
-    }
-    .cmdk-item {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.65rem 0.75rem;
-      background: transparent;
-      border: 0;
-      color: rgba(255, 255, 255, 0.85);
-      font-size: 0.9rem;
-      text-align: left;
-      border-radius: 0.4rem;
-      cursor: pointer;
-      transition: background 0.1s;
-    }
-    .cmdk-item.cmdk-active,
-    .cmdk-item:hover {
-      background: rgba(255, 255, 255, 0.06);
-    }
-    .cmdk-hint {
-      font-size: 0.75rem;
-      color: rgba(255, 255, 255, 0.4);
-    }
-    .cmdk-empty {
-      padding: 1.5rem;
-      text-align: center;
-      color: rgba(255, 255, 255, 0.45);
-      font-size: 0.85rem;
-    }
-    .cmdk-footer {
-      display: flex;
-      gap: 1rem;
-      padding: 0.65rem 1rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.06);
-      font-size: 0.7rem;
-      color: rgba(255, 255, 255, 0.4);
-    }
-    .cmdk-footer kbd {
-      padding: 0.1rem 0.4rem;
-      border-radius: 0.25rem;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      font-family: ui-monospace, monospace;
-      font-size: 0.7rem;
-      margin-right: 0.25rem;
-    }
-  `],
+  styles: [
+    `
+      .cmdk-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        z-index: 1000;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        padding-top: 12vh;
+      }
+      .cmdk-panel {
+        width: 100%;
+        max-width: 36rem;
+        background: rgba(20, 20, 26, 0.92);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 0.75rem;
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+        overflow: hidden;
+        animation: cmdk-pop 0.18s ease-out;
+      }
+      @keyframes cmdk-pop {
+        from {
+          opacity: 0;
+          transform: translateY(-8px) scale(0.98);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+      .cmdk-input {
+        width: 100%;
+        padding: 1.1rem 1.25rem;
+        background: transparent;
+        border: 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        color: #fff;
+        font-size: 1rem;
+        outline: none;
+      }
+      .cmdk-input::placeholder {
+        color: rgba(255, 255, 255, 0.35);
+      }
+      .cmdk-results {
+        max-height: 22rem;
+        overflow-y: auto;
+        padding: 0.5rem;
+      }
+      .cmdk-group-label {
+        padding: 0.5rem 0.75rem 0.25rem;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: rgba(255, 255, 255, 0.4);
+      }
+      .cmdk-item {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.65rem 0.75rem;
+        background: transparent;
+        border: 0;
+        color: rgba(255, 255, 255, 0.85);
+        font-size: 0.9rem;
+        text-align: left;
+        border-radius: 0.4rem;
+        cursor: pointer;
+        transition: background 0.1s;
+      }
+      .cmdk-item.cmdk-active,
+      .cmdk-item:hover {
+        background: rgba(255, 255, 255, 0.06);
+      }
+      .cmdk-hint {
+        font-size: 0.75rem;
+        color: rgba(255, 255, 255, 0.4);
+      }
+      .cmdk-empty {
+        padding: 1.5rem;
+        text-align: center;
+        color: rgba(255, 255, 255, 0.45);
+        font-size: 0.85rem;
+      }
+      .cmdk-footer {
+        display: flex;
+        gap: 1rem;
+        padding: 0.65rem 1rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+        font-size: 0.7rem;
+        color: rgba(255, 255, 255, 0.4);
+      }
+      .cmdk-footer kbd {
+        padding: 0.1rem 0.4rem;
+        border-radius: 0.25rem;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        font-family: ui-monospace, monospace;
+        font-size: 0.7rem;
+        margin-right: 0.25rem;
+      }
+    `,
+  ],
 })
 export class CommandPaletteComponent implements OnDestroy {
   private readonly router = inject(Router);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly themeService = inject(ThemeService);
+  private readonly translate = inject(TranslateService);
 
   private readonly searchInput = viewChild<ElementRef<HTMLInputElement>>('search');
 
@@ -202,18 +215,61 @@ export class CommandPaletteComponent implements OnDestroy {
   private static readonly BUFFER_TIMEOUT_MS = 800;
 
   private readonly commands: Command[] = [
-    { id: 'home',    label: 'Home',          hint: 'g h', group: 'Navigation', action: () => this.go('/') },
-    { id: 'projects',label: 'Projects',      hint: 'g p', group: 'Navigation', action: () => this.go('/projects') },
-    { id: 'blog',    label: 'Blog',          hint: 'g b', group: 'Navigation', action: () => this.go('/blog') },
-    { id: 'cv',      label: 'CV',            hint: 'g c', group: 'Navigation', action: () => this.go('/cv') },
-    { id: 'uses',    label: 'Uses',          hint: 'g u', group: 'Navigation', action: () => this.go('/uses') },
-    { id: 'stack',   label: 'Stack',         hint: 'g s', group: 'Navigation', action: () => this.go('/stack') },
-    { id: 'now',     label: 'Now',           hint: 'g n', group: 'Navigation', action: () => this.go('/now') },
-    { id: 'lab',     label: 'Lab',           hint: 'g l', group: 'Navigation', action: () => this.go('/lab') },
-    { id: 'theme',   label: 'Toggle theme',  hint: 't',   group: 'Actions',    action: () => this.themeService.toggle() },
-    { id: 'top',     label: 'Scroll to top', hint: 'gg',  group: 'Actions',    action: () => this.scrollTop() },
-    { id: 'github',  label: 'GitHub',        hint: '↗',   group: 'External',   action: () => this.openExternal('https://github.com/adrijimcab') },
-    { id: 'linkedin',label: 'LinkedIn',      hint: '↗',   group: 'External',   action: () => this.openExternal('https://www.linkedin.com/in/adrianjimenezcabello') },
+    { id: 'home', label: 'Home', hint: 'g h', group: 'Navigation', action: () => this.go('/') },
+    {
+      id: 'projects',
+      label: 'Projects',
+      hint: 'g p',
+      group: 'Navigation',
+      action: () => this.go('/projects'),
+    },
+    { id: 'blog', label: 'Blog', hint: 'g b', group: 'Navigation', action: () => this.go('/blog') },
+    { id: 'cv', label: 'CV', hint: 'g c', group: 'Navigation', action: () => this.go('/cv') },
+    { id: 'uses', label: 'Uses', hint: 'g u', group: 'Navigation', action: () => this.go('/uses') },
+    {
+      id: 'stack',
+      label: 'Stack',
+      hint: 'g s',
+      group: 'Navigation',
+      action: () => this.go('/stack'),
+    },
+    { id: 'now', label: 'Now', hint: 'g n', group: 'Navigation', action: () => this.go('/now') },
+    { id: 'lab', label: 'Lab', hint: 'g l', group: 'Navigation', action: () => this.go('/lab') },
+    {
+      id: 'guestbook',
+      label: 'Guestbook',
+      hint: 'g w',
+      group: 'Navigation',
+      action: () => this.go('/guestbook'),
+    },
+    {
+      id: 'theme',
+      label: 'Toggle theme',
+      hint: 't',
+      group: 'Actions',
+      action: () => this.themeService.toggle(),
+    },
+    {
+      id: 'top',
+      label: 'Scroll to top',
+      hint: 'gg',
+      group: 'Actions',
+      action: () => this.scrollTop(),
+    },
+    {
+      id: 'github',
+      label: 'GitHub',
+      hint: '↗',
+      group: 'External',
+      action: () => this.openExternal('https://github.com/adrijimcab'),
+    },
+    {
+      id: 'linkedin',
+      label: 'LinkedIn',
+      hint: '↗',
+      group: 'External',
+      action: () => this.openExternal('https://www.linkedin.com/in/adrianjimenezcabello'),
+    },
   ];
 
   /**
@@ -229,6 +285,7 @@ export class CommandPaletteComponent implements OnDestroy {
     gs: () => this.go('/stack'),
     gn: () => this.go('/now'),
     gl: () => this.go('/lab'),
+    gw: () => this.go('/guestbook'),
     gc: () => this.go('/cv'),
     gg: () => this.scrollTop(),
     t: () => this.themeService.toggle(),
@@ -237,8 +294,8 @@ export class CommandPaletteComponent implements OnDestroy {
   readonly filtered = computed<Command[]>(() => {
     const q = this.query().trim().toLowerCase();
     if (!q) return this.commands;
-    return this.commands.filter((c) =>
-      c.label.toLowerCase().includes(q) || c.group.toLowerCase().includes(q),
+    return this.commands.filter(
+      (c) => c.label.toLowerCase().includes(q) || c.group.toLowerCase().includes(q),
     );
   });
 
@@ -323,7 +380,9 @@ export class CommandPaletteComponent implements OnDestroy {
   }
 
   private go(path: string): void {
-    void this.router.navigate([path]);
+    const lang = this.translate.currentLang();
+    const langPath = path === '/' ? `/${lang}` : `/${lang}${path}`;
+    void this.router.navigate([langPath]);
   }
 
   private scrollTop(): void {

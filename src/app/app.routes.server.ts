@@ -3,8 +3,9 @@ import { RenderMode } from '@angular/ssr';
 
 export const serverRoutes: ServerRoute[] = [
   {
-    path: '',
+    path: ':lang',
     renderMode: RenderMode.Prerender,
+    getPrerenderParams: () => Promise.resolve([{ lang: 'es' }, { lang: 'en' }]),
   },
   {
     path: '**',

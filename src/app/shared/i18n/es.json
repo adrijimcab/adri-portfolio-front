@@ -86,6 +86,21 @@
     "sent_message": "Gracias. Te contesto en cuanto pueda.",
     "error": "No se ha podido enviar. Prueba otra vez."
   },
+  "guestbook": {
+    "title": "Libro de visitas",
+    "label": "Deja un mensaje",
+    "subtitle": "Firma el libro de visitas con tu cuenta de GitHub y deja un mensaje.",
+    "sign_button": "Firmar con GitHub",
+    "signed_as": "Conectado como",
+    "placeholder": "Tu mensaje…",
+    "submit": "Firmar",
+    "submitting": "Firmando…",
+    "chars_remaining": "caracteres restantes",
+    "empty": "Nadie ha firmado todavia. Se el primero!",
+    "error_auth": "Error de autenticacion. Intenta de nuevo.",
+    "error_submit": "No se pudo enviar. Intenta otra vez.",
+    "rate_limited": "Solo puedes firmar una vez por hora."
+  },
   "footer": {
     "built_with": "Construido con Angular, NestJS & Supabase."
   },

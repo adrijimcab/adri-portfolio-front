@@ -2,6 +2,7 @@ import type { OnInit } from '@angular/core';
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { SeoService } from '../../core/services/seo.service';
+import { TranslateService } from '../../core/services/translate.service';
 
 interface NowBullet {
   readonly text: string;
@@ -27,8 +28,8 @@ const LAST_UPDATED = '2026-04-08';
         </p>
         <h1 class="text-4xl font-bold text-white md:text-5xl">En qué estoy ahora</h1>
         <p class="mt-4 max-w-xl text-white/60">
-          Una foto honesta de mi foco actual: qué estoy construyendo, qué estoy
-          aprendiendo y qué ando leyendo o escuchando estos días.
+          Una foto honesta de mi foco actual: qué estoy construyendo, qué estoy aprendiendo y qué
+          ando leyendo o escuchando estos días.
         </p>
         <p class="mt-6 text-xs uppercase tracking-widest text-white/40">
           Última actualización: {{ lastUpdated }}
@@ -54,11 +55,17 @@ const LAST_UPDATED = '2026-04-08';
         </h2>
         <p class="text-white/60">
           Mi setup diario vive en
-          <a routerLink="/uses" class="text-white underline underline-offset-4 hover:text-white/70">
+          <a
+            [routerLink]="['/', t.currentLang(), 'uses']"
+            class="text-white underline underline-offset-4 hover:text-white/70"
+          >
             /uses
           </a>
           y el detalle técnico del portfolio en
-          <a routerLink="/stack" class="text-white underline underline-offset-4 hover:text-white/70">
+          <a
+            [routerLink]="['/', t.currentLang(), 'stack']"
+            class="text-white underline underline-offset-4 hover:text-white/70"
+          >
             /stack
           </a>
           .
@@ -110,14 +117,15 @@ const LAST_UPDATED = '2026-04-08';
         >
           now page ↗
         </a>
-        : una página personal donde cuento en qué estoy en este momento de la vida,
-        no mi CV ni mi portfolio. Se actualiza cuando algo cambia de verdad.
+        : una página personal donde cuento en qué estoy en este momento de la vida, no mi CV ni mi
+        portfolio. Se actualiza cuando algo cambia de verdad.
       </footer>
     </main>
   `,
 })
 export class NowComponent implements OnInit {
   private readonly seo = inject(SeoService);
+  readonly t = inject(TranslateService);
 
   readonly lastUpdated = LAST_UPDATED;
 
