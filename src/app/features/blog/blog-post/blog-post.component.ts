@@ -1,6 +1,4 @@
-import type {
-  ElementRef,
-  OnInit} from '@angular/core';
+import type { ElementRef, OnInit } from '@angular/core';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -17,6 +15,7 @@ import { DatePipe, isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import type { SafeHtml } from '@angular/platform-browser';
 import { DomSanitizer } from '@angular/platform-browser';
+import DOMPurify from 'isomorphic-dompurify';
 import { BlogService } from '../blog.service';
 import { SeoService } from '../../../core/services/seo.service';
 import type { BlogPost } from '../blog.types';
@@ -204,7 +203,8 @@ export class BlogPostComponent implements OnInit {
   private readonly rawHtml = computed<string>(() => {
     const current = this.post();
     if (!current) return '';
-    return this.blog.renderMarkdown(current.content);
+    const rendered = this.blog.renderMarkdown(current.content);
+    return DOMPurify.sanitize(rendered);
   });
   protected readonly renderedHtml = computed<SafeHtml>(() =>
     this.sanitizer.bypassSecurityTrustHtml(this.rawHtml()),
