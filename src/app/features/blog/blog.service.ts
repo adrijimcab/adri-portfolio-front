@@ -2,10 +2,10 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import type { Observable} from 'rxjs';
 import { catchError, map, of } from 'rxjs';
-import { marked } from 'marked';
 import { POSTS } from '../../../content/posts/posts';
 import { environment } from '../../../environments/environment';
 import type { BlogPost } from './blog.types';
+import { MarkdownService } from '../../core/services/markdown.service';
 
 interface RecordViewResponse {
   readonly slug: string;
@@ -20,6 +20,7 @@ interface ViewCountEntry {
 @Injectable({ providedIn: 'root' })
 export class BlogService {
   private readonly http = inject(HttpClient);
+  private readonly markdown = inject(MarkdownService);
   private readonly blogApiBase = `${environment.apiUrl}/blog/posts`;
 
   getAllPosts(): readonly BlogPost[] {
@@ -32,12 +33,10 @@ export class BlogService {
 
   /**
    * Render markdown to HTML synchronously, SSR-safe.
-   * Code blocks are emitted as plain `<pre><code class="language-xxx">` so the
-   * client can later upgrade them with shiki inside `afterNextRender`.
+   * Delegates to the shared MarkdownService.
    */
   renderMarkdown(markdown: string): string {
-    const result = marked.parse(markdown, { async: false, gfm: true, breaks: false });
-    return typeof result === 'string' ? result : '';
+    return this.markdown.render(markdown);
   }
 
   /**
