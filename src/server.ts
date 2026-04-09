@@ -37,13 +37,22 @@ app.use(
 
 /**
  * Handle all other requests by rendering the Angular application.
+ *
+ * TODO(F-024): Full CSP nonce — eliminate inline script entirely
+ * Plan:
+ *   1. Read `theme` cookie from `req.headers.cookie` (default 'dark')
+ *   2. After `angularApp.handle(req)`, read response body as text
+ *   3. Replace `<html lang="es">` → `<html lang="es" data-theme="${theme}" class="${theme}" style="color-scheme:${theme}">`
+ *   4. Write modified Response via `writeResponseToNodeResponse`
+ *   5. In ThemeService.toggle(), also set `document.cookie = 'theme=${next};path=/;max-age=31536000;SameSite=Lax'`
+ *   6. Remove the inline <script> from index.html
+ *   7. Update CSP script-src to just `'self'` (drop sha256 hash)
+ * Blocked: step 5 requires modifying src/app/core/services/theme.service.ts
  */
 app.use((req, res, next) => {
   angularApp
     .handle(req)
-    .then((response) =>
-      response ? writeResponseToNodeResponse(response, res) : next(),
-    )
+    .then((response) => (response ? writeResponseToNodeResponse(response, res) : next()))
     .catch(next);
 });
 
