@@ -1,4 +1,4 @@
-import { Injectable, inject, runInInjectionContext, EnvironmentInjector, type Signal } from '@angular/core';
+import { Injectable, inject, runInInjectionContext, untracked, EnvironmentInjector, type Signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import type { Observable } from 'rxjs';
 import { PORTFOLIO_REPOSITORY } from '../domain/repositories';
@@ -119,15 +119,20 @@ export class PortfolioService {
     const cache = this.signalCache;
     const injector = this.injector;
     const reader = (): T | undefined => {
-      const cached = cache.get(key) as Signal<T | undefined> | undefined;
+      let cached = cache.get(key) as Signal<T | undefined> | undefined;
       if (cached) return cached();
-      const created: Signal<T | undefined> = runInInjectionContext(injector, () =>
-        toSignal<T | undefined>(loader() as Observable<T | undefined>, {
-          initialValue: undefined,
-        }),
-      );
-      cache.set(key, created as Signal<unknown>);
-      return created();
+      // Create the toSignal subscription OUTSIDE the reactive tracking context.
+      // Without untracked(), the first read from a template or computed triggers
+      // toSignal's internal .set() synchronously → NG0600.
+      untracked(() => {
+        cached = runInInjectionContext(injector, () =>
+          toSignal<T | undefined>(loader() as Observable<T | undefined>, {
+            initialValue: undefined,
+          }),
+        );
+        cache.set(key, cached as Signal<unknown>);
+      });
+      return cached!();
     };
     return reader as Signal<T | undefined>;
   }
