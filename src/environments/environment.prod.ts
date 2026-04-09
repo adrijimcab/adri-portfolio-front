@@ -12,5 +12,5 @@ export const environment = {
     (typeof globalThis !== 'undefined' &&
       ((globalThis as Record<string, unknown>)['__API_URL__'] as string | undefined)) ??
     'https://adri-portfolio-api-production.up.railway.app/api',
-  githubOAuthClientId: '',
+  githubOAuthClientId: 'Ov23lisIO1VFmdcaTe4f',
 };
