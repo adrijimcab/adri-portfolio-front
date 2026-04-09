@@ -206,7 +206,8 @@ export class GuestbookComponent implements OnInit {
       return;
     }
 
-    const redirectUri = `${window.location.origin}/guestbook`;
+    const lang = this.t.currentLang();
+    const redirectUri = `${window.location.origin}/${lang}/guestbook`;
     const url = `${GITHUB_AUTHORIZE_URL}?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=read:user`;
     window.location.href = url;
   }
