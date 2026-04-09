@@ -5,11 +5,11 @@
  * spec is tighter, the content model is richer, and every modern reader
  * supports it.
  *
- * Posts currently come from a local mirror (`api/_blog-posts.ts`) because the
+ * Posts currently come from a local mirror (`api/_blog-posts.mjs`) because the
  * NestJS API does not yet expose a public `/blog/posts` listing endpoint.
- * See the TODO in `_blog-posts.ts` for the migration path.
+ * See the TODO in `_blog-posts.mjs` for the migration path.
  */
-import { FEED_POSTS_SORTED, type BlogPostFeedEntry } from './_blog-posts.js';
+import { FEED_POSTS_SORTED } from './_blog-posts.mjs';
 
 const SITE_URL = 'https://adrianjimenezcabello.dev';
 const FEED_URL = `${SITE_URL}/rss.xml`;
@@ -19,7 +19,7 @@ const FEED_TITLE = 'Adrián Jiménez Cabello — Blog';
 const FEED_SUBTITLE =
   'Notes on Angular, NestJS, architecture, and shipping production software.';
 
-function escapeXml(value: string): string {
+function escapeXml(value) {
   return value
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
@@ -28,8 +28,7 @@ function escapeXml(value: string): string {
     .replace(/'/g, '&apos;');
 }
 
-function toRfc3339(dateString: string): string {
-  // Input format: yyyy-mm-dd. Anchor to midnight UTC for a deterministic feed.
+function toRfc3339(dateString) {
   const parsed = new Date(`${dateString}T00:00:00Z`);
   if (Number.isNaN(parsed.getTime())) {
     return new Date(0).toISOString();
@@ -37,11 +36,11 @@ function toRfc3339(dateString: string): string {
   return parsed.toISOString();
 }
 
-function renderCategory(tag: string): string {
+function renderCategory(tag) {
   return `    <category term="${escapeXml(tag)}" />`;
 }
 
-function renderEntry(post: BlogPostFeedEntry): string {
+function renderEntry(post) {
   const url = `${SITE_URL}/blog/${post.slug}`;
   const updated = toRfc3339(post.date);
   const categories = (post.tags ?? []).map(renderCategory).join('\n');
@@ -61,9 +60,9 @@ function renderEntry(post: BlogPostFeedEntry): string {
   </entry>`;
 }
 
-function renderFeed(posts: readonly BlogPostFeedEntry[]): string {
+function renderFeed(posts) {
   const latestUpdated =
-    posts.length > 0 ? toRfc3339(posts[0]!.date) : new Date().toISOString();
+    posts.length > 0 ? toRfc3339(posts[0].date) : new Date().toISOString();
   const entries = posts.map(renderEntry).join('\n');
   return `<?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
@@ -87,7 +86,7 @@ ${entries}
 
 export const runtime = 'edge';
 
-export default function handler(_request: Request): Response {
+export default function handler(_request) {
   try {
     return new Response(renderFeed(FEED_POSTS_SORTED), {
       status: 200,

@@ -4,10 +4,10 @@
  * Served at /feed.json via vercel.json rewrite.
  * Spec: https://www.jsonfeed.org/version/1.1/
  *
- * Same source of truth as the Atom feed (`api/rss.ts`) — see the TODO in
- * `_blog-posts.ts` for the migration to a public API endpoint.
+ * Same source of truth as the Atom feed (`api/rss.mjs`) — see the TODO in
+ * `_blog-posts.mjs` for the migration to a public API endpoint.
  */
-import { FEED_POSTS_SORTED, type BlogPostFeedEntry } from './_blog-posts.js';
+import { FEED_POSTS_SORTED } from './_blog-posts.mjs';
 
 const SITE_URL = 'https://adrianjimenezcabello.dev';
 const FEED_URL = `${SITE_URL}/feed.json`;
@@ -18,36 +18,7 @@ const FEED_DESCRIPTION =
   'Notes on Angular, NestJS, architecture, and shipping production software.';
 const LANGUAGE = 'en';
 
-interface JsonFeedAuthor {
-  readonly name: string;
-  readonly url: string;
-}
-
-interface JsonFeedItem {
-  readonly id: string;
-  readonly url: string;
-  readonly title: string;
-  readonly summary: string;
-  readonly content_text: string;
-  readonly date_published: string;
-  readonly date_modified: string;
-  readonly authors: readonly JsonFeedAuthor[];
-  readonly tags?: readonly string[];
-  readonly language: string;
-}
-
-interface JsonFeed {
-  readonly version: 'https://jsonfeed.org/version/1.1';
-  readonly title: string;
-  readonly home_page_url: string;
-  readonly feed_url: string;
-  readonly description: string;
-  readonly language: string;
-  readonly authors: readonly JsonFeedAuthor[];
-  readonly items: readonly JsonFeedItem[];
-}
-
-function toIso(dateString: string): string {
+function toIso(dateString) {
   const parsed = new Date(`${dateString}T00:00:00Z`);
   if (Number.isNaN(parsed.getTime())) {
     return new Date(0).toISOString();
@@ -55,7 +26,7 @@ function toIso(dateString: string): string {
   return parsed.toISOString();
 }
 
-function toJsonFeedItem(post: BlogPostFeedEntry): JsonFeedItem {
+function toJsonFeedItem(post) {
   const url = `${SITE_URL}/blog/${post.slug}`;
   const published = toIso(post.date);
   return {
@@ -72,7 +43,7 @@ function toJsonFeedItem(post: BlogPostFeedEntry): JsonFeedItem {
   };
 }
 
-function buildFeed(posts: readonly BlogPostFeedEntry[]): JsonFeed {
+function buildFeed(posts) {
   return {
     version: 'https://jsonfeed.org/version/1.1',
     title: FEED_TITLE,
@@ -87,7 +58,7 @@ function buildFeed(posts: readonly BlogPostFeedEntry[]): JsonFeed {
 
 export const runtime = 'edge';
 
-export default function handler(_request: Request): Response {
+export default function handler(_request) {
   try {
     const feed = buildFeed(FEED_POSTS_SORTED);
     return new Response(JSON.stringify(feed, null, 2), {
