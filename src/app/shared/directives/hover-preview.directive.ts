@@ -1,15 +1,8 @@
-import type {
-  OnDestroy} from '@angular/core';
-import {
-  Directive,
-  ElementRef,
-  PLATFORM_ID,
-  afterNextRender,
-  inject,
-  input,
-} from '@angular/core';
+import type { OnDestroy } from '@angular/core';
+import { Directive, ElementRef, PLATFORM_ID, afterNextRender, inject, input } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { BlogService } from '../../features/blog/blog.service';
+import { HOVER_PREVIEW_DELAY_MS, HOVER_PREVIEW_FADEOUT_MS } from '../constants/timing';
 
 /**
  * Shows a floating preview card with the blog post title + description
@@ -51,7 +44,7 @@ export class HoverPreviewDirective implements OnDestroy {
 
     this.enterHandler = () => {
       this.clearShowTimer();
-      this.showTimer = setTimeout(() => this.showCard(), 300);
+      this.showTimer = setTimeout(() => this.showCard(), HOVER_PREVIEW_DELAY_MS);
     };
 
     this.leaveHandler = () => {
@@ -166,7 +159,7 @@ export class HoverPreviewDirective implements OnDestroy {
     card.style.transform = 'translateY(6px)';
     setTimeout(() => {
       card.remove();
-    }, 200);
+    }, HOVER_PREVIEW_FADEOUT_MS);
   }
 
   private clearShowTimer(): void {

@@ -1,4 +1,5 @@
 import { Injectable, signal } from '@angular/core';
+import { TOAST_DURATION_MS } from '../../constants/timing';
 
 export interface Toast {
   id: number;
@@ -30,6 +31,6 @@ export class ToastService {
   private add(message: string, type: Toast['type']): void {
     const id = this.nextId++;
     this.toasts.update((t) => [...t, { id, message, type }]);
-    setTimeout(() => this.remove(id), 3000);
+    setTimeout(() => this.remove(id), TOAST_DURATION_MS);
   }
 }

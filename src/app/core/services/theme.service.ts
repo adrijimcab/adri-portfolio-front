@@ -20,10 +20,13 @@ export class ThemeService {
       if (!config || !isPlatformBrowser(this.platformId)) return;
 
       const root = document.documentElement;
-      if (config['primary_color']) root.style.setProperty('--color-primary', config['primary_color']);
-      if (config['secondary_color']) root.style.setProperty('--color-secondary', config['secondary_color']);
+      if (config['primary_color'])
+        root.style.setProperty('--color-primary', config['primary_color']);
+      if (config['secondary_color'])
+        root.style.setProperty('--color-secondary', config['secondary_color']);
       if (config['accent_color']) root.style.setProperty('--color-accent', config['accent_color']);
-      if (config['background_color']) root.style.setProperty('--color-bg', config['background_color']);
+      if (config['background_color'])
+        root.style.setProperty('--color-bg', config['background_color']);
       if (config['font_family']) root.style.setProperty('--font-family', config['font_family']);
     });
 
@@ -53,10 +56,6 @@ export class ThemeService {
       root.classList.add(next);
       root.style.colorScheme = next;
     });
-  }
-
-  init(): void {
-    // Called from app initializer to trigger constructor effect
   }
 
   toggle(): void {

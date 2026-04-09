@@ -1,5 +1,3 @@
-import type {
-  OnInit} from '@angular/core';
 import {
   Component,
   ChangeDetectionStrategy,
@@ -19,6 +17,7 @@ import { CommandPaletteComponent } from './shared/components/command-palette/com
 import { ChatWidgetComponent } from './shared/components/chat-widget/chat-widget.component';
 import { KonamiDirective } from './shared/directives/konami.directive';
 import { ThemeService } from './core/services/theme.service';
+import { KONAMI_FADE_MS } from './shared/constants/timing';
 
 @Component({
   selector: 'app-root',
@@ -62,51 +61,57 @@ import { ThemeService } from './core/services/theme.service';
       </button>
     }
     @if (konamiActive()) {
-      <div class="konami-toast" role="status" aria-live="polite">
-        🎮 Konami unlocked
-      </div>
+      <div class="konami-toast" role="status" aria-live="polite">🎮 Konami unlocked</div>
     }
   `,
-  styles: [`
-    .skip-link {
-      position: absolute;
-      top: -100px;
-      left: 1rem;
-      z-index: 100;
-      padding: 0.75rem 1.25rem;
-      background: var(--color-primary, #0a0a0a);
-      color: var(--color-bg, #ffffff);
-      border-radius: 0.5rem;
-      font-weight: 600;
-      text-decoration: none;
-      transition: top 0.2s ease;
-    }
-    .skip-link:focus {
-      top: 1rem;
-      outline: 2px solid var(--color-accent, #fff);
-      outline-offset: 2px;
-    }
-    .konami-toast {
-      position: fixed;
-      bottom: 2rem;
-      right: 2rem;
-      padding: 0.85rem 1.25rem;
-      background: rgba(20, 20, 26, 0.95);
-      border: 1px solid rgba(180, 140, 240, 0.4);
-      color: #fff;
-      border-radius: 0.5rem;
-      font-weight: 600;
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
-      z-index: 1100;
-      animation: konami-in 0.3s ease-out;
-    }
-    @keyframes konami-in {
-      from { opacity: 0; transform: translateY(8px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-  `],
+  styles: [
+    `
+      .skip-link {
+        position: absolute;
+        top: -100px;
+        left: 1rem;
+        z-index: 100;
+        padding: 0.75rem 1.25rem;
+        background: var(--color-primary, #0a0a0a);
+        color: var(--color-bg, #ffffff);
+        border-radius: 0.5rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: top 0.2s ease;
+      }
+      .skip-link:focus {
+        top: 1rem;
+        outline: 2px solid var(--color-accent, #fff);
+        outline-offset: 2px;
+      }
+      .konami-toast {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        padding: 0.85rem 1.25rem;
+        background: rgba(20, 20, 26, 0.95);
+        border: 1px solid rgba(180, 140, 240, 0.4);
+        color: #fff;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+        z-index: 1100;
+        animation: konami-in 0.3s ease-out;
+      }
+      @keyframes konami-in {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    `,
+  ],
 })
-export class App implements OnInit {
+export class App {
   private readonly theme = inject(ThemeService);
   private readonly platformId = inject(PLATFORM_ID);
   readonly konamiActive = signal(false);
@@ -124,12 +129,8 @@ export class App implements OnInit {
     });
   }
 
-  ngOnInit() {
-    this.theme.init();
-  }
-
   onKonami(): void {
     this.konamiActive.set(true);
-    setTimeout(() => this.konamiActive.set(false), 4000);
+    setTimeout(() => this.konamiActive.set(false), KONAMI_FADE_MS);
   }
 }
