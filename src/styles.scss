@@ -1,11 +1,14 @@
-@use "tailwindcss";
-@use "./styles/theme";
-@use "./styles/scroll-driven";
+@use 'tailwindcss';
+@use './styles/theme';
+@use './styles/scroll-driven';
 
 /* ============================================================
-   Light theme — aggressive overrides for hardcoded dark tokens
-   Strategy: invert the most common Tailwind tokens used across
-   the portfolio so components don't need per-file edits.
+   Light theme — semantic overrides via CSS custom properties.
+   Theme variables are defined in ./styles/theme.scss.
+   TODO: Migrate component templates from hardcoded Tailwind
+   tokens (bg-black, text-white/40, etc.) to semantic variables
+   (bg-[var(--color-bg)], text-[var(--color-text-muted)], etc.)
+   so these class-level overrides can be fully removed.
    ============================================================ */
 :root[data-theme='light'] {
   body {
@@ -13,18 +16,34 @@
     color: var(--color-text);
   }
 
-  /* Core dark tokens → light equivalents */
-  .bg-black { background-color: var(--color-bg) !important; }
-  .bg-black\/80 { background-color: rgba(250, 250, 250, 0.82) !important; }
-  .bg-black\/60 { background-color: rgba(250, 250, 250, 0.65) !important; }
-  .bg-black\/50 { background-color: rgba(250, 250, 250, 0.55) !important; }
-  .bg-black\/40 { background-color: rgba(250, 250, 250, 0.45) !important; }
-  .bg-black\/30 { background-color: rgba(250, 250, 250, 0.35) !important; }
-  .bg-black\/20 { background-color: rgba(250, 250, 250, 0.25) !important; }
+  /* Core dark tokens → light equivalents via theme variables */
+  .bg-black {
+    background-color: var(--color-bg);
+  }
+  .bg-black\/80 {
+    background-color: color-mix(in srgb, var(--color-bg) 82%, transparent);
+  }
+  .bg-black\/60 {
+    background-color: color-mix(in srgb, var(--color-bg) 65%, transparent);
+  }
+  .bg-black\/50 {
+    background-color: color-mix(in srgb, var(--color-bg) 55%, transparent);
+  }
+  .bg-black\/40 {
+    background-color: color-mix(in srgb, var(--color-bg) 45%, transparent);
+  }
+  .bg-black\/30 {
+    background-color: color-mix(in srgb, var(--color-bg) 35%, transparent);
+  }
+  .bg-black\/20 {
+    background-color: color-mix(in srgb, var(--color-bg) 25%, transparent);
+  }
 
-  .text-white { color: var(--color-text) !important; }
+  .text-white {
+    color: var(--color-text);
+  }
 
-  /* Subtle white backdrops used across cards and surfaces */
+  /* Subtle white backdrops → semantic surface tokens */
   .bg-white\/\[0\.02\],
   .bg-white\/\[0\.03\],
   .bg-white\/\[0\.04\],
@@ -33,22 +52,22 @@
   .bg-white\/\[0\.08\],
   .bg-white\/5,
   .bg-white\/10 {
-    background-color: rgba(0, 0, 0, 0.04) !important;
+    background-color: var(--color-surface);
   }
 
   .bg-white\/20,
   .bg-white\/25,
   .bg-white\/30 {
-    background-color: rgba(0, 0, 0, 0.08) !important;
+    background-color: var(--color-surface-hover);
   }
 
   /* Hover states */
   .hover\:bg-white\/5:hover,
   .hover\:bg-white\/10:hover {
-    background-color: rgba(0, 0, 0, 0.06) !important;
+    background-color: var(--color-surface-hover);
   }
 
-  /* Borders on dark tokens → subtle dark borders */
+  /* Borders → semantic border tokens */
   .border-white\/\[0\.04\],
   .border-white\/\[0\.05\],
   .border-white\/\[0\.06\],
@@ -56,23 +75,37 @@
   .border-white\/\[0\.1\],
   .border-white\/5,
   .border-white\/10 {
-    border-color: rgba(0, 0, 0, 0.10) !important;
+    border-color: var(--color-border);
   }
 
   .border-white\/20,
   .border-white\/25,
   .border-white\/30 {
-    border-color: rgba(0, 0, 0, 0.16) !important;
+    border-color: var(--color-border-strong);
   }
 
-  /* White text at various opacities → black at matching opacities */
-  .text-white\/40 { color: rgba(10, 10, 10, 0.55) !important; }
-  .text-white\/50 { color: rgba(10, 10, 10, 0.60) !important; }
-  .text-white\/60 { color: rgba(10, 10, 10, 0.65) !important; }
-  .text-white\/65 { color: rgba(10, 10, 10, 0.70) !important; }
-  .text-white\/70 { color: rgba(10, 10, 10, 0.75) !important; }
-  .text-white\/80 { color: rgba(10, 10, 10, 0.82) !important; }
-  .text-white\/90 { color: rgba(10, 10, 10, 0.90) !important; }
+  /* White text at various opacities → semantic text tokens */
+  .text-white\/40 {
+    color: var(--color-text-muted);
+  }
+  .text-white\/50 {
+    color: color-mix(in srgb, var(--color-text) 60%, transparent);
+  }
+  .text-white\/60 {
+    color: var(--color-text-subtle);
+  }
+  .text-white\/65 {
+    color: color-mix(in srgb, var(--color-text) 70%, transparent);
+  }
+  .text-white\/70 {
+    color: color-mix(in srgb, var(--color-text) 75%, transparent);
+  }
+  .text-white\/80 {
+    color: color-mix(in srgb, var(--color-text) 82%, transparent);
+  }
+  .text-white\/90 {
+    color: color-mix(in srgb, var(--color-text) 90%, transparent);
+  }
 
   /* Background canvases — tone down so the bright bg is readable */
   app-webgl-shader-background,
@@ -81,8 +114,14 @@
     opacity: 0.35;
   }
 
-  /* Gradient overlays that use from-black/to-black should not paint over light bg */
-  .from-black { --tw-gradient-from: var(--color-bg) !important; }
-  .to-black { --tw-gradient-to: var(--color-bg) !important; }
-  .via-black { --tw-gradient-via: var(--color-bg) !important; }
+  /* Gradient overlays that use from-black/to-black */
+  .from-black {
+    --tw-gradient-from: var(--color-bg);
+  }
+  .to-black {
+    --tw-gradient-to: var(--color-bg);
+  }
+  .via-black {
+    --tw-gradient-via: var(--color-bg);
+  }
 }
