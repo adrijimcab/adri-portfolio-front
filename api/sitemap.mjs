@@ -99,9 +99,7 @@ function renderSitemap(entries) {
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${body}\n</urlset>\n`;
 }
 
-export const runtime = 'edge';
-
-export default async function handler(_request) {
+export default async function handler(_req, res) {
   try {
     const { FEED_POSTS_SORTED } = await import('./_blog-posts.mjs');
     const projectEntries = await fetchProjectEntries();
@@ -113,21 +111,13 @@ export default async function handler(_request) {
       ...blogEntries,
     ];
 
-    return new Response(renderSitemap(allEntries), {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/xml; charset=utf-8',
-        'Cache-Control': 'public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400',
-      },
-    });
+    res.setHeader('Content-Type', 'application/xml; charset=utf-8');
+    res.setHeader('Cache-Control', 'public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400');
+    res.status(200).send(renderSitemap(allEntries));
   } catch (error) {
     console.error('[api/sitemap] failed, serving static fallback:', error);
-    return new Response(renderSitemap(STATIC_ENTRIES), {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/xml; charset=utf-8',
-        'Cache-Control': 'public, max-age=300',
-      },
-    });
+    res.setHeader('Content-Type', 'application/xml; charset=utf-8');
+    res.setHeader('Cache-Control', 'public, max-age=300');
+    res.status(200).send(renderSitemap(STATIC_ENTRIES));
   }
 }

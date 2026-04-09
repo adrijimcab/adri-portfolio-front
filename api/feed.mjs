@@ -56,26 +56,15 @@ function buildFeed(posts) {
   };
 }
 
-export const runtime = 'edge';
-
-export default function handler(_request) {
+export default function handler(_req, res) {
   try {
     const feed = buildFeed(FEED_POSTS_SORTED);
-    return new Response(JSON.stringify(feed, null, 2), {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/feed+json; charset=utf-8',
-        'Cache-Control': 'public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400',
-      },
-    });
+    res.setHeader('Content-Type', 'application/feed+json; charset=utf-8');
+    res.setHeader('Cache-Control', 'public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400');
+    res.status(200).send(JSON.stringify(feed, null, 2));
   } catch (error) {
     console.error('[api/feed] failed to render JSON feed:', error);
-    return new Response(
-      JSON.stringify({ error: 'Failed to render JSON Feed' }),
-      {
-        status: 500,
-        headers: { 'Content-Type': 'application/json; charset=utf-8' },
-      },
-    );
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    res.status(500).send(JSON.stringify({ error: 'Failed to render JSON Feed' }));
   }
 }

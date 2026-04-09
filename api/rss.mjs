@@ -84,22 +84,14 @@ ${entries}
 `;
 }
 
-export const runtime = 'edge';
-
-export default function handler(_request) {
+export default function handler(_req, res) {
   try {
-    return new Response(renderFeed(FEED_POSTS_SORTED), {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/atom+xml; charset=utf-8',
-        'Cache-Control': 'public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400',
-      },
-    });
+    res.setHeader('Content-Type', 'application/atom+xml; charset=utf-8');
+    res.setHeader('Cache-Control', 'public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400');
+    res.status(200).send(renderFeed(FEED_POSTS_SORTED));
   } catch (error) {
     console.error('[api/rss] failed to render feed:', error);
-    return new Response('Failed to render Atom feed', {
-      status: 500,
-      headers: { 'Content-Type': 'text/plain; charset=utf-8' },
-    });
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.status(500).send('Failed to render Atom feed');
   }
 }

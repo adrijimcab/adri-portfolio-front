@@ -6,11 +6,7 @@
   "functions": {
     "api/ssr.mjs": {
       "includeFiles": "dist/adri-portfolio-front/server/**"
-    },
-    "api/sitemap.mjs": { "runtime": "edge" },
-    "api/rss.mjs": { "runtime": "edge" },
-    "api/feed.mjs": { "runtime": "edge" },
-    "api/og.mjs": { "runtime": "edge" }
+    }
   },
   "redirects": [
     {

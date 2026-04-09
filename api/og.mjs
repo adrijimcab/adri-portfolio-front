@@ -38,11 +38,9 @@ function parseType(value) {
   return 'page';
 }
 
-export const runtime = 'edge';
-
-export default function handler(request) {
+export default async function handler(req, res) {
   try {
-    const url = new URL(request.url);
+    const url = new URL(req.url, `https://${req.headers.host || 'adrianjimenezcabello.dev'}`);
     const title = sanitize(url.searchParams.get('title'), DEFAULT_TITLE, MAX_TITLE_LENGTH);
     const description = sanitize(
       url.searchParams.get('description'),
@@ -52,7 +50,7 @@ export default function handler(request) {
     const ogType = parseType(url.searchParams.get('type'));
     const typeLabel = TYPE_LABELS[ogType];
 
-    return new ImageResponse(
+    const imageResponse = new ImageResponse(
       {
         type: 'div',
         props: {
@@ -212,20 +210,16 @@ export default function handler(request) {
           ],
         },
       },
-      {
-        width: 1200,
-        height: 630,
-        headers: {
-          'Cache-Control': 'public, immutable, no-transform, max-age=31536000',
-        },
-      },
+      { width: 1200, height: 630 },
     );
+    const buffer = Buffer.from(await imageResponse.arrayBuffer());
+    res.setHeader('Content-Type', 'image/png');
+    res.setHeader('Cache-Control', 'public, immutable, no-transform, max-age=31536000');
+    res.status(200).send(buffer);
   } catch (error) {
     const message = error instanceof Error ? error.message : 'unknown';
     console.error('[api/og] failed to generate image:', message, error);
-    return new Response(`Failed to generate OG image: ${message}`, {
-      status: 500,
-      headers: { 'Content-Type': 'text/plain; charset=utf-8' },
-    });
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.status(500).send(`Failed to generate OG image: ${message}`);
   }
 }
