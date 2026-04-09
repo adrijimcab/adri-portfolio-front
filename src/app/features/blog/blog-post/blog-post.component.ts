@@ -145,6 +145,46 @@ import type { BlogPost } from '../blog.types';
         color: rgba(255, 255, 255, 0.6);
         font-style: italic;
       }
+
+      /* Callout / admonition blocks */
+      .blog-prose :is(.callout) {
+        border-left: 3px solid;
+        border-radius: 0.5rem;
+        padding: 1rem 1.25rem;
+        margin: 1.5rem 0;
+        font-style: normal;
+      }
+      .blog-prose :is(.callout-title) {
+        display: block;
+        margin-bottom: 0.35rem;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+      .blog-prose :is(.callout p) {
+        margin: 0;
+      }
+      .blog-prose :is(.callout-note) {
+        border-color: #3b82f6;
+        background: rgba(59, 130, 246, 0.08);
+      }
+      .blog-prose :is(.callout-note .callout-title) {
+        color: #60a5fa;
+      }
+      .blog-prose :is(.callout-warning) {
+        border-color: #f59e0b;
+        background: rgba(245, 158, 11, 0.08);
+      }
+      .blog-prose :is(.callout-warning .callout-title) {
+        color: #fbbf24;
+      }
+      .blog-prose :is(.callout-tip) {
+        border-color: #22c55e;
+        background: rgba(34, 197, 94, 0.08);
+      }
+      .blog-prose :is(.callout-tip .callout-title) {
+        color: #4ade80;
+      }
     `,
   ],
 })
@@ -220,6 +260,63 @@ export class BlogPostComponent implements OnInit {
     ]);
   }
 
+  /**
+   * Injects a floating "Copy" button into every `<pre>` code block.
+   * Click copies the code text and shows brief "Copied" feedback.
+   */
+  private addCopyButtons(host: HTMLElement): void {
+    const preBlocks = Array.from(host.querySelectorAll<HTMLPreElement>('pre'));
+    for (const pre of preBlocks) {
+      pre.style.position = 'relative';
+
+      const btn = document.createElement('button');
+      btn.textContent = 'Copy';
+      btn.type = 'button';
+      btn.setAttribute('aria-label', 'Copy code to clipboard');
+
+      // Position & style via inline styles (SSR-safe, no Tailwind runtime needed)
+      Object.assign(btn.style, {
+        position: 'absolute',
+        top: '0.5rem',
+        right: '0.5rem',
+        padding: '0.25rem 0.6rem',
+        fontSize: '0.75rem',
+        lineHeight: '1',
+        borderRadius: '0.375rem',
+        border: '1px solid rgba(255,255,255,0.15)',
+        background: 'rgba(255,255,255,0.06)',
+        color: 'rgba(255,255,255,0.6)',
+        cursor: 'pointer',
+        transition: 'background 0.15s, color 0.15s',
+        zIndex: '10',
+      } satisfies Partial<Record<string, string>>);
+
+      btn.addEventListener('mouseenter', () => {
+        btn.style.background = 'rgba(255,255,255,0.12)';
+        btn.style.color = 'rgba(255,255,255,0.9)';
+      });
+      btn.addEventListener('mouseleave', () => {
+        btn.style.background = 'rgba(255,255,255,0.06)';
+        btn.style.color = 'rgba(255,255,255,0.6)';
+      });
+
+      btn.addEventListener('click', () => {
+        const codeEl = pre.querySelector('code');
+        const text = codeEl?.textContent ?? pre.textContent ?? '';
+        void navigator.clipboard.writeText(text).then(() => {
+          btn.textContent = '\u2713 Copied';
+          btn.style.color = '#4ade80';
+          setTimeout(() => {
+            btn.textContent = 'Copy';
+            btn.style.color = 'rgba(255,255,255,0.6)';
+          }, 2000);
+        });
+      });
+
+      pre.appendChild(btn);
+    }
+  }
+
   private async applyShikiHighlight(): Promise<void> {
     if (!isPlatformBrowser(this.platformId)) return;
     const host = this.articleEl()?.nativeElement;
@@ -253,5 +350,7 @@ export class BlogPostComponent implements OnInit {
     } catch {
       // Shiki failed (unsupported language, network issue) — leave plain <pre>.
     }
+
+    this.addCopyButtons(host);
   }
 }
