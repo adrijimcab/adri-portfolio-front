@@ -34,7 +34,7 @@ export class TranslateService {
   }
 
   private detectInitialLang(): Lang {
-    if (!isPlatformBrowser(inject(PLATFORM_ID))) {
+    if (!isPlatformBrowser(this.platformId)) {
       return 'es';
     }
 
