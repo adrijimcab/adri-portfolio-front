@@ -24,9 +24,8 @@ const SITE_ORIGIN = 'https://adrianjimenezcabello.dev';
         </p>
         <h1 class="text-4xl font-bold text-white md:text-5xl">Lab</h1>
         <p class="mt-4 text-white/60">
-          Experimentos, demos y microsites. Cosas chiquitas que no son "proyectos de
-          cliente" pero que me enseñaron algo — CSS, WebGL, generative, APIs raras y
-          microinteracciones.
+          Experimentos, demos y microsites. Cosas chiquitas que no son "proyectos de cliente" pero
+          que me enseñaron algo — CSS, WebGL, generative, APIs raras y microinteracciones.
         </p>
       </header>
 
@@ -70,49 +69,73 @@ export class LabComponent implements OnInit {
     {
       title: 'WebGL Shader Background',
       description:
-        'El shader GLSL que pinta el fondo del portfolio: animación continua y super barata en GPU.',
+        'El shader GLSL que pinta el fondo del portfolio: animación continua y super barata en GPU. Visitá la home y mirá el fondo animado.',
       tags: ['WebGL', 'GLSL'],
-      url: '/',
+      url: '/es',
       external: false,
     },
     {
       title: 'Konami Code Easter Egg',
       description:
-        '↑ ↑ ↓ ↓ ← → ← → B A. Mirá la consola del browser para encontrarlo.',
+        '↑ ↑ ↓ ↓ ← → ← → B A — probalo en cualquier página. Mirá la consola del browser para el otro easter egg.',
       tags: ['DOM', 'UX'],
-      url: '/',
+      url: '/es',
       external: false,
     },
     {
       title: 'Command Palette ⌘K',
       description:
-        'Paleta de comandos navegable 100% por teclado, con roles ARIA correctos.',
+        'Pulsá ⌘K (o ?) en cualquier página para abrir la paleta. Shortcuts vim: g h, g p, t, gg y más.',
       tags: ['a11y', 'UX'],
-      url: '/',
+      url: '/es',
       external: false,
     },
     {
       title: 'Scroll-driven Progress Bar',
       description:
-        'Barra de progreso de lectura usando scroll-driven animations nativas de CSS.',
+        'Barra de progreso de lectura con CSS scroll-driven animations nativas. Visible en la parte superior al scrollear.',
       tags: ['CSS', 'UX'],
-      url: '/',
+      url: '/es/blog/welcome',
       external: false,
     },
     {
       title: 'Particles Background',
       description:
-        'Sistema de partículas generativo en canvas con tuning por device pixel ratio.',
+        'Sistema de partículas generativo en canvas con tuning por device pixel ratio. Visible en el fondo de toda la app.',
       tags: ['Canvas', 'Generative'],
-      url: '/',
+      url: '/es',
       external: false,
     },
     {
       title: 'Spotify Now Playing',
       description:
-        'Widget que muestra qué estoy escuchando ahora, hidratado en server con SSR.',
+        'Widget en el footer que muestra qué estoy escuchando ahora, con polling cada 30s.',
       tags: ['API', 'Realtime'],
-      url: '/',
+      url: '/es',
+      external: false,
+    },
+    {
+      title: 'AI Chatbot RAG',
+      description:
+        'Preguntale a Adrián: chatbot con Retrieval Augmented Generation sobre mis datos reales. Clickeá el botón ✨ abajo a la derecha.',
+      tags: ['AI', 'RAG', 'SSE'],
+      url: '/es',
+      external: false,
+    },
+    {
+      title: 'Dynamic OG Images',
+      description:
+        'Imágenes Open Graph generadas on-the-fly con Satori + Resvg vía Vercel Functions.',
+      tags: ['Vercel', 'Satori'],
+      url: '/og?title=Lab+Demo&type=page',
+      external: true,
+    },
+    {
+      title: 'Guestbook + GitHub OAuth',
+      description:
+        'Firmá el libro de visitas autenticando con GitHub OAuth. Server-side token exchange, zero secrets client-side.',
+      tags: ['OAuth', 'Social'],
+      url: '/es/guestbook',
       external: false,
     },
   ];
