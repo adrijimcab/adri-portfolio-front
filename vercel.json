@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "npm run build",
+  "buildCommand": "npx tsc -p api/tsconfig.json && npm run build",
   "outputDirectory": "dist/adri-portfolio-front/browser",
   "framework": null,
   "functions": {
