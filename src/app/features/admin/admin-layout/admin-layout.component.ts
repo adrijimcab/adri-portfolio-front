@@ -24,7 +24,7 @@ interface NavItem {
   template: `
     <!-- Mobile overlay -->
     @if (sidebarOpen()) {
-      <div class="fixed inset-0 z-30 bg-black/60 lg:hidden" (click)="sidebarOpen.set(false)"></div>
+      <div class="fixed inset-0 z-30 bg-black/60 lg:hidden" (click)="sidebarOpen.set(false)" (keydown.escape)="sidebarOpen.set(false)" tabindex="-1" role="button" aria-label="Close sidebar"></div>
     }
 
     <div class="flex h-screen bg-black text-white">

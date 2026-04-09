@@ -39,15 +39,17 @@ import { ToastService } from '../../../shared/components/toast/toast.service';
         <div class="grid gap-5 md:grid-cols-2">
           @for (field of fields; track field.key) {
             <div [class.md:col-span-2]="field.wide">
-              <label class="mb-1.5 block text-xs font-medium text-white/50">{{ field.label }}</label>
+              <label [for]="'profile-' + field.key" class="mb-1.5 block text-xs font-medium text-white/50">{{ field.label }}</label>
               @if (field.type === 'textarea') {
                 <textarea
+                  [id]="'profile-' + field.key"
                   [formControlName]="field.key"
                   rows="4"
                   class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-3 text-sm text-white placeholder-white/20 outline-none focus:border-indigo-500/50"
                 ></textarea>
               } @else {
                 <input
+                  [id]="'profile-' + field.key"
                   [formControlName]="field.key"
                   [type]="field.type || 'text'"
                   class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-3 text-sm text-white placeholder-white/20 outline-none focus:border-indigo-500/50"
@@ -62,22 +64,25 @@ import { ToastService } from '../../../shared/components/toast/toast.service';
           <h3 class="mb-4 text-sm font-semibold text-white/60">English Translations</h3>
           <div class="grid gap-5 md:grid-cols-2">
             <div>
-              <label class="mb-1.5 block text-xs font-medium text-white/50">Title (EN)</label>
+              <label for="profile-title-en" class="mb-1.5 block text-xs font-medium text-white/50">Title (EN)</label>
               <input
+                id="profile-title-en"
                 formControlName="title_en"
                 class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-3 text-sm text-white placeholder-white/20 outline-none focus:border-indigo-500/50"
               />
             </div>
             <div>
-              <label class="mb-1.5 block text-xs font-medium text-white/50">Subtitle (EN)</label>
+              <label for="profile-subtitle-en" class="mb-1.5 block text-xs font-medium text-white/50">Subtitle (EN)</label>
               <input
+                id="profile-subtitle-en"
                 formControlName="subtitle_en"
-                class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-3 text-sm text-white placeholder-white/20 outline-none focus:border-indigo-500/50"
+                class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white placeholder-white/20 outline-none focus:border-indigo-500/50"
               />
             </div>
             <div class="md:col-span-2">
-              <label class="mb-1.5 block text-xs font-medium text-white/50">Bio (EN)</label>
+              <label for="profile-bio-en" class="mb-1.5 block text-xs font-medium text-white/50">Bio (EN)</label>
               <textarea
+                id="profile-bio-en"
                 formControlName="bio_en"
                 rows="4"
                 class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-3 text-sm text-white placeholder-white/20 outline-none focus:border-indigo-500/50"

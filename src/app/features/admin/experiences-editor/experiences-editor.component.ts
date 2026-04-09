@@ -27,56 +27,63 @@ import type { Experience } from '../../../core/domain/entities';
       <div [formGroup]="form" class="space-y-5">
         <div class="grid gap-4 md:grid-cols-2">
           <div>
-            <label class="mb-1 block text-xs text-white/50">Company *</label>
+            <label for="exp-company" class="mb-1 block text-xs text-white/50">Company *</label>
             <input
+              id="exp-company"
               formControlName="company"
               class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
             />
           </div>
           <div>
-            <label class="mb-1 block text-xs text-white/50">Client</label>
+            <label for="exp-client" class="mb-1 block text-xs text-white/50">Client</label>
             <input
+              id="exp-client"
               formControlName="client"
               class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
             />
           </div>
           <div>
-            <label class="mb-1 block text-xs text-white/50">Role *</label>
+            <label for="exp-role" class="mb-1 block text-xs text-white/50">Role *</label>
             <input
+              id="exp-role"
               formControlName="role"
               class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
             />
           </div>
           <div>
-            <label class="mb-1 block text-xs text-white/50">Role (EN)</label>
+            <label for="exp-role-en" class="mb-1 block text-xs text-white/50">Role (EN)</label>
             <input
+              id="exp-role-en"
               formControlName="role_en"
               class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
             />
           </div>
           <div>
-            <label class="mb-1 block text-xs text-white/50">Start Date *</label>
+            <label for="exp-start-date" class="mb-1 block text-xs text-white/50">Start Date *</label>
             <input
+              id="exp-start-date"
               formControlName="start_date"
               type="date"
               class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
             />
           </div>
           <div>
-            <label class="mb-1 block text-xs text-white/50">End Date</label>
+            <label for="exp-end-date" class="mb-1 block text-xs text-white/50">End Date</label>
             <input
+              id="exp-end-date"
               formControlName="end_date"
               type="date"
               class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
             />
           </div>
           <div class="flex items-center gap-2">
-            <input formControlName="is_current" type="checkbox" class="accent-indigo-500" />
-            <label class="text-xs text-white/50">Currently working here</label>
+            <input id="exp-is-current" formControlName="is_current" type="checkbox" class="accent-indigo-500" />
+            <label for="exp-is-current" class="text-xs text-white/50">Currently working here</label>
           </div>
           <div>
-            <label class="mb-1 block text-xs text-white/50">Sort Order</label>
+            <label for="exp-sort-order" class="mb-1 block text-xs text-white/50">Sort Order</label>
             <input
+              id="exp-sort-order"
               formControlName="sort_order"
               type="number"
               class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
@@ -85,24 +92,26 @@ import type { Experience } from '../../../core/domain/entities';
         </div>
 
         <div>
-          <label class="mb-1 block text-xs text-white/50">Description</label>
+          <label for="exp-description" class="mb-1 block text-xs text-white/50">Description</label>
           <textarea
+            id="exp-description"
             formControlName="description"
             rows="3"
             class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
           ></textarea>
         </div>
         <div>
-          <label class="mb-1 block text-xs text-white/50">Description (EN)</label>
+          <label for="exp-description-en" class="mb-1 block text-xs text-white/50">Description (EN)</label>
           <textarea
+            id="exp-description-en"
             formControlName="description_en"
             rows="3"
             class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
           ></textarea>
         </div>
 
-        <div>
-          <label class="mb-2 block text-xs text-white/50">Achievements</label>
+        <div role="group" aria-labelledby="exp-achievements-label">
+          <span id="exp-achievements-label" class="mb-2 block text-xs text-white/50">Achievements</span>
           @for (ach of achievements(); track $index) {
             <div class="mb-2 flex gap-2">
               <input
@@ -128,8 +137,8 @@ import type { Experience } from '../../../core/domain/entities';
           </button>
         </div>
 
-        <div>
-          <label class="mb-2 block text-xs text-white/50">Achievements (EN)</label>
+        <div role="group" aria-labelledby="exp-achievements-en-label">
+          <span id="exp-achievements-en-label" class="mb-2 block text-xs text-white/50">Achievements (EN)</span>
           @for (ach of achievementsEn(); track $index) {
             <div class="mb-2 flex gap-2">
               <input
@@ -156,10 +165,11 @@ import type { Experience } from '../../../core/domain/entities';
         </div>
 
         <div>
-          <label class="mb-1 block text-xs text-white/50"
+          <label for="exp-tech-ids" class="mb-1 block text-xs text-white/50"
             >Technology IDs (comma-separated)</label
           >
           <input
+            id="exp-tech-ids"
             formControlName="technology_ids"
             class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
             placeholder="uuid1, uuid2, ..."

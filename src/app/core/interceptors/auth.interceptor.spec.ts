@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { signal } from '@angular/core';
-import { HttpHandlerFn, HttpRequest, HttpResponse, HttpEvent } from '@angular/common/http';
+import { type HttpHandlerFn, HttpRequest, HttpResponse, type HttpEvent } from '@angular/common/http';
 import { describe, it, expect, beforeEach } from 'vitest';
 import { of, firstValueFrom, type Observable } from 'rxjs';
 

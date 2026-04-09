@@ -23,32 +23,36 @@ import type { SocialLink } from '../../../core/domain/entities';
     >
       <div [formGroup]="form" class="grid gap-4 md:grid-cols-2">
         <div>
-          <label class="mb-1 block text-xs text-white/50">Platform *</label>
+          <label for="social-platform" class="mb-1 block text-xs text-white/50">Platform *</label>
           <input
+            id="social-platform"
             formControlName="platform"
             class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
             placeholder="GitHub, LinkedIn, Twitter..."
           />
         </div>
         <div>
-          <label class="mb-1 block text-xs text-white/50">URL *</label>
+          <label for="social-url" class="mb-1 block text-xs text-white/50">URL *</label>
           <input
+            id="social-url"
             formControlName="url"
             type="url"
             class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
           />
         </div>
         <div>
-          <label class="mb-1 block text-xs text-white/50">Icon Slug</label>
+          <label for="social-icon-slug" class="mb-1 block text-xs text-white/50">Icon Slug</label>
           <input
+            id="social-icon-slug"
             formControlName="icon_slug"
             class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
             placeholder="github, linkedin, etc."
           />
         </div>
         <div>
-          <label class="mb-1 block text-xs text-white/50">Sort Order</label>
+          <label for="social-sort-order" class="mb-1 block text-xs text-white/50">Sort Order</label>
           <input
+            id="social-sort-order"
             formControlName="sort_order"
             type="number"
             class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"

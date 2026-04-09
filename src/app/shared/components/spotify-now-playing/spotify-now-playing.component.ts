@@ -96,7 +96,7 @@ const POLL_INTERVAL_MS = 30_000;
                 {{ t.title }}
               </div>
               <div class="truncate text-xs text-white/60">{{ t.artist }}</div>
-              @if (t.isPlaying && t.durationMs && t.progressMs != null) {
+              @if (t.isPlaying && t.durationMs && t.progressMs !== null && t.progressMs !== undefined) {
                 <div class="mt-1.5 h-[3px] w-full overflow-hidden rounded-full bg-white/10">
                   <div
                     class="h-full bg-[#1DB954] transition-all duration-1000 ease-linear"

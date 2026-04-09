@@ -75,14 +75,14 @@ export class HeroComponent {
     this.t.t('hero.role4'),
   ]);
 
-  firstName = computed(() => this.profile()?.full_name?.split(' ').slice(0, -2).join(' ') || '');
-  lastName = computed(() => this.profile()?.full_name?.split(' ').slice(-2).join(' ') || '');
+  firstName = computed(() => this.profile()?.full_name?.split(' ').slice(0, -2).join(' ') ?? '');
+  lastName = computed(() => this.profile()?.full_name?.split(' ').slice(-2).join(' ') ?? '');
 
   stats = computed(() => {
     const c = this.config();
-    const yearsRaw = c?.['stats_years'] || '9';
-    const companiesRaw = c?.['stats_companies'] || '4';
-    const techRaw = c?.['stats_technologies'] || '30';
+    const yearsRaw = c?.['stats_years'] ?? '9';
+    const companiesRaw = c?.['stats_companies'] ?? '4';
+    const techRaw = c?.['stats_technologies'] ?? '30';
 
     return [
       {

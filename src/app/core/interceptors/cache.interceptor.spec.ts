@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import {
-  HttpHandlerFn,
+  type HttpHandlerFn,
   HttpRequest,
   HttpResponse,
   HttpHeaders,

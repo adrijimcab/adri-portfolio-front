@@ -82,6 +82,7 @@ export class ProjectListComponent {
     return all.filter(
       (p) =>
         p.title.toLowerCase().includes(query) ||
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- LHS is boolean|undefined in a logical OR chain; ?? would stop on false
         p.short_description?.toLowerCase().includes(query) ||
         p.technologies.some((t) => t.name.toLowerCase().includes(query)),
     );

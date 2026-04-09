@@ -52,9 +52,9 @@ import type { CrudResource } from '../../../core/domain/repositories';
         <app-data-table
           [columns]="columns()"
           [data]="tableData()"
-          (onAdd)="startAdd()"
-          (onEdit)="startEdit($event)"
-          (onDelete)="confirmDelete($event)"
+          (rowAdd)="startAdd()"
+          (rowEdit)="startEdit($event)"
+          (rowDelete)="confirmDelete($event)"
         />
       } @else {
         <form

@@ -2,6 +2,7 @@ import type {
   OnInit} from '@angular/core';
 import {
   Component,
+  ChangeDetectionStrategy,
   inject,
   signal,
   afterNextRender,
@@ -22,6 +23,7 @@ import { ThemeService } from './core/services/theme.service';
 @Component({
   selector: 'app-root',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     RouterOutlet,
     NavbarComponent,

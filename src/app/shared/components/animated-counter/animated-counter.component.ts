@@ -19,7 +19,7 @@ import { isPlatformBrowser } from '@angular/common';
   template: `{{ displayValue() }}{{ hasAnimated() ? suffix() : '' }}`,
 })
 export class AnimatedCounterComponent implements OnDestroy {
-  private readonly el = inject(ElementRef);
+  private readonly el = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly platformId = inject(PLATFORM_ID);
 
   readonly target = input.required<number>();

@@ -193,11 +193,12 @@ export class LoginComponent {
         this.loading.set(false);
         void this.router.navigate(['/admin']);
       },
-      error: (err) => {
+      error: (err: unknown) => {
         this.loading.set(false);
-        if (err.status === 401) {
+        const status = err instanceof Object && 'status' in err ? (err as { status: number }).status : undefined;
+        if (status === 401) {
           this.errorMessage.set('Invalid email or password.');
-        } else if (err.status === 0) {
+        } else if (status === 0) {
           this.errorMessage.set('Network error. Please check your connection.');
         } else {
           this.errorMessage.set('An unexpected error occurred. Please try again.');

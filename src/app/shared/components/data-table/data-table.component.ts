@@ -23,7 +23,7 @@ export interface TableColumn {
           class="w-full max-w-xs rounded-lg border border-white/[0.08] bg-white/[0.04] px-3 py-2 text-sm text-white placeholder-white/20 outline-none focus:border-indigo-500/50"
         />
         <button
-          (click)="onAdd.emit()"
+          (click)="rowAdd.emit()"
           class="shrink-0 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-500 px-4 py-2 text-sm font-semibold text-white transition-all hover:from-indigo-600 hover:to-purple-600"
         >
           + Add
@@ -77,13 +77,13 @@ export interface TableColumn {
                 <td class="px-4 py-3">
                   <div class="flex gap-2">
                     <button
-                      (click)="onEdit.emit(row)"
+                      (click)="rowEdit.emit(row)"
                       class="rounded px-2 py-1 text-xs text-indigo-400 transition-colors hover:bg-indigo-500/10"
                     >
                       Edit
                     </button>
                     <button
-                      (click)="onDelete.emit(row)"
+                      (click)="rowDelete.emit(row)"
                       class="rounded px-2 py-1 text-xs text-red-400 transition-colors hover:bg-red-500/10"
                     >
                       Delete
@@ -108,9 +108,9 @@ export class DataTableComponent {
   readonly columns = input.required<TableColumn[]>();
   readonly data = input.required<Record<string, unknown>[]>();
 
-  readonly onEdit = output<Record<string, unknown>>();
-  readonly onDelete = output<Record<string, unknown>>();
-  readonly onAdd = output();
+  readonly rowEdit = output<Record<string, unknown>>();
+  readonly rowDelete = output<Record<string, unknown>>();
+  readonly rowAdd = output();
 
   readonly searchTerm = signal('');
   readonly sortKey = signal('');
@@ -124,7 +124,7 @@ export class DataTableComponent {
       items = items.filter((row) =>
         this.columns().some((col) => {
           const val = this.getCellValue(row, col.key);
-          return val != null && String(val).toLowerCase().includes(term);
+          return val != null && this.stringify(val).toLowerCase().includes(term);
         }),
       );
     }
@@ -137,7 +137,7 @@ export class DataTableComponent {
         const bVal = this.getCellValue(b, key);
         if (aVal == null) return 1;
         if (bVal == null) return -1;
-        return String(aVal).localeCompare(String(bVal)) * dir;
+        return this.stringify(aVal).localeCompare(this.stringify(bVal)) * dir;
       });
     }
 
@@ -159,10 +159,19 @@ export class DataTableComponent {
 
   formatDate(value: unknown): string {
     if (!value) return '-';
+    const str = this.stringify(value);
     try {
-      return new Date(String(value)).toLocaleDateString();
+      return new Date(str).toLocaleDateString();
     } catch {
-      return String(value);
+      return str;
     }
+  }
+
+  /** Type-safe stringification for unknown cell values. */
+  private stringify(value: unknown): string {
+    if (typeof value === 'string') return value;
+    if (typeof value === 'number' || typeof value === 'boolean') return String(value);
+    if (value == null) return '';
+    return JSON.stringify(value);
   }
 }

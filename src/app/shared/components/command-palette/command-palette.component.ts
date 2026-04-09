@@ -40,8 +40,9 @@ interface Command {
         aria-modal="true"
         aria-label="Command palette"
         (click)="close()"
+        (keydown.escape)="close()"
       >
-        <div class="cmdk-panel" (click)="$event.stopPropagation()">
+        <div class="cmdk-panel" role="presentation" tabindex="-1" (click)="$event.stopPropagation()" (keydown.escape)="close()">
           <input
             #search
             class="cmdk-input"

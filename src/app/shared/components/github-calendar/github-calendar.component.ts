@@ -4,7 +4,6 @@ import {
   DestroyRef,
   inject,
   signal,
-  computed,
   afterNextRender,
   PLATFORM_ID,
 } from '@angular/core';
@@ -213,7 +212,6 @@ export class GithubCalendarComponent {
         const month = currentDate.getMonth();
         if (month !== lastMonth) {
           const monthName = currentDate.toLocaleDateString(this.t.currentLang() === 'es' ? 'es-ES' : 'en-US', { month: 'short' });
-          const offset = weekIndex === 0 && monthLabels.length === 0 ? 0 : 0;
           monthLabels.push({
             label: monthName.charAt(0).toUpperCase() + monthName.slice(1),
             offset: 0,

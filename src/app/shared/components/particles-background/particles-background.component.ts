@@ -68,15 +68,15 @@ export class ParticlesBackgroundComponent implements OnDestroy {
     this.resize(canvas);
 
     this.resizeObserver = new ResizeObserver(() => this.resize(canvas));
-    this.resizeObserver.observe(canvas.parentElement || canvas);
+    this.resizeObserver.observe(canvas.parentElement ?? canvas);
 
     this.createParticles();
     this.animate();
   }
 
   private resize(canvas: HTMLCanvasElement): void {
-    const parent = canvas.parentElement || canvas;
-    const dpr = window.devicePixelRatio || 1;
+    const parent = canvas.parentElement ?? canvas;
+    const dpr = window.devicePixelRatio ?? 1;
     this.width = parent.clientWidth;
     this.height = parent.clientHeight;
     canvas.width = this.width * dpr;

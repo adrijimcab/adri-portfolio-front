@@ -35,10 +35,11 @@ interface ConfigEntry {
         <div class="space-y-3">
           @for (entry of configEntries(); track entry.key) {
             <div class="flex items-center gap-3">
-              <label class="w-48 shrink-0 text-xs text-white/50">{{ entry.key }}</label>
+              <label [for]="'config-' + entry.key" class="w-48 shrink-0 text-xs text-white/50">{{ entry.key }}</label>
               @switch (entry.type) {
                 @case ('color') {
                   <input
+                    [id]="'config-' + entry.key"
                     type="color"
                     [ngModel]="entry.value"
                     (ngModelChange)="updateEntry(entry, $event)"
@@ -48,6 +49,7 @@ interface ConfigEntry {
                 }
                 @case ('url') {
                   <input
+                    [id]="'config-' + entry.key"
                     type="url"
                     [ngModel]="entry.value"
                     (ngModelChange)="updateEntry(entry, $event)"
@@ -56,6 +58,7 @@ interface ConfigEntry {
                 }
                 @case ('number') {
                   <input
+                    [id]="'config-' + entry.key"
                     type="number"
                     [ngModel]="entry.value"
                     (ngModelChange)="updateEntry(entry, $event)"
@@ -64,6 +67,7 @@ interface ConfigEntry {
                 }
                 @default {
                   <input
+                    [id]="'config-' + entry.key"
                     type="text"
                     [ngModel]="entry.value"
                     (ngModelChange)="updateEntry(entry, $event)"

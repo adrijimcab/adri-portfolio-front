@@ -23,16 +23,18 @@ import type { Technology } from '../../../core/domain/entities';
     >
       <div [formGroup]="form" class="grid gap-4 md:grid-cols-2">
         <div>
-          <label class="mb-1 block text-xs text-white/50">Name *</label>
+          <label for="tech-name" class="mb-1 block text-xs text-white/50">Name *</label>
           <input
+            id="tech-name"
             formControlName="name"
             class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
           />
         </div>
         <div>
-          <label class="mb-1 block text-xs text-white/50">Icon Slug *</label>
+          <label for="tech-icon-slug" class="mb-1 block text-xs text-white/50">Icon Slug *</label>
           <div class="flex items-center gap-3">
             <input
+              id="tech-icon-slug"
               formControlName="icon_slug"
               class="flex-1 rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
               placeholder="angular, react, etc."
@@ -48,8 +50,9 @@ import type { Technology } from '../../../core/domain/entities';
           </div>
         </div>
         <div>
-          <label class="mb-1 block text-xs text-white/50">Category</label>
+          <label for="tech-category" class="mb-1 block text-xs text-white/50">Category</label>
           <select
+            id="tech-category"
             formControlName="category"
             class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
           >
@@ -65,8 +68,9 @@ import type { Technology } from '../../../core/domain/entities';
           </select>
         </div>
         <div>
-          <label class="mb-1 block text-xs text-white/50">Proficiency (0-100)</label>
+          <label for="tech-proficiency" class="mb-1 block text-xs text-white/50">Proficiency (0-100)</label>
           <input
+            id="tech-proficiency"
             formControlName="proficiency_level"
             type="range"
             min="0"
@@ -76,8 +80,8 @@ import type { Technology } from '../../../core/domain/entities';
           <span class="text-xs text-white/40">{{ form.value.proficiency_level }}%</span>
         </div>
         <div class="flex items-center gap-2">
-          <input formControlName="is_primary" type="checkbox" class="accent-indigo-500" />
-          <label class="text-xs text-white/50">Primary Technology</label>
+          <input id="tech-is-primary" formControlName="is_primary" type="checkbox" class="accent-indigo-500" />
+          <label for="tech-is-primary" class="text-xs text-white/50">Primary Technology</label>
         </div>
       </div>
     </app-generic-crud>

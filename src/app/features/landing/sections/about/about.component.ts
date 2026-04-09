@@ -39,5 +39,5 @@ export class AboutComponent {
   readonly t = inject(TranslateService);
   profile = input<Profile | undefined>();
 
-  paragraphs = computed(() => this.profile()?.bio?.split('\n\n') || []);
+  paragraphs = computed(() => this.profile()?.bio?.split('\n\n') ?? []);
 }

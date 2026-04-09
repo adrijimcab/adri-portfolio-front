@@ -24,37 +24,42 @@ import type { Certification } from '../../../core/domain/entities';
       <div [formGroup]="form" class="space-y-5">
         <div class="grid gap-4 md:grid-cols-2">
           <div>
-            <label class="mb-1 block text-xs text-white/50">Name *</label>
+            <label for="cert-name" class="mb-1 block text-xs text-white/50">Name *</label>
             <input
+              id="cert-name"
               formControlName="name"
               class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
             />
           </div>
           <div>
-            <label class="mb-1 block text-xs text-white/50">Provider *</label>
+            <label for="cert-provider" class="mb-1 block text-xs text-white/50">Provider *</label>
             <input
+              id="cert-provider"
               formControlName="provider"
               class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
             />
           </div>
           <div>
-            <label class="mb-1 block text-xs text-white/50">Date</label>
+            <label for="cert-date" class="mb-1 block text-xs text-white/50">Date</label>
             <input
+              id="cert-date"
               formControlName="date"
               type="date"
               class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
             />
           </div>
           <div>
-            <label class="mb-1 block text-xs text-white/50">Credential ID</label>
+            <label for="cert-credential-id" class="mb-1 block text-xs text-white/50">Credential ID</label>
             <input
+              id="cert-credential-id"
               formControlName="credential_id"
               class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
             />
           </div>
           <div class="md:col-span-2">
-            <label class="mb-1 block text-xs text-white/50">Certificate URL</label>
+            <label for="cert-url" class="mb-1 block text-xs text-white/50">Certificate URL</label>
             <input
+              id="cert-url"
               formControlName="certificate_url"
               type="url"
               class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
@@ -70,12 +75,13 @@ import type { Certification } from '../../../core/domain/entities';
             </div>
           }
           <div class="flex items-center gap-2">
-            <input formControlName="is_verified" type="checkbox" class="accent-indigo-500" />
-            <label class="text-xs text-white/50">Verified</label>
+            <input id="cert-verified" formControlName="is_verified" type="checkbox" class="accent-indigo-500" />
+            <label for="cert-verified" class="text-xs text-white/50">Verified</label>
           </div>
           <div>
-            <label class="mb-1 block text-xs text-white/50">Sort Order</label>
+            <label for="cert-sort-order" class="mb-1 block text-xs text-white/50">Sort Order</label>
             <input
+              id="cert-sort-order"
               formControlName="sort_order"
               type="number"
               class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
@@ -83,16 +89,18 @@ import type { Certification } from '../../../core/domain/entities';
           </div>
         </div>
         <div>
-          <label class="mb-1 block text-xs text-white/50">Description</label>
+          <label for="cert-description" class="mb-1 block text-xs text-white/50">Description</label>
           <textarea
+            id="cert-description"
             formControlName="description"
             rows="3"
             class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
           ></textarea>
         </div>
         <div>
-          <label class="mb-1 block text-xs text-white/50">Description (EN)</label>
+          <label for="cert-description-en" class="mb-1 block text-xs text-white/50">Description (EN)</label>
           <textarea
+            id="cert-description-en"
             formControlName="description_en"
             rows="3"
             class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"

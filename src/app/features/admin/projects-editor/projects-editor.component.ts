@@ -25,70 +25,79 @@ import type { Project } from '../../../core/domain/entities';
       <div [formGroup]="form" class="space-y-5">
         <div class="grid gap-4 md:grid-cols-2">
           <div>
-            <label class="mb-1 block text-xs text-white/50">Title *</label>
+            <label for="proj-title" class="mb-1 block text-xs text-white/50">Title *</label>
             <input
+              id="proj-title"
               formControlName="title"
               class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
             />
           </div>
           <div>
-            <label class="mb-1 block text-xs text-white/50">Slug *</label>
+            <label for="proj-slug" class="mb-1 block text-xs text-white/50">Slug *</label>
             <input
+              id="proj-slug"
               formControlName="slug"
               class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
             />
           </div>
           <div>
-            <label class="mb-1 block text-xs text-white/50">Title (EN)</label>
+            <label for="proj-title-en" class="mb-1 block text-xs text-white/50">Title (EN)</label>
             <input
+              id="proj-title-en"
               formControlName="title_en"
               class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
             />
           </div>
           <div class="flex items-center gap-2">
-            <input formControlName="is_featured" type="checkbox" class="accent-indigo-500" />
-            <label class="text-xs text-white/50">Featured</label>
+            <input id="proj-featured" formControlName="is_featured" type="checkbox" class="accent-indigo-500" />
+            <label for="proj-featured" class="text-xs text-white/50">Featured</label>
           </div>
           <div>
-            <label class="mb-1 block text-xs text-white/50">Image URL</label>
+            <label for="proj-image-url" class="mb-1 block text-xs text-white/50">Image URL</label>
             <input
+              id="proj-image-url"
               formControlName="image_url"
               class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
             />
           </div>
           <div>
-            <label class="mb-1 block text-xs text-white/50">Demo URL</label>
+            <label for="proj-demo-url" class="mb-1 block text-xs text-white/50">Demo URL</label>
             <input
+              id="proj-demo-url"
               formControlName="demo_url"
               class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
             />
           </div>
           <div>
-            <label class="mb-1 block text-xs text-white/50">Repo URL</label>
+            <label for="proj-repo-url" class="mb-1 block text-xs text-white/50">Repo URL</label>
             <input
+              id="proj-repo-url"
               formControlName="repo_url"
               class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
             />
           </div>
           <div>
-            <label class="mb-1 block text-xs text-white/50">Sort Order</label>
+            <label for="proj-sort-order" class="mb-1 block text-xs text-white/50">Sort Order</label>
             <input
+              id="proj-sort-order"
               formControlName="sort_order"
               type="number"
               class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
             />
           </div>
           <div>
-            <label class="mb-1 block text-xs text-white/50">Start Date</label>
+            <label for="proj-start-date" class="mb-1 block text-xs text-white/50">Start Date</label>
             <input
+              id="proj-start-date"
               formControlName="start_date"
               type="date"
               class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
             />
           </div>
           <div>
-            <label class="mb-1 block text-xs text-white/50">End Date</label>
+            <label for="proj-end-date" class="mb-1 block text-xs text-white/50">End Date</label>
             <input
+              id="proj-end-date"
               formControlName="end_date"
               type="date"
               class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
@@ -105,33 +114,37 @@ import type { Project } from '../../../core/domain/entities';
         }
 
         <div>
-          <label class="mb-1 block text-xs text-white/50">Short Description</label>
+          <label for="proj-short-desc" class="mb-1 block text-xs text-white/50">Short Description</label>
           <input
+            id="proj-short-desc"
             formControlName="short_description"
             class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
           />
         </div>
         <div>
-          <label class="mb-1 block text-xs text-white/50">Description</label>
+          <label for="proj-description" class="mb-1 block text-xs text-white/50">Description</label>
           <textarea
+            id="proj-description"
             formControlName="description"
             rows="3"
             class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
           ></textarea>
         </div>
         <div>
-          <label class="mb-1 block text-xs text-white/50">Description (EN)</label>
+          <label for="proj-description-en" class="mb-1 block text-xs text-white/50">Description (EN)</label>
           <textarea
+            id="proj-description-en"
             formControlName="description_en"
             rows="3"
             class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
           ></textarea>
         </div>
         <div>
-          <label class="mb-1 block text-xs text-white/50">
+          <label for="proj-tech-ids" class="mb-1 block text-xs text-white/50">
             Technology IDs (comma-separated)
           </label>
           <input
+            id="proj-tech-ids"
             formControlName="technology_ids"
             class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
             placeholder="uuid1, uuid2, ..."

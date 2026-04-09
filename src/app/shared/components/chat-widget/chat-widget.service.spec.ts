@@ -1,12 +1,11 @@
 import { TestBed } from '@angular/core/testing';
-import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi, afterEach, type MockInstance } from 'vitest';
 import { ReadableStream as NodeReadableStream } from 'node:stream/web';
 import { ChatWidgetService } from './chat-widget.service';
 import type { ChatEvent } from './chat-widget.types';
 
 // jsdom does not provide ReadableStream — polyfill from Node.js
 if (typeof globalThis.ReadableStream === 'undefined') {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (globalThis as Record<string, unknown>)['ReadableStream'] = NodeReadableStream as unknown;
 }
 
@@ -27,7 +26,7 @@ function createSSEStream(events: string[]): ReadableStream<Uint8Array> {
 
 describe('ChatWidgetService', () => {
   let service: ChatWidgetService;
-  let fetchSpy: ReturnType<typeof vi.spyOn>;
+  let fetchSpy: MockInstance<typeof globalThis.fetch>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});

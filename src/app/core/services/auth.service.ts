@@ -59,7 +59,7 @@ export class AuthService {
   logout(): void {
     const token = this.accessTokenInMemory;
     if (token) {
-      this.http.post(`${this.baseUrl}/auth/logout`, {}).subscribe({ error: () => {} });
+      this.http.post(`${this.baseUrl}/auth/logout`, {}).subscribe({ error: () => { /* fire-and-forget: logout failure is non-critical */ } });
     }
     this.accessTokenInMemory = null;
     this.accessToken.set(null);

@@ -72,7 +72,7 @@ export default tseslint.config(
       '@typescript-eslint/dot-notation': 'warn',
       '@typescript-eslint/require-await': 'warn',
       '@typescript-eslint/await-thenable': 'warn',
-      '@typescript-eslint/unbound-method': 'warn',
+      '@typescript-eslint/unbound-method': ['warn', { ignoreStatic: true }],
       '@typescript-eslint/no-base-to-string': 'warn',
       '@typescript-eslint/no-redundant-type-constituents': 'warn',
       '@typescript-eslint/no-duplicate-type-constituents': 'warn',

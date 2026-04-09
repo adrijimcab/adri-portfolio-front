@@ -24,51 +24,58 @@ import type { Education } from '../../../core/domain/entities';
       <div [formGroup]="form" class="space-y-5">
         <div class="grid gap-4 md:grid-cols-2">
           <div>
-            <label class="mb-1 block text-xs text-white/50">Institution *</label>
+            <label for="edu-institution" class="mb-1 block text-xs text-white/50">Institution *</label>
             <input
+              id="edu-institution"
               formControlName="institution"
               class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
             />
           </div>
           <div>
-            <label class="mb-1 block text-xs text-white/50">Degree *</label>
+            <label for="edu-degree" class="mb-1 block text-xs text-white/50">Degree *</label>
             <input
+              id="edu-degree"
               formControlName="degree"
               class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
             />
           </div>
           <div>
-            <label class="mb-1 block text-xs text-white/50">Degree (EN)</label>
+            <label for="edu-degree-en" class="mb-1 block text-xs text-white/50">Degree (EN)</label>
             <input
+              id="edu-degree-en"
               formControlName="degree_en"
               class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
             />
           </div>
           <div>
-            <label class="mb-1 block text-xs text-white/50">Field</label>
+            <label for="edu-field" class="mb-1 block text-xs text-white/50">Field</label>
             <input
+              id="edu-field"
               formControlName="field"
               class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
             />
           </div>
           <div>
-            <label class="mb-1 block text-xs text-white/50">Field (EN)</label>
+            <label for="edu-field-en" class="mb-1 block text-xs text-white/50">Field (EN)</label>
             <input
+              id="edu-field-en"
               formControlName="field_en"
               class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
             />
           </div>
           <div>
-            <label class="mb-1 block text-xs text-white/50">Year Start</label>
+            <label for="edu-year-start" class="mb-1 block text-xs text-white/50">Year Start</label>
             <input
+              id="edu-year-start"
               formControlName="year_start"
               type="number"
               class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
             />
           </div>
           <div>
-            <label class="mb-1 block text-xs text-white/50">Year End</label>
+            <label for="edu-year-end" class="mb-1 block text-xs text-white/50">Year End</label>
             <input
+              id="edu-year-end"
               formControlName="year_end"
               type="number"
               class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
@@ -76,16 +83,18 @@ import type { Education } from '../../../core/domain/entities';
           </div>
         </div>
         <div>
-          <label class="mb-1 block text-xs text-white/50">Description</label>
+          <label for="edu-description" class="mb-1 block text-xs text-white/50">Description</label>
           <textarea
+            id="edu-description"
             formControlName="description"
             rows="3"
             class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
           ></textarea>
         </div>
         <div>
-          <label class="mb-1 block text-xs text-white/50">Description (EN)</label>
+          <label for="edu-description-en" class="mb-1 block text-xs text-white/50">Description (EN)</label>
           <textarea
+            id="edu-description-en"
             formControlName="description_en"
             rows="3"
             class="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"

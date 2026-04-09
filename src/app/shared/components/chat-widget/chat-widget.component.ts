@@ -60,7 +60,7 @@ const SUGGESTED_QUESTIONS_EN = [
 
       <!-- Side-sheet panel -->
       @if (isOpen()) {
-        <div class="chat-backdrop" (click)="close()"></div>
+        <div class="chat-backdrop" (click)="close()" (keydown.escape)="close()" tabindex="-1" role="button" aria-label="Close chat"></div>
         <aside
           class="chat-panel"
           role="dialog"
