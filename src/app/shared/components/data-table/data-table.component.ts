@@ -1,5 +1,14 @@
-import { Component, ChangeDetectionStrategy, input, output, signal, computed } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  input,
+  output,
+  signal,
+  computed,
+  inject,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ConfirmDialogService } from '../confirm-dialog/confirm-dialog.service';
 
 export interface TableColumn {
   key: string;
@@ -93,7 +102,7 @@ export interface TableColumn {
                       Edit
                     </button>
                     <button
-                      (click)="rowDelete.emit(row)"
+                      (click)="confirmDelete(row)"
                       class="rounded px-3 py-2 text-xs text-red-400 transition-colors hover:bg-red-500/10"
                     >
                       Delete
@@ -120,6 +129,8 @@ export interface TableColumn {
   `,
 })
 export class DataTableComponent {
+  private readonly confirmDialog = inject(ConfirmDialogService);
+
   readonly columns = input.required<TableColumn[]>();
   readonly data = input.required<Record<string, unknown>[]>();
 
@@ -166,6 +177,16 @@ export class DataTableComponent {
       this.sortKey.set(key);
       this.sortDir.set('asc');
     }
+  }
+
+  confirmDelete(row: Record<string, unknown>): void {
+    this.confirmDialog
+      .confirm('Delete', 'Are you sure you want to delete this item?')
+      .subscribe((confirmed) => {
+        if (confirmed) {
+          this.rowDelete.emit(row);
+        }
+      });
   }
 
   getCellValue(row: Record<string, unknown>, key: string): unknown {

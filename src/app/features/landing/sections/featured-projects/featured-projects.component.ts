@@ -96,6 +96,12 @@ import type { Project } from '../../../../core/models';
         grid-template-columns: 1fr;
       }
 
+      @media (min-width: 640px) {
+        .bento-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
       @media (min-width: 768px) {
         .bento-grid {
           grid-template-columns: repeat(3, 1fr);

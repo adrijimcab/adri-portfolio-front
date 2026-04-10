@@ -8,14 +8,14 @@ import type { Profile, SiteConfig } from '../../../../core/models';
 @Component({
   selector: 'app-hero',
   standalone: true,
-  imports: [
-    ScrollAnimateDirective,
-    TypingTextComponent,
-    AnimatedCounterComponent,
-  ],
+  imports: [ScrollAnimateDirective, TypingTextComponent, AnimatedCounterComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <section id="hero" class="relative flex min-h-screen items-center justify-center px-6" aria-labelledby="hero-title">
+    <section
+      id="hero"
+      class="relative flex min-h-screen items-center justify-center px-6"
+      aria-labelledby="hero-title"
+    >
       <div class="relative z-10 text-center" appScrollAnimate>
         <p class="mb-4 text-xs tracking-[4px] uppercase" style="color: var(--color-secondary);">
           <app-typing-text [texts]="typingTexts()" />
@@ -30,7 +30,7 @@ import type { Profile, SiteConfig } from '../../../../core/models';
 
         <!-- Stats -->
         <div
-          class="mt-12 flex justify-center gap-12"
+          class="mt-12 flex justify-center gap-6 md:gap-12"
           appScrollAnimate
           [stagger]="true"
           role="group"
@@ -41,7 +41,9 @@ import type { Profile, SiteConfig } from '../../../../core/models';
               <span class="text-3xl font-bold text-white">
                 <app-animated-counter [target]="stat.numericValue" [suffix]="stat.suffix" />
               </span>
-              <span class="mt-1 block text-xs text-white/65 uppercase tracking-wider">{{ stat.label }}</span>
+              <span class="mt-1 block text-xs text-white/65 uppercase tracking-wider">{{
+                stat.label
+              }}</span>
             </div>
           }
         </div>
@@ -56,7 +58,12 @@ import type { Profile, SiteConfig } from '../../../../core/models';
             role="img"
             aria-label="Scroll down"
           >
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 14l-7 7m0 0l-7-7m7 7V3"
+            />
           </svg>
         </div>
       </div>
