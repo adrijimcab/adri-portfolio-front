@@ -29,13 +29,11 @@ import type { Project } from '../../../../core/models';
       <div class="mx-auto max-w-6xl">
         <app-section-header [title]="t.t('projects.title')" [label]="t.t('projects.label')" />
 
-        <div class="bento-grid">
+        <div class="projects-grid">
           @for (project of projects(); track project.id; let i = $index) {
             <a
               [routerLink]="['/', t.currentLang(), 'projects', project.slug]"
-              class="bento-cell group"
-              [class.bento-featured]="i === 0"
-              [class.bento-tall]="i === 1"
+              class="project-cell group"
               appScrollAnimate
               [delay]="i * 100"
               appTilt
@@ -49,19 +47,20 @@ import type { Project } from '../../../../core/models';
                       width="800"
                       height="450"
                       loading="lazy"
-                      sizes="(max-width: 768px) 100vw, 50vw"
+                      sizes="(max-width: 768px) 100vw, 33vw"
                       class="h-48 w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                   </div>
                 }
                 <h3
-                  class="text-xl font-bold text-white group-hover:text-transparent group-hover:bg-clip-text"
-                  style="background-image: linear-gradient(90deg, var(--color-primary), var(--color-secondary));"
+                  class="text-xl font-bold text-white transition-colors group-hover:text-white/80"
                 >
                   {{ project.title }}
                 </h3>
                 @if (project.short_description) {
-                  <p class="mt-2 text-sm text-white/50">{{ project.short_description }}</p>
+                  <p class="mt-2 text-sm text-white/50 line-clamp-2">
+                    {{ project.short_description }}
+                  </p>
                 }
                 @if (project.technologies.length) {
                   <div class="mt-4 flex flex-wrap gap-1.5">
@@ -90,40 +89,34 @@ import type { Project } from '../../../../core/models';
   `,
   styles: [
     `
-      .bento-grid {
+      .projects-grid {
         display: grid;
         gap: 1.5rem;
         grid-template-columns: 1fr;
       }
 
       @media (min-width: 640px) {
-        .bento-grid {
+        .projects-grid {
           grid-template-columns: repeat(2, 1fr);
         }
       }
 
-      @media (min-width: 768px) {
-        .bento-grid {
+      @media (min-width: 1024px) {
+        .projects-grid {
           grid-template-columns: repeat(3, 1fr);
-          grid-auto-rows: minmax(280px, auto);
-        }
-        .bento-featured {
-          grid-column: span 2;
-          grid-row: span 2;
-        }
-        .bento-tall {
-          grid-row: span 2;
         }
       }
 
-      .bento-cell {
+      .project-cell {
         display: block;
-        min-width: 0;
+        height: 100%;
       }
 
-      .bento-cell :host ::ng-deep app-glass-card,
-      .bento-cell app-glass-card {
+      .project-cell :host ::ng-deep app-glass-card,
+      .project-cell app-glass-card {
         height: 100%;
+        display: flex;
+        flex-direction: column;
       }
     `,
   ],
