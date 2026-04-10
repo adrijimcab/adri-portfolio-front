@@ -20,16 +20,23 @@ import { DomSanitizer } from '@angular/platform-browser';
 
         <div class="text-center mb-8" appScrollAnimate>
           @if (cvUrl()) {
-            <a [href]="rawUrl()" download
-               class="inline-flex items-center gap-2 rounded-lg px-6 py-3 text-sm font-medium text-white transition-all hover:scale-105"
-               style="background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));">
+            <a
+              [href]="rawUrl()"
+              download
+              class="inline-flex items-center gap-2 rounded-lg px-6 py-3 text-sm font-medium text-white transition-all hover:scale-105"
+              style="background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));"
+            >
               Download PDF
             </a>
           }
         </div>
 
         @if (cvUrl()) {
-          <div class="overflow-hidden rounded-2xl border border-white/[0.06]" appScrollAnimate [delay]="100">
+          <div
+            class="overflow-hidden rounded-2xl border border-white/[0.06]"
+            appScrollAnimate
+            [delay]="100"
+          >
             <iframe [src]="cvUrl()" class="h-[80vh] w-full" title="CV Preview"></iframe>
           </div>
         }
@@ -46,7 +53,16 @@ export class CvViewerComponent implements OnInit {
   readonly rawUrl = signal<string>('');
 
   ngOnInit() {
-    this.seo.updateMeta({ title: 'CV — Adrián Jiménez Cabello' });
+    this.seo.updateMeta({
+      title: 'CV — Adrián Jiménez Cabello',
+      description: 'Curriculum Vitae de Adrián Jiménez Cabello. Descargá o visualizá el CV en PDF.',
+      url: 'https://adrianjimenezcabello.dev/cv',
+      type: 'website',
+    });
+    this.seo.setBreadcrumbList([
+      { name: 'Home', url: 'https://adrianjimenezcabello.dev/' },
+      { name: 'CV', url: 'https://adrianjimenezcabello.dev/cv' },
+    ]);
 
     this.portfolio
       .getCvUrl()

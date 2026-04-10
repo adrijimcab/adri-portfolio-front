@@ -30,6 +30,7 @@ export class TranslateService {
     this.currentLang.set(lang);
     if (isPlatformBrowser(this.platformId)) {
       localStorage.setItem(STORAGE_KEY, lang);
+      document.documentElement.lang = lang;
     }
   }
 

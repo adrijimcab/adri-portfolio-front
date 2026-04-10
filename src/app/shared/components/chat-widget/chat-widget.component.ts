@@ -515,6 +515,7 @@ export class ChatWidgetComponent implements OnDestroy {
   }
 
   close(): void {
+    this.streamSub?.unsubscribe();
     this.isOpen.set(false);
   }
 

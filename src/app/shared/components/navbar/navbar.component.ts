@@ -147,7 +147,13 @@ import { MagneticDirective } from '../../directives/magnetic.directive';
         </div>
 
         <!-- Mobile hamburger -->
-        <button class="md:hidden text-white" (click)="mobileOpen.set(!mobileOpen())">
+        <button
+          type="button"
+          class="md:hidden text-white"
+          [attr.aria-label]="mobileOpen() ? 'Cerrar menú' : 'Abrir menú'"
+          [attr.aria-expanded]="mobileOpen()"
+          (click)="mobileOpen.set(!mobileOpen())"
+        >
           <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             @if (mobileOpen()) {
               <path

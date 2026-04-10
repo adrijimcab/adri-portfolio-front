@@ -18,6 +18,7 @@ type Lang = 'es' | 'en';
     >
       <button
         (click)="changeLang('es')"
+        [attr.aria-label]="'Cambiar a español'"
         class="rounded-md px-2 py-1 text-xs font-medium transition-all"
         [class]="
           translate.currentLang() === 'es'
@@ -29,6 +30,7 @@ type Lang = 'es' | 'en';
       </button>
       <button
         (click)="changeLang('en')"
+        [attr.aria-label]="'Switch to English'"
         class="rounded-md px-2 py-1 text-xs font-medium transition-all"
         [class]="
           translate.currentLang() === 'en'

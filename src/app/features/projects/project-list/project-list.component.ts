@@ -1,8 +1,10 @@
+import type { OnInit } from '@angular/core';
 import { Component, ChangeDetectionStrategy, inject, signal, computed } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { NgOptimizedImage } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { PortfolioService } from '../../../core/services/portfolio.service';
+import { SeoService } from '../../../core/services/seo.service';
 import { GlassmorphismCardComponent } from '../../../shared/components/glassmorphism-card/glassmorphism-card.component';
 import { TechPillComponent } from '../../../shared/components/tech-pill/tech-pill.component';
 import { SectionHeaderComponent } from '../../../shared/components/section-header/section-header.component';
@@ -10,6 +12,8 @@ import { ScrollAnimateDirective } from '../../../shared/directives/scroll-animat
 import { TiltDirective } from '../../../shared/directives/tilt.directive';
 import { TranslateService } from '../../../core/services/translate.service';
 import type { Project } from '../../../core/models';
+
+const SITE_ORIGIN = 'https://adrianjimenezcabello.dev';
 
 @Component({
   selector: 'app-project-list',
@@ -36,6 +40,7 @@ import type { Project } from '../../../core/models';
           <input
             type="text"
             placeholder="Search projects..."
+            aria-label="Search projects"
             [value]="searchQuery()"
             (input)="onSearchInput($event)"
             class="w-full rounded-xl border border-white/10 bg-white/5 px-5 py-3 text-sm text-white placeholder-white/30 outline-none backdrop-blur-sm transition-colors focus:border-white/20 focus:bg-white/[0.08]"
@@ -84,7 +89,8 @@ import type { Project } from '../../../core/models';
     </div>
   `,
 })
-export class ProjectListComponent {
+export class ProjectListComponent implements OnInit {
+  private readonly seo = inject(SeoService);
   readonly t = inject(TranslateService);
   private readonly portfolio = inject(PortfolioService);
   // Pull-based: toSignal cleans up automatically on component destroy.
@@ -92,6 +98,20 @@ export class ProjectListComponent {
     initialValue: [],
   });
   readonly searchQuery = signal('');
+
+  ngOnInit(): void {
+    this.seo.updateMeta({
+      title: 'Projects — Adrián Jiménez Cabello',
+      description:
+        'Explore all projects by Adrián Jiménez Cabello. Full-stack apps, open source tools and more.',
+      url: `${SITE_ORIGIN}/projects`,
+      type: 'website',
+    });
+    this.seo.setBreadcrumbList([
+      { name: 'Home', url: `${SITE_ORIGIN}/` },
+      { name: 'Projects', url: `${SITE_ORIGIN}/projects` },
+    ]);
+  }
 
   readonly filteredProjects = computed(() => {
     const query = this.searchQuery().toLowerCase().trim();

@@ -33,19 +33,36 @@ import type { GitHubRepo } from '../../../core/domain/entities';
         <table class="w-full text-left text-sm">
           <thead>
             <tr class="border-b border-white/[0.06] bg-white/[0.02]">
-              <th class="px-4 py-3 text-xs font-medium tracking-wider text-white/40 uppercase">Name</th>
-              <th class="px-4 py-3 text-xs font-medium tracking-wider text-white/40 uppercase">Language</th>
-              <th class="px-4 py-3 text-xs font-medium tracking-wider text-white/40 uppercase">Stars</th>
-              <th class="px-4 py-3 text-xs font-medium tracking-wider text-white/40 uppercase">Forks</th>
-              <th class="px-4 py-3 text-xs font-medium tracking-wider text-white/40 uppercase">Visible</th>
-              <th class="px-4 py-3 text-xs font-medium tracking-wider text-white/40 uppercase">Pinned</th>
+              <th class="px-4 py-3 text-xs font-medium tracking-wider text-white/40 uppercase">
+                Name
+              </th>
+              <th class="px-4 py-3 text-xs font-medium tracking-wider text-white/40 uppercase">
+                Language
+              </th>
+              <th class="px-4 py-3 text-xs font-medium tracking-wider text-white/40 uppercase">
+                Stars
+              </th>
+              <th class="px-4 py-3 text-xs font-medium tracking-wider text-white/40 uppercase">
+                Forks
+              </th>
+              <th class="px-4 py-3 text-xs font-medium tracking-wider text-white/40 uppercase">
+                Visible
+              </th>
+              <th class="px-4 py-3 text-xs font-medium tracking-wider text-white/40 uppercase">
+                Pinned
+              </th>
             </tr>
           </thead>
           <tbody>
             @for (repo of repos(); track repo.id) {
               <tr class="border-b border-white/[0.04] transition-colors hover:bg-white/[0.02]">
                 <td class="px-4 py-3">
-                  <a [href]="repo.html_url" target="_blank" class="text-indigo-400 hover:underline">
+                  <a
+                    [href]="repo.html_url"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="text-indigo-400 hover:underline"
+                  >
                     {{ repo.name }}
                   </a>
                   @if (repo.description) {
@@ -59,7 +76,11 @@ import type { GitHubRepo } from '../../../core/domain/entities';
                   <button
                     (click)="toggleVisible(repo)"
                     class="rounded px-2 py-1 text-xs transition-colors"
-                    [class]="repo.is_visible ? 'bg-green-500/10 text-green-400' : 'bg-white/[0.04] text-white/30'"
+                    [class]="
+                      repo.is_visible
+                        ? 'bg-green-500/10 text-green-400'
+                        : 'bg-white/[0.04] text-white/30'
+                    "
                   >
                     {{ repo.is_visible ? 'Yes' : 'No' }}
                   </button>
@@ -68,7 +89,11 @@ import type { GitHubRepo } from '../../../core/domain/entities';
                   <button
                     (click)="togglePinned(repo)"
                     class="rounded px-2 py-1 text-xs transition-colors"
-                    [class]="repo.is_pinned ? 'bg-indigo-500/10 text-indigo-400' : 'bg-white/[0.04] text-white/30'"
+                    [class]="
+                      repo.is_pinned
+                        ? 'bg-indigo-500/10 text-indigo-400'
+                        : 'bg-white/[0.04] text-white/30'
+                    "
                   >
                     {{ repo.is_pinned ? 'Yes' : 'No' }}
                   </button>
@@ -95,7 +120,9 @@ export class GithubManagerComponent implements OnInit {
   readonly repos = signal<(GitHubRepo & { is_visible: boolean })[]>([]);
   readonly syncing = signal(false);
 
-  ngOnInit(): void { this.loadData(); }
+  ngOnInit(): void {
+    this.loadData();
+  }
 
   private loadData(): void {
     this.admin

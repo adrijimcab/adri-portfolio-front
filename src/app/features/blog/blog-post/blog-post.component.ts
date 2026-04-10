@@ -1,4 +1,4 @@
-import type { ElementRef, OnInit } from '@angular/core';
+import type { ElementRef, OnDestroy, OnInit } from '@angular/core';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -188,7 +188,7 @@ import type { BlogPost } from '../blog.types';
     `,
   ],
 })
-export class BlogPostComponent implements OnInit {
+export class BlogPostComponent implements OnInit, OnDestroy {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly blog = inject(BlogService);
@@ -198,6 +198,7 @@ export class BlogPostComponent implements OnInit {
   private readonly sanitizer = inject(DomSanitizer);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly destroyRef = inject(DestroyRef);
+  private cleanupFns: (() => void)[] = [];
 
   private readonly articleEl = viewChild<ElementRef<HTMLElement>>('articleEl');
 
@@ -263,6 +264,13 @@ export class BlogPostComponent implements OnInit {
     ]);
   }
 
+  ngOnDestroy(): void {
+    for (const cleanup of this.cleanupFns) {
+      cleanup();
+    }
+    this.cleanupFns = [];
+  }
+
   /**
    * Injects a floating "Copy" button into every `<pre>` code block.
    * Click copies the code text and shows brief "Copied" feedback.
@@ -294,26 +302,42 @@ export class BlogPostComponent implements OnInit {
         zIndex: '10',
       } satisfies Partial<Record<string, string>>);
 
-      btn.addEventListener('mouseenter', () => {
+      const onMouseEnter = (): void => {
         btn.style.background = 'rgba(255,255,255,0.12)';
         btn.style.color = 'rgba(255,255,255,0.9)';
-      });
-      btn.addEventListener('mouseleave', () => {
+      };
+      const onMouseLeave = (): void => {
         btn.style.background = 'rgba(255,255,255,0.06)';
         btn.style.color = 'rgba(255,255,255,0.6)';
-      });
+      };
 
-      btn.addEventListener('click', () => {
+      let resetTimerId: ReturnType<typeof setTimeout> | null = null;
+
+      const onClick = (): void => {
         const codeEl = pre.querySelector('code');
         const text = codeEl?.textContent ?? pre.textContent ?? '';
         void navigator.clipboard.writeText(text).then(() => {
           btn.textContent = '\u2713 Copied';
           btn.style.color = '#4ade80';
-          setTimeout(() => {
+          resetTimerId = setTimeout(() => {
             btn.textContent = 'Copy';
             btn.style.color = 'rgba(255,255,255,0.6)';
+            resetTimerId = null;
           }, 2000);
         });
+      };
+
+      btn.addEventListener('mouseenter', onMouseEnter);
+      btn.addEventListener('mouseleave', onMouseLeave);
+      btn.addEventListener('click', onClick);
+
+      this.cleanupFns.push(() => {
+        btn.removeEventListener('mouseenter', onMouseEnter);
+        btn.removeEventListener('mouseleave', onMouseLeave);
+        btn.removeEventListener('click', onClick);
+        if (resetTimerId !== null) {
+          clearTimeout(resetTimerId);
+        }
       });
 
       pre.appendChild(btn);

@@ -72,7 +72,7 @@ import type { Project } from '../../../core/models';
                 <a
                   [href]="p.demo_url"
                   target="_blank"
-                  rel="noopener"
+                  rel="noopener noreferrer"
                   class="rounded-lg px-6 py-3 text-sm font-medium text-white transition-all hover:scale-105"
                   style="background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));"
                 >
@@ -83,7 +83,7 @@ import type { Project } from '../../../core/models';
                 <a
                   [href]="p.repo_url"
                   target="_blank"
-                  rel="noopener"
+                  rel="noopener noreferrer"
                   class="rounded-lg border border-white/10 px-6 py-3 text-sm text-white/60 transition-all hover:border-white/20 hover:text-white"
                 >
                   {{ t.t('projects.code') }}

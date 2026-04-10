@@ -20,6 +20,7 @@ export interface TableColumn {
           [ngModel]="searchTerm()"
           (ngModelChange)="searchTerm.set($event)"
           placeholder="Search..."
+          aria-label="Buscar en la tabla"
           class="w-full max-w-xs rounded-lg border border-white/[0.08] bg-white/[0.04] px-3 py-2 text-sm text-white placeholder-white/20 outline-none focus:border-indigo-500/50"
         />
         <button
@@ -42,13 +43,11 @@ export interface TableColumn {
                 >
                   {{ col.label }}
                   @if (sortKey() === col.key) {
-                    <span>{{ sortDir() === 'asc' ? ' \u2191' : ' \u2193' }}</span>
+                    <span>{{ sortDir() === 'asc' ? ' ↑' : ' ↓' }}</span>
                   }
                 </th>
               }
-              <th
-                class="px-4 py-3 text-xs font-medium tracking-wider text-white/40 uppercase"
-              >
+              <th class="px-4 py-3 text-xs font-medium tracking-wider text-white/40 uppercase">
                 Actions
               </th>
             </tr>
@@ -93,7 +92,10 @@ export interface TableColumn {
               </tr>
             } @empty {
               <tr>
-                <td [attr.colspan]="columns().length + 1" class="px-4 py-8 text-center text-white/30">
+                <td
+                  [attr.colspan]="columns().length + 1"
+                  class="px-4 py-8 text-center text-white/30"
+                >
                   No data found.
                 </td>
               </tr>
