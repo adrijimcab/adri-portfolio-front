@@ -90,7 +90,9 @@ interface ContactResponse {
                 <div aria-live="polite" [attr.aria-busy]="sending()">
                   <button
                     type="submit"
-                    [disabled]="sending()"
+                    [disabled]="
+                      sending() || !formName.trim() || !formEmail.trim() || !formMessage.trim()
+                    "
                     appMagnetic
                     [strength]="0.25"
                     class="w-full rounded-xl px-8 py-4 text-white font-medium transition-all hover:scale-[1.02] disabled:opacity-50"

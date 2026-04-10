@@ -15,6 +15,7 @@ import { ParticlesBackgroundComponent } from './shared/components/particles-back
 import { ScrollProgressComponent } from './shared/components/scroll-progress/scroll-progress.component';
 import { CommandPaletteComponent } from './shared/components/command-palette/command-palette.component';
 import { ChatWidgetComponent } from './shared/components/chat-widget/chat-widget.component';
+import { CookieConsentComponent } from './shared/components/cookie-consent/cookie-consent.component';
 import { KonamiDirective } from './shared/directives/konami.directive';
 import { ThemeService } from './core/services/theme.service';
 import { KONAMI_FADE_MS } from './shared/constants/timing';
@@ -32,6 +33,7 @@ import { KONAMI_FADE_MS } from './shared/constants/timing';
     ScrollProgressComponent,
     CommandPaletteComponent,
     ChatWidgetComponent,
+    CookieConsentComponent,
     KonamiDirective,
   ],
   template: `
@@ -60,6 +62,7 @@ import { KONAMI_FADE_MS } from './shared/constants/timing';
         <span class="text-xl text-white">&#10024;</span>
       </button>
     }
+    <app-cookie-consent />
     @if (konamiActive()) {
       <div class="konami-toast" role="status" aria-live="polite">🎮 Konami unlocked</div>
     }

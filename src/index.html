@@ -85,13 +85,24 @@
       content="Adrián Jiménez Cabello — Full Stack Developer portfolio"
     />
 
-    <!-- Google Analytics (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-N59YCT3EWB"></script>
+    <!-- Consent default: deny all until user accepts (GDPR) -->
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag() {
         dataLayer.push(arguments);
       }
+      gtag('consent', 'default', {
+        analytics_storage: 'denied',
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+        wait_for_update: 500,
+      });
+    </script>
+
+    <!-- Google Analytics (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-N59YCT3EWB"></script>
+    <script>
       gtag('js', new Date());
       gtag('config', 'G-N59YCT3EWB');
     </script>

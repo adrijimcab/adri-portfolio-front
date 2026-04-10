@@ -52,23 +52,25 @@ import type { Project } from '../../../../core/models';
                     />
                   </div>
                 }
-                <h3
-                  class="text-xl font-bold text-white transition-colors group-hover:text-white/80"
-                >
-                  {{ project.title }}
-                </h3>
-                @if (project.short_description) {
-                  <p class="mt-2 text-sm text-white/50 line-clamp-2">
-                    {{ project.short_description }}
-                  </p>
-                }
-                @if (project.technologies.length) {
-                  <div class="mt-4 flex flex-wrap gap-1.5">
-                    @for (tech of project.technologies; track tech.id) {
-                      <app-tech-pill [name]="tech.name" [iconSlug]="tech.icon_slug" />
-                    }
-                  </div>
-                }
+                <div class="flex flex-1 flex-col">
+                  <h3
+                    class="text-xl font-bold text-white transition-colors group-hover:text-white/80"
+                  >
+                    {{ project.title }}
+                  </h3>
+                  @if (project.short_description) {
+                    <p class="mt-2 text-sm text-white/50 line-clamp-2">
+                      {{ project.short_description }}
+                    </p>
+                  }
+                  @if (project.technologies.length) {
+                    <div class="mt-auto pt-4 flex flex-wrap gap-1.5">
+                      @for (tech of project.technologies; track tech.id) {
+                        <app-tech-pill [name]="tech.name" [iconSlug]="tech.icon_slug" />
+                      }
+                    </div>
+                  }
+                </div>
               </app-glass-card>
             </a>
           }
@@ -112,11 +114,8 @@ import type { Project } from '../../../../core/models';
         height: 100%;
       }
 
-      .project-cell :host ::ng-deep app-glass-card,
       .project-cell app-glass-card {
         height: 100%;
-        display: flex;
-        flex-direction: column;
       }
     `,
   ],

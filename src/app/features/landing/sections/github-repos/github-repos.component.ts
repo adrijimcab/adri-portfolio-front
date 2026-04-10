@@ -37,12 +37,12 @@ import { getLanguageColor } from '../../../../shared/helpers/language-colors';
         } @else {
           <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             @for (repo of sortedRepos(); track repo.id; let i = $index) {
-              <div appScrollAnimate [delay]="i * 60" appTilt>
+              <div class="h-full" appScrollAnimate [delay]="i * 60" appTilt>
                 <a
                   [href]="repo.html_url"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="block group"
+                  class="block group h-full"
                   [attr.aria-label]="repo.name + ' — ver en GitHub (abre en nueva ventana)'"
                 >
                   <app-glass-card>
@@ -102,7 +102,7 @@ import { getLanguageColor } from '../../../../shared/helpers/language-colors';
                     </div>
 
                     @if (repo.topics.length) {
-                      <div class="mt-3 flex flex-wrap gap-1">
+                      <div class="mt-auto pt-3 flex flex-wrap gap-1">
                         @for (topic of repo.topics.slice(0, 5); track topic) {
                           <span
                             class="rounded-full px-2 py-0.5 text-[10px] font-medium border border-white/10 text-white/65 bg-white/[0.03]"

@@ -132,7 +132,6 @@ import type { Certification } from '../../../../core/models';
         height: 100%;
       }
 
-      .cert-cell :host ::ng-deep app-glass-card,
       .cert-cell app-glass-card {
         height: 100%;
       }
