@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, input, inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input, inject, signal } from '@angular/core';
 import { SectionHeaderComponent } from '../../../../shared/components/section-header/section-header.component';
 import { GlassmorphismCardComponent } from '../../../../shared/components/glassmorphism-card/glassmorphism-card.component';
 import { ScrollAnimateDirective } from '../../../../shared/directives/scroll-animate.directive';
@@ -19,7 +19,10 @@ import type { TechnologyGroup } from '../../../../core/models';
           @for (group of groups(); track group.category; let i = $index) {
             <div appScrollAnimate [delay]="i * 80">
               <app-glass-card>
-                <h3 class="mb-4 text-sm font-semibold uppercase tracking-wider" style="color: var(--color-secondary);">
+                <h3
+                  class="mb-4 text-sm font-semibold uppercase tracking-wider"
+                  style="color: var(--color-secondary);"
+                >
                   {{ group.category }}
                 </h3>
                 <div class="space-y-3">
@@ -31,12 +34,29 @@ import type { TechnologyGroup } from '../../../../core/models';
                         would add zero value and width/height are font-sized (h-6 w-6).
                         loading=lazy + decoding=async still keeps this off the critical path.
                       -->
-                      <img [src]="'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/' + tech.icon_slug + '/' + tech.icon_slug + '-original.svg'"
-                           [alt]="tech.name"
-                           class="h-6 w-6 transition-transform group-hover:scale-125"
-                           loading="lazy"
-                           decoding="async"
-                           (error)="onImgError($event)" />
+                      @if (failedIcons().has(tech.id)) {
+                        <span
+                          class="flex h-6 w-6 items-center justify-center rounded bg-white/[0.06] text-[0.5rem] font-bold uppercase leading-none"
+                          style="color: var(--color-secondary);"
+                          [attr.aria-label]="tech.name"
+                          >{{ tech.name.slice(0, 2) }}</span
+                        >
+                      } @else {
+                        <img
+                          [src]="
+                            'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/' +
+                            tech.icon_slug +
+                            '/' +
+                            tech.icon_slug +
+                            '-original.svg'
+                          "
+                          [alt]="tech.name"
+                          class="h-6 w-6 transition-transform group-hover:scale-125"
+                          loading="lazy"
+                          decoding="async"
+                          (error)="onImgError(tech.id)"
+                        />
+                      }
                       <div class="flex-1">
                         <div class="flex items-center justify-between">
                           <span class="text-sm text-white/80">{{ tech.name }}</span>
@@ -46,9 +66,11 @@ import type { TechnologyGroup } from '../../../../core/models';
                         </div>
                         @if (tech.proficiency_level) {
                           <div class="mt-1 h-1 w-full rounded-full bg-white/[0.06]">
-                            <div class="h-full rounded-full transition-all duration-700"
-                                 [style.width.%]="tech.proficiency_level"
-                                 style="background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));"></div>
+                            <div
+                              class="h-full rounded-full transition-all duration-700"
+                              [style.width.%]="tech.proficiency_level"
+                              style="background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));"
+                            ></div>
                           </div>
                         }
                       </div>
@@ -66,8 +88,9 @@ import type { TechnologyGroup } from '../../../../core/models';
 export class TechStackComponent {
   readonly t = inject(TranslateService);
   groups = input<TechnologyGroup[]>([]);
+  readonly failedIcons = signal<Set<string>>(new Set());
 
-  onImgError(event: Event) {
-    (event.target as HTMLImageElement).style.display = 'none';
+  onImgError(techId: string): void {
+    this.failedIcons.update((prev) => new Set(prev).add(techId));
   }
 }

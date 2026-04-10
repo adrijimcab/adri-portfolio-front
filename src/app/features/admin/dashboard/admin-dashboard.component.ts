@@ -1,6 +1,8 @@
 import type { OnInit } from '@angular/core';
 import { Component, ChangeDetectionStrategy, inject, signal, DestroyRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { forkJoin } from 'rxjs';
+import { catchError, of } from 'rxjs';
 import { AdminService } from '../../../core/services/admin.service';
 import { ToastService } from '../../../shared/components/toast/toast.service';
 
@@ -21,9 +23,7 @@ interface StatCard {
       <!-- Stats Grid -->
       <div class="grid grid-cols-2 gap-4 lg:grid-cols-4">
         @for (stat of stats(); track stat.label) {
-          <div
-            class="rounded-xl border border-white/[0.06] bg-white/[0.03] p-5 backdrop-blur-xl"
-          >
+          <div class="rounded-xl border border-white/[0.06] bg-white/[0.03] p-5 backdrop-blur-xl">
             <p class="text-xs font-medium text-white/40 uppercase">{{ stat.label }}</p>
             <p class="mt-2 text-3xl font-bold" [style.color]="stat.color">{{ stat.count }}</p>
           </div>
@@ -64,49 +64,20 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   private loadStats(): void {
-    let experiences = 0;
-    let projects = 0;
-    let technologies = 0;
-    let certifications = 0;
-
-    this.admin
-      .getExperiences()
+    forkJoin([
+      this.admin.getExperiences().pipe(catchError(() => of([]))),
+      this.admin.getProjects().pipe(catchError(() => of([]))),
+      this.admin.getTechnologies().pipe(catchError(() => of([]))),
+      this.admin.getCertifications().pipe(catchError(() => of([]))),
+    ])
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (data) => {
-          experiences = data.length;
-          this.updateStats(experiences, projects, technologies, certifications);
-        },
-      });
-    this.admin
-      .getProjects()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (data) => {
-          projects = data.length;
-          this.updateStats(experiences, projects, technologies, certifications);
-        },
-      });
-    this.admin
-      .getTechnologies()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (data) => {
-          technologies = data.length;
-          this.updateStats(experiences, projects, technologies, certifications);
-        },
-        error: () => {
-          /* technologies endpoint may return grouped data; fall through */
-        },
-      });
-    this.admin
-      .getCertifications()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (data) => {
-          certifications = data.length;
-          this.updateStats(experiences, projects, technologies, certifications);
-        },
+      .subscribe(([experiences, projects, technologies, certifications]) => {
+        this.updateStats(
+          experiences.length,
+          projects.length,
+          technologies.length,
+          certifications.length,
+        );
       });
   }
 

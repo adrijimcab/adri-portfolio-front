@@ -1,6 +1,6 @@
-import type { ApplicationConfig} from '@angular/core';
+import type { ApplicationConfig } from '@angular/core';
 import { provideBrowserGlobalErrorListeners } from '@angular/core';
-import { provideRouter, withViewTransitions } from '@angular/router';
+import { provideRouter, withViewTransitions, withInMemoryScrolling } from '@angular/router';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { cacheInterceptor } from './core/interceptors/cache.interceptor';
@@ -13,7 +13,11 @@ import { HttpPortfolioRepository } from './core/infrastructure/http';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideRouter(routes, withViewTransitions()),
+    provideRouter(
+      routes,
+      withViewTransitions(),
+      withInMemoryScrolling({ scrollPositionRestoration: 'top', anchorScrolling: 'enabled' }),
+    ),
     provideHttpClient(withFetch(), withInterceptors([authInterceptor, cacheInterceptor])),
     provideClientHydration(withEventReplay()),
     provideAnimationsAsync(),

@@ -25,8 +25,8 @@ interface StackCategory {
         </p>
         <h1 class="text-4xl font-bold text-white md:text-5xl">Tech stack</h1>
         <p class="mt-4 max-w-xl text-white/60">
-          What this portfolio is built on, and what I reach for day to day. Every
-          choice has a reason. No resume-driven development.
+          What this portfolio is built on, and what I reach for day to day. Every choice has a
+          reason. No resume-driven development.
         </p>
       </header>
 
@@ -40,7 +40,12 @@ interface StackCategory {
               <li>
                 <p class="font-medium text-white">
                   @if (item.url) {
-                    <a [href]="item.url" target="_blank" rel="noopener noreferrer" class="hover:text-white/70">
+                    <a
+                      [href]="item.url"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="hover:text-white/70"
+                    >
                       {{ item.name }} ↗
                     </a>
                   } @else {
@@ -63,50 +68,109 @@ export class StackComponent implements OnInit {
     {
       title: 'Frontend',
       items: [
-        { name: 'Angular 21 (zoneless + signals)', why: 'No Zone.js, signals everywhere, SSR with hydration that actually replays events. The version that finally clicked for me.', url: 'https://angular.dev' },
-        { name: 'Tailwind CSS 4', why: 'No BEM, no class wars. Design tokens live in CSS variables and you compose from there.', url: 'https://tailwindcss.com' },
-        { name: 'Standalone components', why: 'No NgModules. Smaller bundles, lazy routes with loadComponent, less ceremony.' },
+        {
+          name: 'Angular 21 (zoneless + signals)',
+          why: 'No Zone.js, signals everywhere, SSR with hydration that actually replays events. The version that finally clicked for me.',
+          url: 'https://angular.dev',
+        },
+        {
+          name: 'Tailwind CSS 4',
+          why: 'No BEM, no class wars. Design tokens live in CSS variables and you compose from there.',
+          url: 'https://tailwindcss.com',
+        },
+        {
+          name: 'Standalone components',
+          why: 'No NgModules. Smaller bundles, lazy routes with loadComponent, less ceremony.',
+        },
       ],
     },
     {
       title: 'Backend',
       items: [
-        { name: 'NestJS', why: 'DI, guards, interceptors. Strict TypeScript feels at home here.', url: 'https://nestjs.com' },
-        { name: 'Express 5 (under Nest)', why: 'The middleware ecosystem is mature. Helmet, throttler, validation pipes — they just work.' },
-        { name: 'class-validator + class-transformer', why: 'DTO validation that lives next to the types instead of fighting them.' },
+        {
+          name: 'NestJS',
+          why: 'DI, guards, interceptors. Strict TypeScript feels at home here.',
+          url: 'https://nestjs.com',
+        },
+        {
+          name: 'Express 5 (under Nest)',
+          why: 'The middleware ecosystem is mature. Helmet, throttler, validation pipes — they just work.',
+        },
+        {
+          name: 'class-validator + class-transformer',
+          why: 'DTO validation that lives next to the types instead of fighting them.',
+        },
       ],
     },
     {
       title: 'Database',
       items: [
-        { name: 'Supabase (Postgres)', why: 'It\'s real Postgres, with RLS, auth and storage on top. One vendor instead of stitching three together.', url: 'https://supabase.com' },
-        { name: 'Migrations as code', why: 'Versioned SQL in the repo, pushed to production with supabase db push.' },
-        { name: 'Row Level Security', why: 'Authorization lives in the database. Reads are public, writes are admin-only, and the rule is right next to the schema.' },
+        {
+          name: 'Supabase (Postgres)',
+          why: "It's real Postgres, with RLS, auth and storage on top. One vendor instead of stitching three together.",
+          url: 'https://supabase.com',
+        },
+        {
+          name: 'Migrations as code',
+          why: 'Versioned SQL in the repo, pushed to production with supabase db push.',
+        },
+        {
+          name: 'Row Level Security',
+          why: 'Authorization lives in the database. Reads are public, writes are admin-only, and the rule is right next to the schema.',
+        },
       ],
     },
     {
       title: 'Hosting & deployment',
       items: [
-        { name: 'Vercel', why: 'Auto-deploy from GitHub. Preview URL on every PR. I never have to think about it.', url: 'https://vercel.com' },
-        { name: 'Railway', why: 'The NestJS API runs here. Same story: push to main, container redeploys.', url: 'https://railway.com' },
-        { name: 'Cloudflare DNS', why: 'Just registrar and DNS. Proxy off. Vercel handles SSL.', url: 'https://cloudflare.com' },
+        {
+          name: 'Vercel',
+          why: 'Auto-deploy from GitHub. Preview URL on every PR. I never have to think about it.',
+          url: 'https://vercel.com',
+        },
+        {
+          name: 'Railway',
+          why: 'The NestJS API runs here. Same story: push to main, container redeploys.',
+          url: 'https://railway.com',
+        },
+        {
+          name: 'Cloudflare DNS',
+          why: 'Just registrar and DNS. Proxy off. Vercel handles SSL.',
+          url: 'https://cloudflare.com',
+        },
       ],
     },
     {
       title: 'Quality & security',
       items: [
-        { name: 'CSP, HSTS, X-Frame-Options', why: 'Tells the browser exactly where scripts and frames can come from. Cheap insurance.' },
-        { name: 'Two-tier rate limiting', why: 'Generous on public endpoints, strict on auth. Slows brute force without annoying real users.' },
-        { name: 'Sanitized exception filter', why: 'Production gets a generic error. Full stack traces stay on the server, where they belong.' },
+        {
+          name: 'CSP, HSTS, X-Frame-Options',
+          why: 'Tells the browser exactly where scripts and frames can come from. Cheap insurance.',
+        },
+        {
+          name: 'Two-tier rate limiting',
+          why: 'Generous on public endpoints, strict on auth. Slows brute force without annoying real users.',
+        },
+        {
+          name: 'Sanitized exception filter',
+          why: 'Production gets a generic error. Full stack traces stay on the server, where they belong.',
+        },
       ],
     },
   ];
 
   ngOnInit(): void {
+    const origin = 'https://adrianjimenezcabello.dev';
+
     this.seo.updateMeta({
       title: 'Stack — Adrián Jiménez Cabello',
       description: 'What this portfolio runs on, and why I picked each piece.',
-      url: 'https://adrianjimenezcabello.dev/stack',
+      url: `${origin}/stack`,
     });
+
+    this.seo.setBreadcrumbList([
+      { name: 'Home', url: `${origin}/` },
+      { name: 'Stack', url: `${origin}/stack` },
+    ]);
   }
 }

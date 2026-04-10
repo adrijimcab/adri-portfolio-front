@@ -81,12 +81,27 @@ export class BlogListComponent implements OnInit {
   private readonly viewCounts = signal<ReadonlyMap<string, number>>(new Map());
 
   ngOnInit(): void {
+    const origin = 'https://adrianjimenezcabello.dev';
+
     this.seo.updateMeta({
       title: 'Blog — Adrián Jiménez Cabello',
       description:
         'Technical writing on Angular, NestJS and Supabase, plus the things I learn while shipping.',
-      url: 'https://adrianjimenezcabello.dev/blog',
+      url: `${origin}/blog`,
     });
+
+    this.seo.setBreadcrumbList([
+      { name: 'Home', url: `${origin}/` },
+      { name: 'Blog', url: `${origin}/blog` },
+    ]);
+
+    const allPosts = this.blog.getAllPosts();
+    if (allPosts.length > 0) {
+      this.seo.setItemList(
+        allPosts.map((p) => ({ name: p.title, url: `${origin}/blog/${p.slug}` })),
+        'schema-blog-list',
+      );
+    }
 
     this.blog
       .getAllViewCounts()

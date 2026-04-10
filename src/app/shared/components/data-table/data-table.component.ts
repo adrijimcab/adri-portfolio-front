@@ -34,16 +34,27 @@ export interface TableColumn {
       <!-- Table -->
       <div class="overflow-x-auto rounded-xl border border-white/[0.06]">
         <table class="w-full text-left text-sm">
+          <caption class="sr-only">
+            Data table
+          </caption>
           <thead>
             <tr class="border-b border-white/[0.06] bg-white/[0.02]">
               @for (col of columns(); track col.key) {
                 <th
                   class="cursor-pointer px-4 py-3 text-xs font-medium tracking-wider text-white/40 uppercase select-none"
                   (click)="toggleSort(col.key)"
+                  [attr.aria-label]="'Sort by ' + col.label"
+                  [attr.aria-sort]="
+                    sortKey() === col.key
+                      ? sortDir() === 'asc'
+                        ? 'ascending'
+                        : 'descending'
+                      : null
+                  "
                 >
                   {{ col.label }}
                   @if (sortKey() === col.key) {
-                    <span>{{ sortDir() === 'asc' ? ' ↑' : ' ↓' }}</span>
+                    <span aria-hidden="true">{{ sortDir() === 'asc' ? ' ↑' : ' ↓' }}</span>
                   }
                 </th>
               }
@@ -77,13 +88,13 @@ export interface TableColumn {
                   <div class="flex gap-2">
                     <button
                       (click)="rowEdit.emit(row)"
-                      class="rounded px-2 py-1 text-xs text-indigo-400 transition-colors hover:bg-indigo-500/10"
+                      class="rounded px-3 py-2 text-xs text-indigo-400 transition-colors hover:bg-indigo-500/10"
                     >
                       Edit
                     </button>
                     <button
                       (click)="rowDelete.emit(row)"
-                      class="rounded px-2 py-1 text-xs text-red-400 transition-colors hover:bg-red-500/10"
+                      class="rounded px-3 py-2 text-xs text-red-400 transition-colors hover:bg-red-500/10"
                     >
                       Delete
                     </button>
@@ -95,6 +106,8 @@ export interface TableColumn {
                 <td
                   [attr.colspan]="columns().length + 1"
                   class="px-4 py-8 text-center text-white/30"
+                  role="status"
+                  aria-live="polite"
                 >
                   No data found.
                 </td>

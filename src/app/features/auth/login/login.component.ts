@@ -38,7 +38,9 @@ import { AuthService } from '../../../core/services/auth.service';
           <!-- Login Form -->
           <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="space-y-5">
             <div>
-              <label for="login-email" class="mb-1.5 block text-xs font-medium text-white/60">Email</label>
+              <label for="login-email" class="mb-1.5 block text-xs font-medium text-white/60"
+                >Email</label
+              >
               <input
                 id="login-email"
                 formControlName="email"
@@ -49,7 +51,9 @@ import { AuthService } from '../../../core/services/auth.service';
               />
             </div>
             <div>
-              <label for="login-password" class="mb-1.5 block text-xs font-medium text-white/60">Password</label>
+              <label for="login-password" class="mb-1.5 block text-xs font-medium text-white/60"
+                >Password</label
+              >
               <input
                 id="login-password"
                 formControlName="password"
@@ -61,39 +65,48 @@ import { AuthService } from '../../../core/services/auth.service';
             </div>
 
             @if (errorMessage()) {
-              <div class="rounded-lg border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-400">
+              <div
+                class="rounded-lg border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-400"
+              >
                 {{ errorMessage() }}
               </div>
             }
 
-            <button
-              type="submit"
-              [disabled]="loading()"
-              class="w-full rounded-lg bg-gradient-to-r from-indigo-500 to-purple-500 px-4 py-3 text-sm font-semibold text-white transition-all hover:from-indigo-600 hover:to-purple-600 disabled:opacity-50"
-            >
-              @if (loading()) {
-                <span class="inline-flex items-center gap-2">
-                  <svg class="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
-                    <circle
-                      class="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      stroke-width="4"
-                    ></circle>
-                    <path
-                      class="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                    ></path>
-                  </svg>
-                  Signing in...
-                </span>
-              } @else {
-                Sign In
-              }
-            </button>
+            <div aria-live="polite" [attr.aria-busy]="loading()">
+              <button
+                type="submit"
+                [disabled]="loading()"
+                class="w-full rounded-lg bg-gradient-to-r from-indigo-500 to-purple-500 px-4 py-3 text-sm font-semibold text-white transition-all hover:from-indigo-600 hover:to-purple-600 disabled:opacity-50"
+              >
+                @if (loading()) {
+                  <span class="inline-flex items-center gap-2">
+                    <svg
+                      class="h-4 w-4 animate-spin"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      aria-hidden="true"
+                    >
+                      <circle
+                        class="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        stroke-width="4"
+                      ></circle>
+                      <path
+                        class="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                      ></path>
+                    </svg>
+                    Signing in...
+                  </span>
+                } @else {
+                  Sign In
+                }
+              </button>
+            </div>
 
             <div class="text-center">
               <button
@@ -112,7 +125,9 @@ import { AuthService } from '../../../core/services/auth.service';
               Enter your email and we'll send you a password reset link.
             </p>
             <div>
-              <label for="forgot-email" class="mb-1.5 block text-xs font-medium text-white/60">Email</label>
+              <label for="forgot-email" class="mb-1.5 block text-xs font-medium text-white/60"
+                >Email</label
+              >
               <input
                 id="forgot-email"
                 formControlName="email"
@@ -187,24 +202,30 @@ export class LoginComponent {
     this.errorMessage.set('');
 
     const { email, password } = this.loginForm.getRawValue();
-    this.auth.login(email, password).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: (res) => {
-        this.auth.handleLoginSuccess(res);
-        this.loading.set(false);
-        void this.router.navigate(['/admin']);
-      },
-      error: (err: unknown) => {
-        this.loading.set(false);
-        const status = err instanceof Object && 'status' in err ? (err as { status: number }).status : undefined;
-        if (status === 401) {
-          this.errorMessage.set('Invalid email or password.');
-        } else if (status === 0) {
-          this.errorMessage.set('Network error. Please check your connection.');
-        } else {
-          this.errorMessage.set('An unexpected error occurred. Please try again.');
-        }
-      },
-    });
+    this.auth
+      .login(email, password)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (res) => {
+          this.auth.handleLoginSuccess(res);
+          this.loading.set(false);
+          void this.router.navigate(['/admin']);
+        },
+        error: (err: unknown) => {
+          this.loading.set(false);
+          const status =
+            err instanceof Object && 'status' in err
+              ? (err as { status: number }).status
+              : undefined;
+          if (status === 401) {
+            this.errorMessage.set('Invalid email or password.');
+          } else if (status === 0) {
+            this.errorMessage.set('Network error. Please check your connection.');
+          } else {
+            this.errorMessage.set('An unexpected error occurred. Please try again.');
+          }
+        },
+      });
   }
 
   onForgotPassword(): void {
@@ -214,17 +235,20 @@ export class LoginComponent {
     this.forgotMessage.set('');
 
     const { email } = this.forgotForm.getRawValue();
-    this.auth.forgotPassword(email).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: () => {
-        this.loading.set(false);
-        this.forgotSuccess.set(true);
-        this.forgotMessage.set('Reset link sent! Check your email.');
-      },
-      error: () => {
-        this.loading.set(false);
-        this.forgotSuccess.set(false);
-        this.forgotMessage.set('Failed to send reset link. Please try again.');
-      },
-    });
+    this.auth
+      .forgotPassword(email)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.loading.set(false);
+          this.forgotSuccess.set(true);
+          this.forgotMessage.set('Reset link sent! Check your email.');
+        },
+        error: () => {
+          this.loading.set(false);
+          this.forgotSuccess.set(false);
+          this.forgotMessage.set('Failed to send reset link. Please try again.');
+        },
+      });
   }
 }

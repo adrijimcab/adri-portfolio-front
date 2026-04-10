@@ -37,7 +37,7 @@ interface Command {
         class="cmdk-backdrop"
         role="dialog"
         aria-modal="true"
-        aria-label="Command palette"
+        aria-labelledby="cmdk-title"
         (click)="close()"
         (keydown.escape)="close()"
       >
@@ -48,6 +48,7 @@ interface Command {
           (click)="$event.stopPropagation()"
           (keydown.escape)="close()"
         >
+          <h2 id="cmdk-title" class="sr-only">Command palette</h2>
           <input
             #search
             class="cmdk-input"

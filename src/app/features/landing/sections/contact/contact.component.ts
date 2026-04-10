@@ -1,4 +1,11 @@
-import { Component, ChangeDetectionStrategy, DestroyRef, input, inject, signal } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  DestroyRef,
+  input,
+  inject,
+  signal,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { SectionHeaderComponent } from '../../../../shared/components/section-header/section-header.component';
@@ -17,7 +24,14 @@ interface ContactResponse {
 @Component({
   selector: 'app-contact',
   standalone: true,
-  imports: [FormsModule, SectionHeaderComponent, GlassmorphismCardComponent, LinkedinWidgetComponent, ScrollAnimateDirective, MagneticDirective],
+  imports: [
+    FormsModule,
+    SectionHeaderComponent,
+    GlassmorphismCardComponent,
+    LinkedinWidgetComponent,
+    ScrollAnimateDirective,
+    MagneticDirective,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section id="contact" class="py-24 px-6">
@@ -29,54 +43,105 @@ interface ContactResponse {
             @if (!formSent()) {
               <p class="mb-6 text-white/60">{{ t.t('contact.subtitle') }}</p>
 
-              <form (ngSubmit)="sendMessage()" class="space-y-4 text-left">
+              <form
+                (ngSubmit)="sendMessage()"
+                class="space-y-4 text-left"
+                [attr.aria-describedby]="formError() ? 'contact-error' : null"
+              >
                 <div>
-                  <input id="contact-name" type="text" [(ngModel)]="formName" name="name" autocomplete="name" [placeholder]="t.t('contact.name')" required
-                    class="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder-white/30 outline-none transition-colors focus:border-white/20 focus:bg-white/[0.08]" />
+                  <input
+                    id="contact-name"
+                    type="text"
+                    [(ngModel)]="formName"
+                    name="name"
+                    autocomplete="name"
+                    [placeholder]="t.t('contact.name')"
+                    required
+                    aria-required="true"
+                    class="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder-white/30 outline-none transition-colors focus:border-white/20 focus:bg-white/[0.08]"
+                  />
                 </div>
                 <div>
-                  <input id="contact-email" type="email" [(ngModel)]="formEmail" name="email" autocomplete="email" [placeholder]="t.t('contact.email')" required
-                    class="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder-white/30 outline-none transition-colors focus:border-white/20 focus:bg-white/[0.08]" />
+                  <input
+                    id="contact-email"
+                    type="email"
+                    [(ngModel)]="formEmail"
+                    name="email"
+                    autocomplete="email"
+                    [placeholder]="t.t('contact.email')"
+                    required
+                    aria-required="true"
+                    class="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder-white/30 outline-none transition-colors focus:border-white/20 focus:bg-white/[0.08]"
+                  />
                 </div>
                 <div>
-                  <textarea id="contact-message" [(ngModel)]="formMessage" name="message" autocomplete="off" [placeholder]="t.t('contact.message')" required rows="4"
-                    class="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder-white/30 outline-none transition-colors focus:border-white/20 focus:bg-white/[0.08] resize-none"></textarea>
+                  <textarea
+                    id="contact-message"
+                    [(ngModel)]="formMessage"
+                    name="message"
+                    autocomplete="off"
+                    [placeholder]="t.t('contact.message')"
+                    required
+                    aria-required="true"
+                    rows="4"
+                    class="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder-white/30 outline-none transition-colors focus:border-white/20 focus:bg-white/[0.08] resize-none"
+                  ></textarea>
                 </div>
-                <button type="submit" [disabled]="sending()"
-                  appMagnetic [strength]="0.25"
-                  class="w-full rounded-xl px-8 py-4 text-white font-medium transition-all hover:scale-[1.02] disabled:opacity-50"
-                  style="background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));">
-                  @if (sending()) {
-                    {{ t.t('contact.sending') }}
-                  } @else {
-                    {{ t.t('contact.send') }}
-                  }
-                </button>
+                <div aria-live="polite" [attr.aria-busy]="sending()">
+                  <button
+                    type="submit"
+                    [disabled]="sending()"
+                    appMagnetic
+                    [strength]="0.25"
+                    class="w-full rounded-xl px-8 py-4 text-white font-medium transition-all hover:scale-[1.02] disabled:opacity-50"
+                    style="background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));"
+                  >
+                    @if (sending()) {
+                      {{ t.t('contact.sending') }}
+                    } @else {
+                      {{ t.t('contact.send') }}
+                    }
+                  </button>
+                </div>
               </form>
 
               @if (formError()) {
-                <p class="mt-4 text-sm text-red-400">{{ formError() }}</p>
+                <p id="contact-error" class="mt-4 text-sm text-red-400" role="alert">
+                  {{ formError() }}
+                </p>
               }
             } @else {
               <div class="py-8">
-                <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full"
-                     style="background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));">
-                  <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                <div
+                  class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full"
+                  style="background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));"
+                >
+                  <svg
+                    class="h-8 w-8 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M5 13l4 4L19 7"
+                    />
                   </svg>
                 </div>
                 <h3 class="text-xl font-bold text-white">{{ t.t('contact.sent_title') }}</h3>
                 <p class="mt-2 text-white/60">{{ t.t('contact.sent_message') }}</p>
               </div>
             }
-
           </app-glass-card>
         </div>
 
         <div class="mt-8" appScrollAnimate [delay]="200">
           <app-linkedin-widget
             [name]="profile()?.full_name || 'Adrián Jiménez Cabello'"
-            [title]="profile()?.title || 'Frontend Architect'" />
+            [title]="profile()?.title || 'Frontend Architect'"
+          />
         </div>
       </div>
     </section>

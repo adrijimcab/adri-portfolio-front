@@ -55,15 +55,15 @@ const SUGGESTED_QUESTIONS_EN = [
 
       <!-- Side-sheet panel -->
       @if (isOpen()) {
-        <div
-          class="chat-backdrop"
-          (click)="close()"
+        <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -->
+        <div class="chat-backdrop" (click)="close()"></div>
+        <aside
+          class="chat-panel"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Chat con Adrián"
           (keydown.escape)="close()"
-          tabindex="-1"
-          role="button"
-          aria-label="Close chat"
-        ></div>
-        <aside class="chat-panel" role="dialog" aria-modal="true" aria-label="Chat con Adrián">
+        >
           <!-- Header -->
           <header class="chat-header">
             <h2 class="text-sm font-semibold text-white/90">Pregúntale a Adrián</h2>
