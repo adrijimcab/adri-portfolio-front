@@ -60,6 +60,16 @@ const publicChildren: Routes = [
       import('./features/guestbook/guestbook.component').then((m) => m.GuestbookComponent),
   },
   {
+    path: 'battle',
+    loadComponent: () =>
+      import('./features/battle/battle.component').then((m) => m.BattleComponent),
+  },
+  {
+    path: 'services',
+    loadComponent: () =>
+      import('./features/services/services.component').then((m) => m.ServicesComponent),
+  },
+  {
     path: 'blog',
     loadComponent: () =>
       import('./features/blog/blog-list/blog-list.component').then((m) => m.BlogListComponent),

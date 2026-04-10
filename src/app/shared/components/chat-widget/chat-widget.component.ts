@@ -46,11 +46,28 @@ const SUGGESTED_QUESTIONS_EN = [
   imports: [RouterLink],
   template: `
     @if (isBrowser) {
-      <!-- Floating trigger button -->
+      <!-- Floating trigger button + AI prompt tooltip -->
       @if (!isOpen()) {
-        <button type="button" class="chat-fab" aria-label="Abrir chat" (click)="open()">
-          <span class="text-xl">&#10024;</span>
-        </button>
+        <div class="chat-trigger-wrap">
+          @if (showTooltip()) {
+            <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -->
+            <div class="chat-tooltip" (click)="open()">
+              <p class="text-xs font-medium text-white/90">¿Tenés preguntas sobre mi perfil?</p>
+              <p class="text-[10px] text-white/50 mt-0.5">Asistente IA disponible</p>
+              <button
+                type="button"
+                class="chat-tooltip-close"
+                aria-label="Cerrar"
+                (click)="dismissTooltip($event)"
+              >
+                ×
+              </button>
+            </div>
+          }
+          <button type="button" class="chat-fab" aria-label="Abrir chat" (click)="open()">
+            <span class="text-xl">&#10024;</span>
+          </button>
+        </div>
       }
 
       <!-- Side-sheet panel -->
@@ -209,11 +226,51 @@ const SUGGESTED_QUESTIONS_EN = [
   `,
   styles: [
     `
-      .chat-fab {
+      .chat-trigger-wrap {
         position: fixed;
         bottom: 1.5rem;
         right: 1.5rem;
         z-index: 50;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 0.75rem;
+      }
+      .chat-tooltip {
+        position: relative;
+        background: rgba(15, 23, 42, 0.95);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 0.75rem;
+        padding: 0.75rem 2rem 0.75rem 0.75rem;
+        cursor: pointer;
+        animation: tooltip-in 0.4s ease-out;
+        max-width: 220px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      }
+      .chat-tooltip-close {
+        position: absolute;
+        top: 0.25rem;
+        right: 0.5rem;
+        background: none;
+        border: none;
+        color: rgba(255, 255, 255, 0.4);
+        font-size: 1rem;
+        cursor: pointer;
+        line-height: 1;
+      }
+      @keyframes tooltip-in {
+        from {
+          opacity: 0;
+          transform: translateY(10px) scale(0.95);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+      .chat-fab {
+        position: relative;
         display: flex;
         height: 3.5rem;
         width: 3.5rem;
@@ -481,11 +538,13 @@ export class ChatWidgetComponent implements OnDestroy {
   readonly isBrowser = isPlatformBrowser(this.platformId);
 
   readonly isOpen = signal(false);
+  readonly showTooltip = signal(false);
   readonly messages = signal<ChatMessage[]>([]);
   readonly isStreaming = signal(false);
   readonly inputText = signal('');
 
   private streamSub: Subscription | null = null;
+  private tooltipTimer: ReturnType<typeof setTimeout> | null = null;
 
   private readonly messagesContainer = viewChild<ElementRef<HTMLElement>>('messagesContainer');
 
@@ -506,7 +565,18 @@ export class ChatWidgetComponent implements OnDestroy {
     afterNextRender(() => {
       if (!this.isBrowser) return;
       this.loadHistory();
+      const dismissed = localStorage.getItem('chat_tooltip_dismissed');
+      if (!dismissed) {
+        this.tooltipTimer = setTimeout(() => this.showTooltip.set(true), 5000);
+      }
     });
+  }
+
+  dismissTooltip(event: Event): void {
+    event.stopPropagation();
+    this.showTooltip.set(false);
+    localStorage.setItem('chat_tooltip_dismissed', '1');
+    if (this.tooltipTimer) clearTimeout(this.tooltipTimer);
   }
 
   open(): void {
