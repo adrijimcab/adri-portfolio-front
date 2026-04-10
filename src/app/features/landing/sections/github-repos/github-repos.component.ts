@@ -48,8 +48,7 @@ import { getLanguageColor } from '../../../../shared/helpers/language-colors';
                   <app-glass-card>
                     <div class="flex items-start justify-between gap-2">
                       <h3
-                        class="font-bold text-white text-sm group-hover:text-transparent group-hover:bg-clip-text"
-                        style="background-image: linear-gradient(90deg, var(--color-primary), var(--color-secondary));"
+                        class="text-sm font-bold text-white transition-colors group-hover:text-white/80"
                       >
                         {{ repo.name }}
                       </h3>
