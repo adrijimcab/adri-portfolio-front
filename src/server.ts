@@ -67,7 +67,7 @@ if (isMainModule(import.meta.url) || process.env['pm_id']) {
       throw error;
     }
 
-    console.info(`Node Express server listening on http://localhost:${port}`);
+    // Server started — logged by runtime, no console output in production
   });
 }
 

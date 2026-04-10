@@ -1,11 +1,12 @@
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { SpotifyNowPlayingComponent } from '../spotify-now-playing/spotify-now-playing.component';
 import { TranslateService } from '../../../core/services/translate.service';
 
 @Component({
   selector: 'app-footer',
   standalone: true,
-  imports: [SpotifyNowPlayingComponent],
+  imports: [SpotifyNowPlayingComponent, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <footer class="border-t border-white/[0.06] py-12">
@@ -67,7 +68,14 @@ import { TranslateService } from '../../../core/services/translate.service';
         <p class="mt-6 text-xs text-white/30">
           {{ t.t('footer.built_with') }}
         </p>
-        <p class="mt-4 text-sm text-white/50">&copy; {{ currentYear }} Adrián Jiménez Cabello</p>
+        <p class="mt-4 text-sm text-white/50">
+          &copy; {{ currentYear }} Adrián Jiménez Cabello ·
+          <a
+            [routerLink]="['/', t.currentLang(), 'privacy']"
+            class="hover:text-white/70 transition-colors"
+            >Política de Privacidad</a
+          >
+        </p>
       </div>
     </footer>
   `,

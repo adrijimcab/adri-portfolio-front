@@ -77,6 +77,11 @@ const publicChildren: Routes = [
         (m) => m.CertificationDetailComponent,
       ),
   },
+  {
+    path: 'privacy',
+    loadComponent: () =>
+      import('./features/privacy/privacy.component').then((m) => m.PrivacyComponent),
+  },
 ];
 
 export const routes: Routes = [

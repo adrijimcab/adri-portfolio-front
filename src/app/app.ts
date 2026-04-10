@@ -119,7 +119,6 @@ export class App {
   constructor() {
     afterNextRender(() => {
       if (!isPlatformBrowser(this.platformId)) return;
-      // Easter egg for devs who open the inspector. Geek delight.
       // eslint-disable-next-line no-console
       console.log(
         '%c¡Hola, dev!%c\n\nGracias por meterte en el inspector.\nEste portfolio corre sobre Angular 21 SSR, NestJS y Supabase.\nCódigo: https://github.com/adrijimcab\n\n¿Quieres trabajar conmigo? https://adrianjimenezcabello.dev/#contact\n',
