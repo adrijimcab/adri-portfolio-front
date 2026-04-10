@@ -96,8 +96,8 @@
     "submit": "Firmar",
     "submitting": "Firmando…",
     "chars_remaining": "caracteres restantes",
-    "empty": "Nadie ha firmado todavia. Se el primero!",
-    "error_auth": "Error de autenticacion. Intenta de nuevo.",
+    "empty": "Nadie ha firmado todavía. ¡Sé el primero!",
+    "error_auth": "Error de autenticación. Intenta de nuevo.",
     "error_submit": "No se pudo enviar. Intenta otra vez.",
     "rate_limited": "Solo puedes firmar una vez por hora."
   },
