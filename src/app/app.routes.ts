@@ -70,6 +70,11 @@ const publicChildren: Routes = [
       import('./features/services/services.component').then((m) => m.ServicesComponent),
   },
   {
+    path: 'contact',
+    loadComponent: () =>
+      import('./features/contact-page/contact-page.component').then((m) => m.ContactPageComponent),
+  },
+  {
     path: 'blog',
     loadComponent: () =>
       import('./features/blog/blog-list/blog-list.component').then((m) => m.BlogListComponent),

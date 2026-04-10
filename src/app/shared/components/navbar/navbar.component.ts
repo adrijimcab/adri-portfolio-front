@@ -82,6 +82,12 @@ import { MagneticDirective } from '../../directives/magnetic.directive';
             >{{ t.t('nav.services') }}</a
           >
           <a
+            [routerLink]="['/', lang(), 'contact']"
+            routerLinkActive="text-white"
+            class="text-sm text-white/60 transition-colors hover:text-white"
+            >{{ t.t('nav.contact') }}</a
+          >
+          <a
             [routerLink]="['/', lang(), 'cv']"
             appMagnetic
             [strength]="0.18"
@@ -249,6 +255,12 @@ import { MagneticDirective } from '../../directives/magnetic.directive';
               class="text-sm text-white/60"
               (click)="mobileOpen.set(false)"
               >{{ t.t('nav.services') }}</a
+            >
+            <a
+              [routerLink]="['/', lang(), 'contact']"
+              class="text-sm text-white/60"
+              (click)="mobileOpen.set(false)"
+              >{{ t.t('nav.contact') }}</a
             >
             <a
               [routerLink]="['/', lang(), 'cv']"

@@ -8,7 +8,9 @@ import {
   afterNextRender,
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { SeoService } from '../../core/services/seo.service';
+import { TranslateService } from '../../core/services/translate.service';
 import { SectionHeaderComponent } from '../../shared/components/section-header/section-header.component';
 import { ScrollAnimateDirective } from '../../shared/directives/scroll-animate.directive';
 
@@ -55,7 +57,7 @@ const TECH_STACK: readonly string[] = [
 @Component({
   selector: 'app-services',
   standalone: true,
-  imports: [SectionHeaderComponent, ScrollAnimateDirective],
+  imports: [SectionHeaderComponent, ScrollAnimateDirective, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <main class="min-h-screen px-6 pt-24 pb-20">
@@ -149,6 +151,55 @@ const TECH_STACK: readonly string[] = [
           </div>
         </section>
 
+        <!-- Portfolio de webs -->
+        <section class="mb-24" appScrollAnimate>
+          <app-section-header title="Proyectos Realizados" label="Portfolio" />
+
+          <div class="grid gap-6 md:grid-cols-1 max-w-3xl mx-auto">
+            <a
+              href="https://martasubliarte.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="group block overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.03] backdrop-blur-xl transition-all duration-300 hover:border-white/[0.12] hover:scale-[1.01]"
+            >
+              <div class="relative overflow-hidden">
+                <img
+                  src="https://image.thum.io/get/width/1280/crop/720/https://martasubliarte.com"
+                  alt="Marta Subliarte — Tienda online de productos sublimados"
+                  class="w-full h-48 md:h-64 object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                  loading="lazy"
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                <div class="absolute bottom-4 left-4 right-4">
+                  <h3 class="text-lg font-bold text-white">Marta Subliarte</h3>
+                  <p class="text-sm text-white/70">
+                    E-commerce de productos sublimados — Angular, NestJS, Supabase
+                  </p>
+                </div>
+              </div>
+              <div class="flex items-center justify-between p-4">
+                <span class="text-xs text-white/40">martasubliarte.com</span>
+                <div class="flex items-center gap-3">
+                  <span class="text-xs text-white/50 group-hover:text-white/80 transition-colors">
+                    Visitar →
+                  </span>
+                </div>
+              </div>
+            </a>
+          </div>
+
+          <div class="mt-4 text-center">
+            <a
+              href="https://github.com/adrijimcab/marta-web-showcase"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-xs text-white/30 hover:text-white/60 transition-colors"
+            >
+              Ver código en GitHub →
+            </a>
+          </div>
+        </section>
+
         <!-- CTA -->
         <section class="text-center" appScrollAnimate>
           <h2 class="mb-4 text-3xl font-bold text-white md:text-4xl">
@@ -158,11 +209,11 @@ const TECH_STACK: readonly string[] = [
             Cuéntame tu idea y busquemos juntos la mejor solución técnica.
           </p>
           <a
-            href="/#contact"
+            [routerLink]="['/', lang(), 'contact']"
             class="inline-block rounded-full px-8 py-3 text-sm font-semibold text-white transition-opacity duration-200 hover:opacity-90"
             style="background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));"
           >
-            Hablemos
+            ¡Hablemos!
           </a>
         </section>
       </div>
@@ -171,6 +222,8 @@ const TECH_STACK: readonly string[] = [
 })
 export class ServicesComponent implements OnInit, OnDestroy {
   private readonly seo = inject(SeoService);
+  private readonly t = inject(TranslateService);
+  readonly lang = this.t.currentLang;
   private readonly platformId = inject(PLATFORM_ID);
 
   readonly mouseX = signal(0);
